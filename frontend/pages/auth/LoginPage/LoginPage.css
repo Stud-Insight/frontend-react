@@ -12,5 +12,7 @@
     flex-direction: column;
     justify-content: center; 
     align-items: center;
+    gap: 20px;
+    padding: 100px;
     background-color: var(--light_gray-col);
 }

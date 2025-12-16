@@ -1,0 +1,10 @@
+.separator-style {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+}
+
+.sep {
+    
+}

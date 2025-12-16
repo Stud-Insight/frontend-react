@@ -9,8 +9,8 @@ interface SubmitButtonInterface {
 export default function SubmitButton({label, icon_path}: SubmitButtonInterface){
     return (
         <button className="button-style">
-            {icon_path && (<img src={icon_path} className="button-image"/>)}
             <span className="button-label">{label}</span>
+            {icon_path && (<img src={icon_path} className="button-image"/>)}
         </button>
     );
 }
