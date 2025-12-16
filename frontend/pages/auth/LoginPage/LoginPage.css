@@ -1,0 +1,16 @@
+.login-page-background {
+    background-image: url("../../../assets/background.svg");
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.login-page {
+    width: 33.33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    background-color: var(--light_gray-col);
+}

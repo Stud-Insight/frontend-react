@@ -1,0 +1,18 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+:root {
+    --deep_blue-col: #26266e;
+	--blue-col: #0c5deb;
+    --cyan-col: #00e1ff;
+    --dark_gray-col: #333333;
+    --light_gray-col: #d9d9d9;
+    --gray-col: #808080;
+    --red-col: #ff3333;
+    --green-col: #00cc00;
+    --yellow-col: #ffcc00;
+    --orange-col: #ff6600;
+    --main-font: sans-serif;
+}
