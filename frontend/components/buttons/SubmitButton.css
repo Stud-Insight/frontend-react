@@ -1,5 +1,5 @@
-.button-style {
-    height: 40px;
+.submit-button-style {
+    height: 35px;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -10,9 +10,7 @@
     border: none;
     font-family: var(--main-font);
     font-weight: var(--main-bold);
-    font-size: medium;
-}
-
-.button-image {
-
+    font-size: 15px;
+    color: var(--white-col);
+    background-color: var(--blue-col);
 }

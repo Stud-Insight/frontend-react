@@ -1,16 +1,11 @@
 .input-field {
-    background-color: var(--gray-col);
-    color: var( --dark_gray-col);
+    background-color: var(--light_gray-col);
+    color: var(--light_gray-col);
     border-radius: 5px;
-    padding: 10px 12px;
+    height: 35px;
     border: none;
     font-size: 14px;
     font-family: var(--main-font);
-}
-
-.input-field:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 
 .input-field-container {
@@ -25,7 +20,13 @@
     flex-direction: row;
     align-items: center;
     gap: 6px;
+    color: var(--gray-col);
     font-family: var(--main-font);
     font-weight: var(--main-bold);
     font-size: medium;
+}
+
+.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }

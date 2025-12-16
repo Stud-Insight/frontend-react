@@ -1,7 +1,7 @@
 import React from "react";
-import "./SeparatorStyle1.css"
+import "./Separator1.css"
 
-export default function SeparatorStyle1(){
+export default function Separator1(){
     return (
         <div className="separator-style">
             <div className="sep"/>

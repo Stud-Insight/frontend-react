@@ -6,7 +6,7 @@
     flex-direction: row-reverse;
 }
 
-.login-page {
+.login-page-container {
     width: 33.33%;
     display: flex;
     flex-direction: column;
@@ -14,5 +14,6 @@
     align-items: center;
     gap: 20px;
     padding: 100px;
-    background-color: var(--light_gray-col);
+    box-sizing: border-box; 
+    background-color: var(--white-col);
 }
