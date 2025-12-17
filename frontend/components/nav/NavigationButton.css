@@ -1,0 +1,13 @@
+.navigation-button-style {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: auto;
+    height: 40px;
+    gap: 20px;
+    color: var(--gray-col);
+    font-family: var(--main-font);
+    font-weight: 500;
+    font-size: medium;
+}

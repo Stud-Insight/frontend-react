@@ -24,9 +24,13 @@ export default function AccountActivationContent(){
     return (
         <form method="POST" className="content-style-div" onSubmit={activation_handle}>
             <InfoBox label="Veuillez renseigner un e-mail et un mot de passe pour valider la création de votre compte."/>
-            <InputField label="E-Mail" value={email} onChange={setEmail} icon={<IoMail/>}/>
-            <InputField label="Mot de passe" value={password} onChange={setPassword} icon={<FaLock/>} is_password={true} offset={-1.8}/>
-            <InputField label="Confirm Mot de passe" value={password_confirm} onChange={setPasswordConfirm} icon={<FaLock/>} is_password={true} offset={-1.8}/>
+            <InputField label="E-Mail"  icon={<IoMail/>} value={email} onChange={setEmail} placeholder="Choisissez un e-mail"/>
+
+            <div className="password-container">
+                <InputField label="Mot de passe" icon={<FaLock/>} value={password} onChange={setPassword} is_password={true} offset={-1.8} placeholder="Choisissez un mot de passe"/>
+                <InputField value={password_confirm} onChange={setPasswordConfirm} is_password={true} placeholder="Confirmation du mot de passe"/>
+            </div>
+
             <Divider/>
             <SubmitButton label="Valider"/>
 

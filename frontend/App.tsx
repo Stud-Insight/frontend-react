@@ -4,6 +4,8 @@ import LoginPage from "./pages/auth/LoginPage.tsx";
 import AccountLoginContent from "./pages/auth/content/AccountLoginContent.tsx";
 import AccountRecoveryContent from "./pages/auth/content/AccountRecoveryContent.tsx";
 import AccountActivationContent from "./pages/auth/content/AccountActivationContent.tsx";
+import DashboardPage from './pages/dashboard/DashboardPage.tsx';
+
 import "./index.css";
 
 function App(){
@@ -11,6 +13,10 @@ function App(){
     return (
         <Router>
             <Routes>
+                <Route path="/dashboard" element={
+                    <DashboardPage></DashboardPage>
+                }/>
+
                 <Route path="/auth/login" element={
                     <LoginPage>
                         <AccountLoginContent/>
@@ -30,10 +36,14 @@ function App(){
                 }/>
 
                 <Route path="*" element={
+                    <DashboardPage/>
+                }/>
+
+                {/* <Route path="*" element={
                     <LoginPage>
                         <AccountLoginContent/>
                     </LoginPage>
-                }/>
+                }/> */}
             </Routes>
         </Router>
     );

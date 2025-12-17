@@ -4,30 +4,36 @@ import "./InputField.css"
 import { IoEye } from "react-icons/io5";
 
 interface InputFieldInterface {
-    label: string,
-    icon: React.ReactNode,
+    label?: string,
+    icon?: React.ReactNode,
     is_password?: boolean,
+    placeholder?: string,
     offset?: number;
     value?: string
     onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, icon, value, is_password, offset = 0, onChange}: InputFieldInterface){
+export default function InputField({label, icon, value, is_password, offset = 0, onChange, placeholder = ""}: InputFieldInterface){
     const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="input-field-container">
-            <div className="input-field-label">
-                <span style={{transform: `translateY(${offset}px)`}}>
-                    {icon}
-                </span>
-                <label>{label}</label>
-            </div>
+            {(icon || label) && (
+                <div className="input-field-label">
+                    {icon && (
+                        <span style={{ transform: `translateY(${offset}px)` }}>
+                            {icon}
+                        </span>
+                    )}
+                    {label && <label>{label}</label>}
+                </div>
+            )}
 
             <input 
-                className="input-field" 
-                value={value ? value : ""}
-                type={is_password ? (showPassword ? "text" : "password") : "text"}
+                className = "input-field" 
+                value = {value ? value : ""}
+                placeholder = {placeholder}
+                type = {is_password ? (showPassword ? "text" : "password") : "text"}
                 onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             />
         </div>

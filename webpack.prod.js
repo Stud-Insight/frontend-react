@@ -1,30 +1,22 @@
-const path = require("path");
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
+
 const html_plugin = require("html-webpack-plugin");
 const css_plugin = require("mini-css-extract-plugin")
 
-module.exports = {
-    mode: "development",
-    entry: "./frontend/index.tsx",
-    output: {
-        path: path.join(__dirname, "public"),
-        filename: "index.js",
-        clean: true
-    },
-	devServer: {
-		port: 8000,
-		open: true,
-		hot: true,
-	},
+module.exports = merge(common, {
+    mode: "production",
+    
     plugins: [
         new html_plugin({
             template: "./frontend/index.html",
             filename: "index.html"
         }),
-
         new css_plugin({
-            filename: "index.css"
+            filename: "styles.css"
         })
     ],
+
     module: {
         rules: [
             {
@@ -45,7 +37,15 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [css_plugin.loader, "css-loader"]
+            },
+
+            {
+                test: /\.(png|svg)$/,
+                type: "asset/resource",
+                generator: {
+                    filename: "images/[name][hash][ext]"
+                }
             }
         ]
     }
-}
+});

@@ -1,0 +1,22 @@
+.user-profile-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+    padding: 10px;
+}
+
+.user-profile-image {
+    /* border-radius: 50%;
+    object-fit: cover; */
+}
+
+.user-profile-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    color: var(--gray-col);
+    font-family: var(--main-font);
+    font-size: 5px;
+    font-weight: 500;
+    font-size: medium;
+}

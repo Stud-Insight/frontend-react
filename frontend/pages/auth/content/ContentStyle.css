@@ -7,6 +7,9 @@
     width: 70%;
 }
 
-.center-div {
-    margin-left: none;
+.password-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }

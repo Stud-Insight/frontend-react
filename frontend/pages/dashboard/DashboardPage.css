@@ -1,0 +1,28 @@
+.dashboard-content {
+    width: 100%;
+    height: 100%;
+    background-image: url("../../assets/background.svg");
+    display: flex;
+    flex-direction: row;
+}
+
+.dashboard-sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 10px;
+    width: 25%;
+    padding: 20px;
+    box-sizing: border-box; 
+    background-color: var(--white-col);
+}
+
+.dashboard-main-content {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-style-dashboard {
+    height: 200px;
+    margin-bottom: auto;
+}
