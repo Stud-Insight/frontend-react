@@ -3,6 +3,8 @@ import InputField from "../../../components/input/InputField.tsx"
 import SubmitButton from "../../../components/input/SubmitButton.tsx";
 import Link1 from "../../../components/nav/Link1.tsx";
 import Divider from "../../../components/ui/Divider.tsx";
+import UserService from "../../../service/UserService.ts";
+
 import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
@@ -13,10 +15,16 @@ export default function AccountLoginContent(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const login_handle = (event: React.FormEvent) => {
+    const login_handle = async (event: React.FormEvent) => {
         event.preventDefault();
         console.log("Email:", email);
         console.log("Password:", password);
+
+        try {
+            const data = await UserService.login(email, password);
+        } catch (error: any){
+            console.error(error.message);
+        }
     }
 
     return (

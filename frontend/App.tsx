@@ -1,11 +1,10 @@
-import React from "react";
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-import LoginPage from "./auth/LoginPage.tsx";
-import AccountLoginContent from "./auth/content/AccountLoginContent.tsx";
-import AccountRecoveryContent from "./auth/content/AccountRecoveryContent.tsx";
-import AccountActivationContent from "./auth/content/AccountActivationContent.tsx";
-import "../index.css";
+import LoginPage from "./pages/auth/LoginPage.tsx";
+import AccountLoginContent from "./pages/auth/content/AccountLoginContent.tsx";
+import AccountRecoveryContent from "./pages/auth/content/AccountRecoveryContent.tsx";
+import AccountActivationContent from "./pages/auth/content/AccountActivationContent.tsx";
+import "./index.css";
 
 function App(){
 
@@ -30,7 +29,11 @@ function App(){
                     </LoginPage>
                 }/>
 
-                <Route path="*" element={<Navigate to="/auth/login"/>}/>
+                <Route path="*" element={
+                    <LoginPage>
+                        <AccountLoginContent/>
+                    </LoginPage>
+                }/>
             </Routes>
         </Router>
     );

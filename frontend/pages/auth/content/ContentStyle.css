@@ -1,4 +1,6 @@
 .content-style-div {
+    position: relative;
+    top: -150px;
     display: flex;
     flex-direction: column;
     gap: 20px;
