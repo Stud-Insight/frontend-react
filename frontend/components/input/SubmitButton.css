@@ -5,7 +5,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
     border-radius: 5px;
     border: none;
     font-family: var(--main-font);
@@ -13,4 +13,8 @@
     font-size: 15px;
     color: var(--white-col);
     background-color: var(--blue-col);
+}
+
+.submit-button-image {
+    height: 90%;
 }
