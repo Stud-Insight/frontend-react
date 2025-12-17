@@ -1,5 +1,5 @@
 .login-page-background {
-    background-image: url("../../../assets/background.svg");
+    background-image: url("../../assets/background.svg");
     width: 100%;
     height: 100%;
     display: flex;
@@ -13,7 +13,11 @@
     justify-content: center; 
     align-items: center;
     gap: 20px;
-    padding: 100px;
     box-sizing: border-box; 
     background-color: var(--white-col);
+}
+
+.login-logo-style {
+    position: absolute;
+    top: 100px;
 }

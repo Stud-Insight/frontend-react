@@ -6,20 +6,30 @@ import { IoEye } from "react-icons/io5";
 interface InputFieldInterface {
     label: string,
     icon: React.ReactNode,
-    password_type: boolean,
+    is_password?: boolean,
+    offset?: number;
+    value?: string
+    onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, icon, password_type}: InputFieldInterface){
-    const [showPassword, setShowPassword] = useState(true);
+export default function InputField({label, icon, value, is_password, offset = 0, onChange}: InputFieldInterface){
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className="input-field-container">
             <div className="input-field-label">
-                {icon}
+                <span style={{transform: `translateY(${offset}px)`}}>
+                    {icon}
+                </span>
                 <label>{label}</label>
             </div>
 
-            <input className="input-field" type={password_type && showPassword ? "text" : "password"}/>
+            <input 
+                className="input-field" 
+                value={value ? value : ""}
+                type={is_password ? (showPassword ? "text" : "password") : "text"}
+                onChange={onChange ? (e) => onChange(e.target.value) : undefined}
+            />
         </div>
     );
 }

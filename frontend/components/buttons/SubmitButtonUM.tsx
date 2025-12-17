@@ -5,7 +5,7 @@ interface SubmitButtonInterface {
     label: string;
 };
 
-export default function SubmitButton({label}: SubmitButtonInterface){
+export default function SubmitButtonUM({label}: SubmitButtonInterface){
     return (
         <button className="submit-button-style">
             <span className="button-label">{label}</span>

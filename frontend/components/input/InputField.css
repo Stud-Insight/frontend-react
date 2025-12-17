@@ -1,6 +1,7 @@
 .input-field {
     background-color: var(--light_gray-col);
-    color: var(--light_gray-col);
+    color: var(--gray-col);
+    padding: 10px;
     border-radius: 5px;
     height: 35px;
     border: none;
