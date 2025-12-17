@@ -1,7 +1,7 @@
 import React from "react";
 import "./LoginPage.css"
 
-import Logo from "../../components/logo/Logo.tsx";
+import Logo from "../../components/ui/Logo.tsx";
 interface LoginPageInterface {
     children: React.ReactNode;
 }
