@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoginPage from "./auth/LoginPage.tsx";
 import AccountLoginContent from "./auth/content/AccountLoginContent.tsx";
 import AccountRecoveryContent from "./auth/content/AccountRecoveryContent.tsx";
+import AccountActivationContent from "./auth/content/AccountActivationContent.tsx";
 import "../index.css";
 
 function App(){
@@ -20,6 +21,12 @@ function App(){
                  <Route path="/auth/recovery" element={
                     <LoginPage>
                         <AccountRecoveryContent/>
+                    </LoginPage>
+                }/>
+
+                <Route path="/auth/activation" element={
+                    <LoginPage>
+                        <AccountActivationContent/>
                     </LoginPage>
                 }/>
 

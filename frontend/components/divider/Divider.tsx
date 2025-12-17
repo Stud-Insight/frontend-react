@@ -1,13 +1,13 @@
 import React from "react";
-import "./Separator.css"
+import "./Divider.css"
 
-interface SeparatorInterface {
+interface DividerInterface {
     label?: string
 };
 
-export default function Separator({label}: SeparatorInterface){
+export default function Divider({label}: DividerInterface){
     return label ? (
-        <div className="separator-style">
+        <div className="Divider-style">
             <div className="sep" />
             <label>{label}</label>
             <div className="sep" />
