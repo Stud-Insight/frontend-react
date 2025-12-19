@@ -21,3 +21,18 @@
     height: 200px;
     margin-bottom: auto;
 }
+
+.content-style-div {
+    position: relative;
+    top: -150px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 70%;
+}
+
+.password-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
