@@ -19,7 +19,7 @@ function App(){
                     <Route path="activation" element={<AccountActivationPage/>} />
                 </Route>
 
-                <Route path="/dashboard">
+                {/* <Route path="/dashboard">
                     <Route path="home" element={<HomePage/>}/>
                     <Route path="users" element={<UsersPage/>} />
                     <Route path="stage" element={<HomePage/>} />
@@ -27,7 +27,7 @@ function App(){
                     <Route path="archive" element={<HomePage/>} />
                     <Route path="notification" element={<HomePage/>} />
                     <Route path="settings" element={<HomePage/>} />
-                </Route>
+                </Route> */}
                
                 <Route path="*" element={<Navigate to="/auth/login"/>}/>
             </Routes>
