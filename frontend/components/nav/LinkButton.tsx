@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom"; 
-import "./Link1.css";
+import "./LinkButton.css";
 
 interface LinkInterface {
     label: string;
@@ -9,7 +9,7 @@ interface LinkInterface {
     push_left?: boolean;
 };
 
-export default function Link1({label, redirection, push_left = false, push_right = false}: LinkInterface){
+export default function LinkButton({label, redirection, push_left = false, push_right = false}: LinkInterface){
     return (
         <Link to={redirection} className="link-style"  style={{
                 marginLeft: push_right ? "auto" : undefined,

@@ -10,7 +10,8 @@ module.exports = merge(common, {
     plugins: [
         new html_plugin({
             template: "./frontend/index.html",
-            filename: "index.html"
+            filename: "index.html",
+            favicon: "./frontend/assets/favicon.svg"
         }),
         new css_plugin({
             filename: "styles.css"

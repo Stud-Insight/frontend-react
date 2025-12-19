@@ -9,12 +9,11 @@ import DashboardPage from './pages/dashboard/DashboardPage.tsx';
 import "./index.css";
 
 function App(){
-
     return (
         <Router>
             <Routes>
                 <Route path="/dashboard" element={
-                    <DashboardPage></DashboardPage>
+                    <DashboardPage/>
                 }/>
 
                 <Route path="/auth/login" element={
@@ -23,7 +22,7 @@ function App(){
                     </LoginPage>
                 }/>
 
-                 <Route path="/auth/recovery" element={
+                <Route path="/auth/recovery" element={
                     <LoginPage>
                         <AccountRecoveryContent/>
                     </LoginPage>
@@ -36,14 +35,9 @@ function App(){
                 }/>
 
                 <Route path="*" element={
-                    <DashboardPage/>
+                    // <Navigate to="/auth/login"/>
+                    <Navigate to="/dashboard"/>
                 }/>
-
-                {/* <Route path="*" element={
-                    <LoginPage>
-                        <AccountLoginContent/>
-                    </LoginPage>
-                }/> */}
             </Routes>
         </Router>
     );

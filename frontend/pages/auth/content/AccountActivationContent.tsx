@@ -7,7 +7,7 @@ import InputField from "../../../components/input/InputField.tsx";
 import SubmitButton from "../../../components/input/SubmitButton.tsx";
 import Divider from "../../../components/ui/Divider.tsx";
 import InfoBox from "../../../components/ui/InfoBox.tsx";
-import Link1 from "../../../components/nav/Link1.tsx";
+import LinkButton from "../../../components/nav/LinkButton.tsx";
 
 export default function AccountActivationContent(){
     const [email, setEmail] = useState("");
@@ -36,7 +36,7 @@ export default function AccountActivationContent(){
 
             {/*TODO CREER UN CAPTCHA POUR EVITER BOT */}
 
-            <Link1 label="Retour à la page de connection" redirection="/auth/login" push_right={true}  push_left={true}/>
+            <LinkButton label="Retour à la page de connection" redirection="/auth/login" push_right={true}  push_left={true}/>
         </form>
     );
 }
