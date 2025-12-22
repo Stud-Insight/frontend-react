@@ -1,13 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaFile, FaBell, FaFolder } from "react-icons/fa";
 import { FaBoxArchive } from "react-icons/fa6";
-import { IoMail } from "react-icons/io5";
-import { IoSettingsSharp } from "react-icons/io5";
-import { FaFile } from "react-icons/fa";
+import { IoMail, IoSettingsSharp } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
-import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
@@ -35,6 +32,7 @@ export default function DashboardPage({children} : DashboardPageInterface){
         home: "Home",
         stage: "Stages",
         ter: "TERs",
+        files: "Fichiers",
         notification: "Notifications",
         users: "Utilisateurs",
         archive: "Archives",
@@ -69,6 +67,7 @@ export default function DashboardPage({children} : DashboardPageInterface){
                     <NavigationButton icon={<FaHome/>} id="home" active={page === "home"} label={page_map["home"]} onClick={(id) => page_change_handler(id)}/>
                     <NavigationButton icon={<IoMail/>} id="stage" active={page === "stage"} label={page_map["stage"]} onClick={(id) => page_change_handler(id)}/>
                     <NavigationButton icon={<FaFile/>} id="ter" active={page === "ter"} label={page_map["ter"]} onClick={(id) => page_change_handler(id)}/>
+                    <NavigationButton icon={<FaFolder/>} id="files" active={page === "files"} label={page_map["files"]} onClick={(id) => page_change_handler(id)}/>
                     <NavigationButton icon={<FaBell/>} id="notification" active={page === "notification"} label={page_map["notification"]} onClick={(id) => page_change_handler(id)}/>
                 </div>
                 <Divider/>

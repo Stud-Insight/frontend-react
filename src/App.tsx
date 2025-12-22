@@ -7,6 +7,7 @@ import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/HomePage";
 import UsersPage from "./pages/dashboard/UsersPage";
+import FilesPage from "./pages/dashboard/FilesPage";
 
 import "./index.css";
 
@@ -113,6 +114,14 @@ function AppRoutes() {
                     element={
                         <ProtectedRoute>
                             <HomePage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="files"
+                    element={
+                        <ProtectedRoute>
+                            <FilesPage />
                         </ProtectedRoute>
                     }
                 />
