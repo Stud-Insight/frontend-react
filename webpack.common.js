@@ -4,9 +4,8 @@ module.exports = {
     entry: "./src/index.tsx",
 
     output: {
-        path: path.join(__dirname, "dist"),
-        filename: "[name].[contenthash].js",
-        publicPath: "/",
+        path: path.join(__dirname, "public"),
+        filename: "index.js",
         clean: true,
     },
 
