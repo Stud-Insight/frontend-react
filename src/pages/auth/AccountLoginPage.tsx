@@ -9,6 +9,7 @@ import LinkButton from "../../components/nav/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
+import UserService from "../../services/UserService.ts"
 
 import "./LoginPage.css";
 

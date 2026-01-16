@@ -66,7 +66,7 @@ export const getFileIcon = (contentType: string): string => {
     return "[FILE]";
 };
 
-export default class FileService {
+export default class Fileservices {
     public static async uploadFile(
         file: File,
         onProgress?: (progress: number) => void

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import ChatService, { Message, ConversationDetail, getParticipantName } from "../../service/ChatService";
+import ChatService, { Message, ConversationDetail, getParticipantName } from "../../services/ChatService";
 import { useAuth } from "../../context/AuthContext";
 import "./ChatWindow.css";
 

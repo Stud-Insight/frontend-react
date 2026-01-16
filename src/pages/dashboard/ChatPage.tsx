@@ -3,7 +3,7 @@ import DashboardPage from "./DashboardPage";
 import ChatSidebar from "../../components/chat/ChatSidebar";
 import ChatWindow from "../../components/chat/ChatWindow";
 import NewChatDialog from "../../components/chat/NewChatDialog";
-import ChatService, { Conversation, getParticipantName } from "../../service/ChatService";
+import ChatService, { Conversation, getParticipantName } from "../../services/ChatService";
 import { useAuth } from "../../context/AuthContext";
 import "./ChatPage.css";
 

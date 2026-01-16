@@ -11,9 +11,9 @@ export default function InfoBox({ label, type = "info" }: InfoBoxInterface) {
     const getIcon = () => {
         switch (type) {
             case "error":
-                return <MdError size={40} />;
+                return <MdError size={20} />;
             case "success":
-                return <MdCheckCircle size={40} />;
+                return <MdCheckCircle size={20} />;
             default:
                 return <MdInfo size={40} />;
         }

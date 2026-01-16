@@ -1,5 +1,5 @@
 import React from "react";
-import { Conversation, getParticipantName, formatMessageTime } from "../../service/ChatService";
+import { Conversation, getParticipantName, formatMessageTime } from "../../services/ChatService";
 import { useAuth } from "../../context/AuthContext";
 import "./ChatSidebar.css";
 

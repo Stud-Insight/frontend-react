@@ -12,6 +12,7 @@ import Logo from "../../components/ui/Logo.tsx";
 import Divider from "../../components/ui/Divider.tsx";
 import UserWidget from "../../components/ui/UserWidget.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
+import UserService, { User } from "../../services/UserService.ts"
 
 import "./DashboardPage.css"
 
@@ -20,8 +21,7 @@ interface DashboardPageInterface {
 };
 
 export default function DashboardPage({children} : DashboardPageInterface){
-    const [user, setUser] = useState("");
-    const [email, setEmail] = useState("");
+    const [user, setUser] = useState<User | null>(null);
     const [userImage, setUserImage] = useState("");
     const [page, setPage] = useState("home");
     const [perm, setPerm] = useState("etu");
@@ -51,10 +51,25 @@ export default function DashboardPage({children} : DashboardPageInterface){
     }
 
     useEffect(() => {
-        //TODO: Faire appelle API pour recup user donnée
-        setUser("Vincent");
-        setEmail("vincent.hannah@etu.umontpellier.fr");
-        setUserImage("../../assets/default_profile.svg");
+        // const loadUser = async () => {
+        //     const currentUser = await UserService.getCurrentUser();
+        //     setUser(currentUser);
+        // };
+
+        // loadUser();
+
+        const fakeUser: User = {
+            id: "1",
+            email: "test@example.com",
+            first_name: "Vincent",
+            last_name: "Hannah",
+            groups: [],
+            is_staff: true,
+            is_superuser: true,
+        };
+
+        setUser(fakeUser);
+
     }, []);
 
     return (
@@ -62,7 +77,7 @@ export default function DashboardPage({children} : DashboardPageInterface){
             {/* side bar */}
             <div className="dashboard-sidebar-content">
                 <Logo width={"200"} height={"50"} large={true} className="logo-style-dashboard"/>
-                <UserWidget user={user} email={email} perm={perm}/>
+                <UserWidget user={user?.first_name} email={user?.email} perm={perm}/>
                 <Divider/>
                 <div className="dashboard-group-content">
                     <NavigationButton icon={<FaHome/>} id="home" active={page === "home"} label={page_map["home"]} onClick={(id) => page_change_handler(id)}/>

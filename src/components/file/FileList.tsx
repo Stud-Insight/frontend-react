@@ -1,5 +1,5 @@
 import React from "react";
-import { Attachment, formatFileSize, getFileIcon } from "../../service/FileService";
+import { Attachment, formatFileSize, getFileIcon } from "../../services/FileService";
 import "./FileList.css";
 
 interface FileListProps {

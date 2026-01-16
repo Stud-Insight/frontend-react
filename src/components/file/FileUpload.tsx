@@ -1,5 +1,5 @@
 import React, { useState, useRef, DragEvent, ChangeEvent } from "react";
-import FileService from "../../service/FileService";
+import FileService from "../../services/FileService";
 import "./FileUpload.css";
 
 interface FileUploadProps {

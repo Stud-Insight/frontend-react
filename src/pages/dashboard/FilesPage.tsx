@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import DashboardPage from "./DashboardPage";
 import FileUpload from "../../components/file/FileUpload";
 import FileList from "../../components/file/FileList";
-import FileService, { Attachment } from "../../service/FileService";
+import FileService, { Attachment } from "../../services/FileService";
 import "./FilesPage.css";
 
 export default function FilesPage() {

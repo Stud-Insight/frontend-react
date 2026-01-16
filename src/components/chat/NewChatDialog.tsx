@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ChatService, { Participant, getParticipantName } from "../../service/ChatService";
+import ChatService, { Participant, getParticipantName } from "../../services/ChatService";
 import "./NewChatDialog.css";
 
 interface NewChatDialogProps {

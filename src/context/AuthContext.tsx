@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import UserService, { User } from "../service/UserService";
+import UserService, { User } from "../services/UserService";
 
 interface AuthContextType {
     user: User | null;
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const message = err instanceof Error ? err.message : "Erreur de connexion";
             setError(message);
             throw err;
-        } finally {
+        } finally { 
             setIsLoading(false);
         }
     };

@@ -7,7 +7,7 @@ import SubmitButton from "../../components/input/SubmitButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import Divider from "../../components/ui/Divider.tsx";
 import LoginPage from "./LoginPage.tsx";
-import UserService from "../../service/UserService.ts";
+import UserService from "../../services/UserService.ts";
 
 import "./LoginPage.css";
 
