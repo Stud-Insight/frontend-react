@@ -51,24 +51,23 @@ export default function DashboardPage({children} : DashboardPageInterface){
     }
 
     useEffect(() => {
-        // const loadUser = async () => {
-        //     const currentUser = await UserService.getCurrentUser();
-        //     setUser(currentUser);
-        // };
-
-        // loadUser();
-
-        const fakeUser: User = {
-            id: "1",
-            email: "test@example.com",
-            first_name: "Vincent",
-            last_name: "Hannah",
-            groups: [],
-            is_staff: true,
-            is_superuser: true,
+        const loadUser = async () => {
+            const currentUser = await UserService.getCurrentUser();
+            setUser(currentUser);
         };
 
-        setUser(fakeUser);
+        loadUser();
+
+        // const test_user: User = {
+        //     id: "1",
+        //     email: "test@example.com",
+        //     first_name: "Vincent",
+        //     last_name: "Hannah",
+        //     groups: [],
+        //     is_staff: false,
+        //     is_superuser: false,
+        // };
+        // setUser(test_user);
 
     }, []);
 
@@ -77,7 +76,7 @@ export default function DashboardPage({children} : DashboardPageInterface){
             {/* side bar */}
             <div className="dashboard-sidebar-content">
                 <Logo width={"200"} height={"50"} large={true} className="logo-style-dashboard"/>
-                <UserWidget user={user?.first_name} email={user?.email} perm={perm}/>
+                <UserWidget user={user}/>
                 <Divider/>
                 <div className="dashboard-group-content">
                     <NavigationButton icon={<FaHome/>} id="home" active={page === "home"} label={page_map["home"]} onClick={(id) => page_change_handler(id)}/>
