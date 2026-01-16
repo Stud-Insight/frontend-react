@@ -13,6 +13,7 @@ import Divider from "../../components/ui/Divider.tsx";
 import UserWidget from "../../components/ui/UserWidget.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import UserService, { User } from "../../services/UserService.ts"
+import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./DashboardPage.css"
 
@@ -27,6 +28,7 @@ export default function DashboardPage({children} : DashboardPageInterface){
     const [perm, setPerm] = useState("etu");
     
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     const page_map: Record<string, string> = {
         home: "Home",
@@ -40,8 +42,14 @@ export default function DashboardPage({children} : DashboardPageInterface){
         settings: "Paramètres"
     };
 
-    const logout_handle = () => {
-        console.log("Deconnection!");
+    const logout_handle = async () => {
+        try {
+            await logout();
+            setUser(null);
+            navigate("/");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Erreur de connexion";
+        }
     }
 
     const page_change_handler = (id: string) => {

@@ -91,34 +91,25 @@ export default class Userservices {
      * Connexion avec email et mot de passe
      */
     public static async login(email: string, password: string): Promise<LoginResponse> {
-        console.log("[login] start", { email });
-
         try {
-            console.log("[login] getting CSRF token...");
+            // Obtenir un CSRF token d'abord
             await this.getCSRFToken();
-            console.log("[login] CSRF token OK");
 
-            console.log("[login] sending login request to /auth/login");
             const response = await api.post<LoginResponse>("/auth/login", {
                 email,
                 password,
             });
 
-            console.log("[login] response received", response.data);
-
+            // Sauvegarder le nouveau CSRF token
             if (response.data.csrf_token) {
-                console.log("[login] saving csrf token");
                 localStorage.setItem("csrf_token", response.data.csrf_token);
             }
 
-            console.log("[login] saving user in localStorage");
+            // Sauvegarder les infos utilisateur
             localStorage.setItem("user", JSON.stringify(response.data.user));
 
-            console.log("[login] SUCCESS");
             return response.data;
-
         } catch (error) {
-            console.error("[login] ERROR", error);
             handleApiError(error as AxiosError<ApiError>);
         }
     }
