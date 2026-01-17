@@ -11,17 +11,19 @@ export default function InfoBox({ label, type = "info" }: InfoBoxInterface) {
     const getIcon = () => {
         switch (type) {
             case "error":
-                return <MdError size={20} />;
+                return <MdError size={20}/>;
             case "success":
-                return <MdCheckCircle size={20} />;
+                return <MdCheckCircle size={20}/>;
             default:
-                return <MdInfo size={40} />;
+                return <MdInfo size={20}/>;
         }
     };
 
     return (
         <div className={`info-box info-box-${type}`}>
-            {getIcon()}
+            <div className="info-box-icon">
+                {getIcon()}
+            </div>
             <label>{label}</label>
         </div>
     );

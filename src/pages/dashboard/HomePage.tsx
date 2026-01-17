@@ -6,6 +6,7 @@ export default function HomePage(){
     return (
         <DashboardPage>
             <div>
+                <label>{"Home"}</label>
                 main
             </div>
         </DashboardPage>

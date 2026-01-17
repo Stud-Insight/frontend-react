@@ -29,12 +29,12 @@
     padding: 30px;
     display: flex;
     flex-direction: column;
-    background-color: var(--light_gray-col);
+    background-color: var(--white-col);
     gap: 10px;
     color: var(--gray-col);
     font-family: var(--main-font);
     font-weight: 600;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .dashboard-main-content {
@@ -44,4 +44,10 @@
     padding: 10px;
     box-sizing: border-box;
     background-color: var(--white-col);
+}
+
+.dashboard-content-default {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

@@ -19,6 +19,7 @@ export default function AccountRecoveryPage() {
 
     const recovery_handle = async (event: React.FormEvent) => {
         event.preventDefault();
+
         setError(null);
         setSuccess(null);
         setIsSubmitting(true);
@@ -51,6 +52,7 @@ export default function AccountRecoveryPage() {
                 <Divider />
                 <SubmitButton
                     label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}
+                    type="submit"
                     disabled={isSubmitting}
                 />
                 <LinkButton

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ChatService, { Message, ConversationDetail, getParticipantName } from "../../services/ChatService";
-import { useAuth } from "../../context/AuthContext";
 import "./ChatWindow.css";
 
 interface ChatWindowProps {
@@ -10,7 +9,6 @@ interface ChatWindowProps {
 }
 
 export default function ChatWindow({ conversationId, conversationName, onBack }: ChatWindowProps) {
-    const { user } = useAuth();
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -142,9 +140,7 @@ export default function ChatWindow({ conversationId, conversationName, onBack }:
                                     <span>{formatDate(msg.created)}</span>
                                 </div>
                             )}
-                            <div
-                                className={`chat-message ${msg.sender.id === user?.id ? "own" : "other"}`}
-                            >
+                            {/* <div className={`chat-message ${msg.sender.id === user?.id ? "own" : "other"}`}>
                                 {msg.sender.id !== user?.id && (
                                     <div className="chat-message-sender">
                                         {getParticipantName(msg.sender)}
@@ -154,7 +150,7 @@ export default function ChatWindow({ conversationId, conversationName, onBack }:
                                     <p>{msg.content}</p>
                                     <span className="chat-message-time">{formatTime(msg.created)}</span>
                                 </div>
-                            </div>
+                            </div> */}
                         </React.Fragment>
                     ))
                 )}

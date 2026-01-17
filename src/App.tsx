@@ -12,8 +12,7 @@ import ChatPage from "./pages/dashboard/ChatPage";
 
 import "./index.css";
 
-// Protected route wrapper
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }){
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -27,8 +26,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }
 
-// Public route wrapper (redirect to dashboard if already logged in)
-function PublicRoute({ children }: { children: React.ReactNode }) {
+function PublicRoute({ children }: { children: React.ReactNode }){
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -42,7 +40,6 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }
 
-// Root redirect based on auth status
 function RootRedirect() {
     const { isAuthenticated, isLoading } = useAuth();
 
@@ -56,113 +53,25 @@ function RootRedirect() {
 function AppRoutes() {
     return (
         <Routes>
-            {/* Auth routes - redirect to dashboard if already logged in */}
             <Route path="/auth">
-                <Route
-                    path="login"
-                    element={
-                        <PublicRoute>
-                            <AccountLoginPage />
-                        </PublicRoute>
-                    }
-                />
-                <Route
-                    path="recovery"
-                    element={
-                        <PublicRoute>
-                            <AccountRecoveryPage />
-                        </PublicRoute>
-                    }
-                />
-                <Route
-                    path="activation"
-                    element={
-                        <PublicRoute>
-                            <AccountActivationPage />
-                        </PublicRoute>
-                    }
-                />
+                <Route path="login" element={<PublicRoute><AccountLoginPage/></PublicRoute>}/>
+                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage/></PublicRoute>}/>
+                <Route path="activation" element={<PublicRoute><AccountActivationPage/></PublicRoute>}/>
             </Route>
 
-            {/* Dashboard routes - protected */}
             <Route path="/dashboard">
-                <Route
-                    path="home"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="users"
-                    element={
-                        <ProtectedRoute>
-                            <UsersPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="stage"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="ter"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="files"
-                    element={
-                        <ProtectedRoute>
-                            <FilesPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="chat"
-                    element={
-                        <ProtectedRoute>
-                            <ChatPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="archive"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="notification"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="settings"
-                    element={
-                        <ProtectedRoute>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                <Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
+                <Route path="stage" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                <Route path="ter" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                <Route path="files" element={<ProtectedRoute><FilesPage/></ProtectedRoute>}/>
+                <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
+                <Route path="archive" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                {/* <Route path="settings" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
             </Route>
 
-            {/* Root redirect */}
-            <Route path="/" element={<RootRedirect />} />
-            <Route path="*" element={<RootRedirect />} />
+            <Route path="/" element={<RootRedirect/>} />
+            <Route path="*" element={<RootRedirect/>} />
         </Routes>
     );
 }
@@ -171,7 +80,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <AppRoutes />
+                <AppRoutes/>
             </Router>
         </AuthProvider>
     );

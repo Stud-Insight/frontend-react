@@ -16,6 +16,14 @@
     letter-spacing: 0.6px;
 }
 
+.info-box-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .info-box-info {
     background-color: var(--light_gray-col);
     color: var(--gray-col);
@@ -23,12 +31,12 @@
 
 .info-box-error {
     color: rgba(var(--red-col), 0.9);
-    background-color: rgba(var(--red-col), 0.3);
+    background-color: rgba(var(--red-col), 0.2);
     border-color: rgba(var(--red-col), 0.6);
 }
 
 .info-box-success {
     color: rgba(var(--green-col), 1);
-    background-color: rgba(var(--green-col), 0.3);
+    background-color: rgba(var(--green-col), 0.2);
     border-color: rgba(var(--green-col), 0.6);
 }
