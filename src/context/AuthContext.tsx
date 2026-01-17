@@ -55,8 +55,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }, []);
 
     const login = async (email: string, password: string) => {
-        setIsLoading(true);
         setError(null);
+        
         try {
             const response = await UserService.login(email, password);
             setUser(response.user);
@@ -70,7 +70,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
 
     const logout = async () => {
-        setIsLoading(true);
         try {
             await UserService.logout();
         } catch (err) {

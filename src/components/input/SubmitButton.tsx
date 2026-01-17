@@ -19,9 +19,19 @@ export default function SubmitButton({label, onChange, type = "button", style = 
         );
     }
 
-    return (
-        <button type={type} className="submit-button-style" onClick={onChange ? () => onChange() : undefined}>
-            <span className="button-label">{label}</span>
-        </button>
-    );
+    if (type == "button"){
+        return (
+            <button type={type} className="submit-button-style" onClick={onChange ? () => onChange() : undefined}>
+                <span className="button-label">{label}</span>
+            </button>
+        );
+    }
+
+    if (type == "submit"){
+        return (
+            <button type={type} className="submit-button-style">
+                <span className="button-label">{label}</span>
+            </button>
+        );
+    }
 }

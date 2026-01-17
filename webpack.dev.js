@@ -9,7 +9,7 @@ module.exports = merge(common, {
     devServer: {
         port: 3000,
         host: "0.0.0.0",
-        open: false,
+        open: true,
         hot: true,
         liveReload: true,
         historyApiFallback: true,

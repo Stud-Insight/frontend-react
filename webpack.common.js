@@ -7,6 +7,7 @@ module.exports = {
         path: path.join(__dirname, "public"),
         filename: "index.js",
         clean: true,
+        publicPath: '/',
     },
 
     resolve: {

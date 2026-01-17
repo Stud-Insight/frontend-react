@@ -9,7 +9,6 @@ import LinkButton from "../../components/nav/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
-import UserService from "../../services/UserService.ts"
 
 import "./LoginPage.css";
 
@@ -24,24 +23,22 @@ export default function AccountLoginPage() {
 
     const login_handle = async (event: React.FormEvent) => {
         event.preventDefault();
-        setError(null);
-        setIsSubmitting(true);
+        console.log("Submitting form");
 
         try {
             await login(email, password);
+            console.log("Login resolved");
             navigate("/dashboard/home");
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Erreur de connexion";
-            setError(message);
-        } finally {
-            setIsSubmitting(false);
+            console.log("Login failed", err);
+            setError("Erreur de connexion");
         }
     };
 
     return (
         <LoginPage>
-            <form method="POST" className="content-style-div" onSubmit={login_handle}>
-                {error && <InfoBox label={error} type="error" />}
+            <form className="content-style-div" onSubmit={login_handle}>
+                {error ? <InfoBox label={error} type="error"/> : undefined}
                 <InputField
                     label="E-Mail"
                     value={email}

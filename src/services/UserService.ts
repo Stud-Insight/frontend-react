@@ -2,7 +2,8 @@ import axios, { AxiosError } from "axios";
 
 // Configuration de l'API
 // Use relative URL to go through nginx proxy (same-origin for cookies)
-//onst API_BASE_URL = "/api";
+
+//const API_BASE_URL = "/api";
 const API_BASE_URL = "http://localhost:8080/api"
 
 const api = axios.create({
@@ -63,8 +64,8 @@ api.interceptors.request.use((config) => {
 // Gestion des erreurs
 const handleApiError = (error: AxiosError<ApiError>): never => {
     if (error.response) {
-        const apiError = error.response.data;
-        throw new Error(apiError?.message || "Une erreur est survenue");
+        const message = error.response.data?.detail?.[0]?.msg
+        throw new Error(message);
     } else if (error.request) {
         throw new Error("Erreur de connexion au serveur");
     } else {
