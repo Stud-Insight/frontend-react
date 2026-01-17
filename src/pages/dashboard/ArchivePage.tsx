@@ -1,11 +1,12 @@
 import React from "react";
 import DashboardPage from "./DashboardPage.tsx";
-import "./HomePage.css"
 
-export default function HomePage(){
+import "./ArchivePage.css"
+
+export default function ArchivePage(){
     return (
         <DashboardPage>
-            <label>Accueil</label>
+            <label>Archives</label>
         </DashboardPage>
     )
 }

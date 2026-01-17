@@ -44,9 +44,6 @@
     padding: 10px;
     box-sizing: border-box;
     background-color: var(--white-col);
-}
-
-.dashboard-content-default {
     display: flex;
     flex-direction: column;
     gap: 20px;

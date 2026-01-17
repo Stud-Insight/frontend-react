@@ -9,6 +9,9 @@ import HomePage from "./pages/dashboard/HomePage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import FilesPage from "./pages/dashboard/FilesPage";
 import ChatPage from "./pages/dashboard/ChatPage";
+import StagesPage from "./pages/dashboard/StagesPage";
+import TERPage from "./pages/dashboard/TERPage";
+import ArchivePage from "./pages/dashboard/ArchivePage";
 
 import "./index.css";
 
@@ -62,11 +65,11 @@ function AppRoutes() {
             <Route path="/dashboard">
                 <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
                 <Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
-                <Route path="stage" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
-                <Route path="ter" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                <Route path="stage" element={<ProtectedRoute><StagesPage/></ProtectedRoute>}/>
+                <Route path="ter" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
                 <Route path="files" element={<ProtectedRoute><FilesPage/></ProtectedRoute>}/>
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
-                <Route path="archive" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+                <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
                 {/* <Route path="settings" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
             </Route>
 

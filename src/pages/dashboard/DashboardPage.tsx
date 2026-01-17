@@ -5,7 +5,7 @@ import { FaBoxArchive } from "react-icons/fa6";
 import { IoMail, IoSettingsSharp } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
 import Logo from "../../components/ui/Logo.tsx";
@@ -23,17 +23,17 @@ interface DashboardPageInterface {
 };
 
 export default function DashboardPage({children} : DashboardPageInterface){
-    const [user, setUser] = useState<User | null>(null);
+    const { user } = useAuth();
     const [userImage, setUserImage] = useState("");
-    const [page, setPage] = useState("users");
     
+    const location = useLocation();
     const navigate = useNavigate();
     const { logout } = useAuth();
+    const currentPage = location.pathname.split("/").pop();
 
     const logout_handle = async () => {
         try {
             await logout();
-            setUser(null);
             navigate("/");
         } catch (err) {
             const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -42,28 +42,20 @@ export default function DashboardPage({children} : DashboardPageInterface){
 
     const page_change_handler = (id: string) => {
         console.log("Page clicked: ", id);
-        setPage(id);
         navigate("/dashboard/" + id);
     }
 
     useEffect(() => {
-        // const loadUser = async () => {
-        //     const currentUser = await UserService.getCurrentUser();
-        //     setUser(currentUser);
+        // const test_user: User = {
+        //     id: "1",
+        //     email: "test@example.com",
+        //     first_name: "Clémentine",
+        //     last_name: "Nébut",
+        //     groups: [],
+        //     is_staff: false,
+        //     is_superuser: false,
         // };
-
-        // loadUser();
-
-        const test_user: User = {
-            id: "1",
-            email: "test@example.com",
-            first_name: "Clémentine",
-            last_name: "Nébut",
-            groups: [],
-            is_staff: false,
-            is_superuser: false,
-        };
-        setUser(test_user);
+        // setUser(test_user);
 
     }, []);
 
@@ -75,17 +67,16 @@ export default function DashboardPage({children} : DashboardPageInterface){
                 <UserWidget user={user}/>
                 <Divider/>
 
-                <NavigationButton label={"Accueil"} active={page == "home"} icon={<FaHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Stages"} active={page == "stage"} icon={<IoMail/>} id="stage" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"TERs"} active={page == "ter"} icon={<FaFile/>} id="ter" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Fichiers"} active={page == "files"} icon={<FaFolder/>} id="files" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Messages"} active={page == "chat"} icon={<FaComments/>} id="chat" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Accueil"} active={currentPage == "home"} icon={<FaHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Stages"} active={currentPage == "stage"} icon={<IoMail/>} id="stage" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"TERs"} active={currentPage == "ter"} icon={<FaFile/>} id="ter" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Fichiers"} active={currentPage == "files"} icon={<FaFolder/>} id="files" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Messages"} active={currentPage == "chat"} icon={<FaComments/>} id="chat" onClick={(id) => page_change_handler(id)}/>
 
                 <Divider/>
 
-                <NavigationButton label={"Utilisateurs"} active={page == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Archives"} active={page == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
-                {/* <NavigationButton icon={<IoSettingsSharp/>} id="settings" onClick={(id) => page_change_handler(id)}/> */}
+                <NavigationButton label={"Utilisateurs"} active={currentPage == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Archives"} active={currentPage == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
 
                 <Divider/>
                 <NavigationButton icon={<MdLogout/>} label="Déconnection" onClick={logout_handle}/>

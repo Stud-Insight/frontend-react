@@ -33,6 +33,7 @@ export default function AccountLoginPage() {
         } catch (err) {
             const message = err instanceof Error ? err.message : "Erreur de connexion";
             setError(message);
+            setIsSubmitting(false);
         }
     };
 

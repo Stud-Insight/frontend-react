@@ -15,6 +15,11 @@
     background-color: var(--blue-col);
 }
 
+.submit-button-style:active {
+    transform: scale(0.97);
+}
+
+
 .submit-button-image {
     height: 90%;
 }

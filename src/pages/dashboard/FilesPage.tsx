@@ -3,6 +3,7 @@ import DashboardPage from "./DashboardPage";
 import FileUpload from "../../components/file/FileUpload";
 import FileList from "../../components/file/FileList";
 import FileService, { Attachment } from "../../services/FileService";
+import InfoBox from "../../components/ui/InfoBox";
 import "./FilesPage.css";
 
 export default function FilesPage() {
@@ -61,29 +62,18 @@ export default function FilesPage() {
 
     return (
         <DashboardPage>
-            <div className="files-page">
-                {error && <div className="files-message error">{error}</div>}
-                {successMessage && <div className="files-message success">{successMessage}</div>}
+            <label>Fichiers</label>
 
-                <div className="files-section">
-                    <h2>Uploader un fichier</h2>
-                    <FileUpload
-                        onUploadSuccess={handleUploadSuccess}
-                        onUploadError={handleUploadError}
-                        maxSize={50}
-                    />
-                </div>
+            {error && <InfoBox label={error} type="error"/>}
+            {successMessage && <div className="files-message success">{successMessage}</div>}
 
-                <div className="files-section">
-                    <h2>Mes fichiers ({files.length})</h2>
-                    <FileList
-                        files={files}
-                        isLoading={isLoading}
-                        onDownload={handleDownload}
-                        onDelete={handleDelete}
-                        emptyMessage="Vous n'avez pas encore de fichiers"
-                    />
-                </div>
+            <div className="files-section">
+                <FileUpload onUploadSuccess={handleUploadSuccess} onUploadError={handleUploadError} maxSize={50}/>
+            </div>
+
+            <div className="files-section">
+                <h2>Mes fichiers ({files.length})</h2>
+                <FileList files={files} isLoading={isLoading} onDownload={handleDownload} onDelete={handleDelete} emptyMessage="Vous n'avez pas encore de fichiers"/>
             </div>
         </DashboardPage>
     );

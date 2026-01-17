@@ -1,11 +1,12 @@
 import React from "react";
 import DashboardPage from "./DashboardPage.tsx";
-import "./HomePage.css"
 
-export default function HomePage(){
+import "./TERPage.css"
+
+export default function TERPage(){
     return (
         <DashboardPage>
-            <label>Accueil</label>
+            <label>TERs</label>
         </DashboardPage>
     )
 }
