@@ -45,32 +45,42 @@ const handleApiError = (error: AxiosError<ApiError>): never => {
     throw new Error("Erreur de connexion au serveur");
 };
 
-// Formater la taille du fichier
-export const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 B";
-    const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
+export default class FileService {
+    public static formatFileSize = (bytes: number): string => {
+        if (bytes === 0){
+            return "0 B";
+        } 
 
-// Obtenir l'icone selon le type de fichier
-export const getFileIcon = (contentType: string): string => {
-    if (contentType.startsWith("image/")) return "[IMG]";
-    if (contentType === "application/pdf") return "[PDF]";
-    if (contentType.includes("word") || contentType.includes("document")) return "[DOC]";
-    if (contentType.includes("excel") || contentType.includes("spreadsheet")) return "[XLS]";
-    if (contentType.includes("powerpoint") || contentType.includes("presentation")) return "[PPT]";
-    if (contentType.startsWith("text/")) return "[TXT]";
-    if (contentType.includes("zip") || contentType.includes("archive")) return "[ZIP]";
-    return "[FILE]";
-};
+        const k = 1024;
+        const sizes = ["B", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    };
 
-export default class Fileservices {
-    public static async uploadFile(
-        file: File,
-        onProgress?: (progress: number) => void
-    ): Promise<UploadResponse> {
+    public static formatFileDate = (dateString: string): string => {
+        const date = new Date(dateString);
+
+        return date.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
+    public static getFileIcon = (contentType: string): string => {
+        if (contentType.startsWith("image/")) return "IMG";
+        if (contentType === "application/pdf") return "PDF";
+        if (contentType.includes("word") || contentType.includes("document")) return "DOC";
+        if (contentType.includes("excel") || contentType.includes("spreadsheet")) return "XLS";
+        if (contentType.includes("powerpoint") || contentType.includes("presentation")) return "PPT";
+        if (contentType.startsWith("text/")) return "TXT";
+        if (contentType.includes("zip") || contentType.includes("archive")) return "ZIP";
+        return "FILE";
+    };
+
+    public static async uploadFile(file: File, onProgress?: (progress: number) => void): Promise<UploadResponse> {
         try {
             const formData = new FormData();
             formData.append("file", file);

@@ -1,10 +1,7 @@
 import axios, { AxiosError } from "axios";
 
-// Configuration de l'API
-// Use relative URL to go through nginx proxy (same-origin for cookies)
-
-//const API_BASE_URL = "/api";
-const API_BASE_URL = "http://localhost:8080/api"
+const API_BASE_URL = "/api";
+// const API_BASE_URL = "http://localhost:8080/api"
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -72,7 +69,7 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
     }
 };
 
-export default class Userservices {
+export default class UserService {
     private static async getCSRFToken(): Promise<string> {
         try {
             const response = await api.get<{ csrf_token: string }>("/auth/csrf");
@@ -128,7 +125,7 @@ export default class Userservices {
         } catch (error) {
             localStorage.removeItem("user");
             localStorage.removeItem("csrf_token");
-            
+
             error_formatting(error as AxiosError<ApiError>);
         }
     }

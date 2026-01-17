@@ -5,6 +5,7 @@ import { FaBoxArchive } from "react-icons/fa6";
 import { IoMail, IoSettingsSharp } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
@@ -72,11 +73,15 @@ export default function DashboardPage({children} : DashboardPageInterface){
                 <NavigationButton label={"TERs"} active={currentPage == "ter"} icon={<FaFile/>} id="ter" onClick={(id) => page_change_handler(id)}/>
                 <NavigationButton label={"Fichiers"} active={currentPage == "files"} icon={<FaFolder/>} id="files" onClick={(id) => page_change_handler(id)}/>
                 <NavigationButton label={"Messages"} active={currentPage == "chat"} icon={<FaComments/>} id="chat" onClick={(id) => page_change_handler(id)}/>
+                <NavigationButton label={"Profile"} active={currentPage == "profile"} icon={<FaUser/>} id="profile" onClick={(id) => page_change_handler(id)}/>
 
-                <Divider/>
-
-                <NavigationButton label={"Utilisateurs"} active={currentPage == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Archives"} active={currentPage == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
+                {user?.is_staff && (
+                    <>
+                        <Divider/>
+                        <NavigationButton label={"Utilisateurs"} active={currentPage == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
+                        <NavigationButton label={"Archives"} active={currentPage == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
+                    </>
+                )}
 
                 <Divider/>
                 <NavigationButton icon={<MdLogout/>} label="Déconnection" onClick={logout_handle}/>

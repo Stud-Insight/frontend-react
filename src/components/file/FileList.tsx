@@ -10,13 +10,7 @@ interface FileListProps {
     emptyMessage?: string;
 }
 
-export default function FileList({
-    files,
-    onDownload,
-    onDelete,
-    isLoading = false,
-    emptyMessage = "Aucun fichier",
-}: FileListProps) {
+export default function FileList({files, onDownload, onDelete, isLoading = false, emptyMessage = "Aucun fichier"}: FileListProps) {
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("fr-FR", {
@@ -46,6 +40,7 @@ export default function FileList({
             {files.map((file) => (
                 <div key={file.id} className="file-item">
                     <div className="file-icon">{getFileIcon(file.content_type)}</div>
+
                     <div className="file-info">
                         <div className="file-name" title={file.original_filename}>
                             {file.original_filename}
@@ -56,22 +51,15 @@ export default function FileList({
                             <span>{formatDate(file.created)}</span>
                         </div>
                     </div>
+
                     <div className="file-actions">
                         {onDownload && (
-                            <button
-                                className="file-action-btn download"
-                                onClick={() => onDownload(file)}
-                                title="Telecharger"
-                            >
+                            <button className="file-action-btn download" onClick={() => onDownload(file)} title="Telecharger">
                                 DL
                             </button>
                         )}
                         {onDelete && (
-                            <button
-                                className="file-action-btn delete"
-                                onClick={() => onDelete(file)}
-                                title="Supprimer"
-                            >
+                            <button className="file-action-btn delete" onClick={() => onDelete(file)} title="Supprimer">
                                 X
                             </button>
                         )}

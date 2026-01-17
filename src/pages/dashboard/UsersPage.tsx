@@ -40,34 +40,32 @@ export default function UsersPage(){
 
     return (
         <DashboardPage>
-            <label>Utilisateurs</label>
+            <label>Utilisateurs ({users.length})</label>
 
-            <div className="users-table-content-style">
-                <table className="users-table-style">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Nom</th>
-                            <th>Email</th>
-                            <th>Date Activation</th>
-                            <th>Dernière Connection</th>
-                            <th>Role</th>
+            <table className="users-table-style">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Date Activation</th>
+                        <th>Dernière Connection</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user, index) => (
+                        <tr key={index}>
+                            <td><input type="checkbox" className="checkbox-users-selection"></input></td>
+                            <td> {user.first_name} {user.last_name}</td>
+                            <td>{user.email}</td>
+                            <td>{"eelele"}</td>
+                            <td>{"eelele"}</td>
+                            <td><PermissionTag perm={"etu"}/></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user, index) => (
-                            <tr key={index}>
-                                <td><input type="checkbox" className="checkbox-users-selection"></input></td>
-                                <td> {user.first_name} {user.last_name}</td>
-                                <td>{user.email}</td>
-                                <td>{"eelele"}</td>
-                                <td>{"eelele"}</td>
-                                <td><PermissionTag perm={"etu"}/></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                    ))}
+                </tbody>
+            </table>
         </DashboardPage>
     )
 }

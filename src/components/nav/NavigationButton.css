@@ -12,6 +12,7 @@
     font-weight: 500;
     font-size: medium;
     cursor: pointer;  
+    transition: transform 0.1s ease;
 }
 
 .navigation-button-style.active {

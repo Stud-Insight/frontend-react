@@ -8,26 +8,55 @@ import "./FilesPage.css";
 
 export default function FilesPage() {
     const [files, setFiles] = useState<Attachment[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const loadFiles = useCallback(async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
-            const data = await FileService.listFiles();
-            setFiles(data);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Erreur lors du chargement");
-        } finally {
-            setIsLoading(false);
-        }
+        // try {
+        //     setIsLoading(true);
+        //     setError(null);
+        //     const data = await FileService.listFiles();
+        //     setFiles(data);
+        // } catch (err) {
+        //     setError(err instanceof Error ? err.message : "Erreur lors du chargement");
+        // } finally {
+        //     setIsLoading(false);
+        // }
     }, []);
 
     useEffect(() => {
         loadFiles();
     }, [loadFiles]);
+
+    const mockFiles: Attachment[] = [
+        {
+            id: "1",
+            original_filename: "document.pdf",
+            content_type: "application/pdf",
+            size: 245678,
+            created: "2025-01-01T10:15:00Z",
+        },
+        {
+            id: "2",
+            original_filename: "image.png",
+            content_type: "image/png",
+            size: 134567,
+            created: "2025-01-05T14:30:00Z",
+        },
+        {
+            id: "3",
+            original_filename: "notes.txt",
+            content_type: "text/plain",
+            size: 4567,
+            created: "2025-01-10T09:00:00Z",
+        },
+    ];
+
+
+    useEffect(() => {
+        setFiles(mockFiles);
+    }, []);
 
     const handleUploadSuccess = (fileId: string, filename: string) => {
         setSuccessMessage(`Fichier "${filename}" uploade avec succes`);
@@ -40,11 +69,11 @@ export default function FilesPage() {
         setTimeout(() => setError(null), 5000);
     };
 
-    const handleDownload = (file: Attachment) => {
+    const download_handle = (file: Attachment) => {
         FileService.downloadFile(file.id, file.original_filename);
     };
 
-    const handleDelete = async (file: Attachment) => {
+    const delete_handle = async (file: Attachment) => {
         if (!confirm(`Supprimer "${file.original_filename}" ?`)) {
             return;
         }
@@ -62,19 +91,37 @@ export default function FilesPage() {
 
     return (
         <DashboardPage>
-            <label>Fichiers</label>
+            <label>Mes fichiers ({files.length})</label>
 
             {error && <InfoBox label={error} type="error"/>}
-            {successMessage && <div className="files-message success">{successMessage}</div>}
+            {successMessage && <InfoBox label={successMessage} type="success"/>}
 
-            <div className="files-section">
-                <FileUpload onUploadSuccess={handleUploadSuccess} onUploadError={handleUploadError} maxSize={50}/>
-            </div>
-
-            <div className="files-section">
-                <h2>Mes fichiers ({files.length})</h2>
-                <FileList files={files} isLoading={isLoading} onDownload={handleDownload} onDelete={handleDelete} emptyMessage="Vous n'avez pas encore de fichiers"/>
-            </div>
+            <FileUpload onUploadSuccess={handleUploadSuccess} onUploadError={handleUploadError} maxSize={50}/>
+            
+            <table className="file-list-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Taille</th>
+                        <th>Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {files.map((file, index) => (
+                        <tr key={index}>
+                            <td>{file.original_filename}</td>
+                            <td>{FileService.getFileIcon(file.content_type)}</td>
+                            <td>{FileService.formatFileSize(file.size)}</td>
+                            <td>{FileService.formatFileDate(file.created)}</td>
+                            <td className="file-list-table-clickable" onClick={() => download_handle(file)}>Télécharger</td>
+                            <td className="file-list-table-clickable" onClick={() => delete_handle(file)}>Supprimer</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </DashboardPage>
     );
 }

@@ -1,0 +1,12 @@
+.bonjour-div-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 30px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: var(--blue-col);
+    color: var(--white-col);
+    box-sizing: border-box;
+}

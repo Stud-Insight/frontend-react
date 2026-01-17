@@ -21,13 +21,16 @@
 }
 
 .permission-tag-style.prof {
-    --permission-color: #bb218a;
+    --permission-color: var(--blue-col);
+    /* --permission-color: #bb218a; */
 }   
 
 .permission-tag-style.admin {
-    --permission-color: #e11656;
+    --permission-color: var(--blue-col);
+    /* --permission-color: #e11656; */
 }
 
 .permission-tag-style.extern {
-    --permission-color: var(--orange-col)
+    --permission-color: var(--blue-col);
+    /* --permission-color: var(--orange-col) */
 }

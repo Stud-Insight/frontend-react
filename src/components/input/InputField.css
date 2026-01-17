@@ -29,5 +29,8 @@
 
 .input-field:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--light_gray-col);
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--blue-col);
+    transition: border 0.3s ease;
 }

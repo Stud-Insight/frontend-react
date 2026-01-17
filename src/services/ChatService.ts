@@ -90,7 +90,7 @@ export const formatMessageTime = (dateString: string): string => {
     return date.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit" });
 };
 
-export default class Chatservices {
+export default class ChatService {
     /**
      * Lister les conversations
      */
