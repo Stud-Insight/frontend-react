@@ -39,8 +39,8 @@ export default function AccountRecoveryPage() {
         <LoginPage>
             <form method="POST" className="content-style-div" onSubmit={recovery_handle}>
                 <InfoBox label="Veuillez saisir votre adresse e-mail pour recevoir un lien de reinitialisation de votre mot de passe." />
-                {error && <InfoBox label={error} type="error" />}
-                {success && <InfoBox label={success} type="success" />}
+                {error && <InfoBox label={error} type="error"/>}
+                {success && <InfoBox label={success} type="success"/>}
                 <InputField
                     label="E-Mail"
                     icon={<IoMail />}

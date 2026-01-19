@@ -60,8 +60,7 @@ api.interceptors.request.use((config) => {
 
 const error_formatting = (error: AxiosError<ApiError>): never => {
     if (error.response) {
-        const message = error.response.data?.detail?.[0]?.msg
-        throw new Error(message);
+        throw new Error(error.message);
     } else if (error.request) {
         throw new Error("Erreur de connexion au serveur");
     } else {
@@ -100,7 +99,7 @@ export default class UserService {
                 email,
                 password,
             });
-
+            
             // Sauvegarder le nouveau CSRF token
             if (response.data.csrf_token) {
                 localStorage.setItem("csrf_token", response.data.csrf_token);
@@ -111,6 +110,7 @@ export default class UserService {
 
             return response.data;
         } catch (error) {
+            console.log(error);
             error_formatting(error as AxiosError<ApiError>);
         }
     }
