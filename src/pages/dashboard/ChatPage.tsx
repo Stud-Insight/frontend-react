@@ -55,7 +55,9 @@ export default function ChatPage() {
     };
 
     const getConversationName = (conv: Conversation): string => {
-        if (conv.name) return conv.name;
+        if (conv.name) {
+			return conv.name;
+		}
         const other = conv.participants.find((p) => p.id !== user?.id);
         return other ? getParticipantName(other) : "Conversation";
     };

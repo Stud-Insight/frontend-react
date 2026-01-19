@@ -117,8 +117,6 @@ export default function FileUpload({
                     <p className="upload-hint">Taille max: {maxSize}MB</p>
                 </div>
             )}
-
-            {error && <div className="upload-error">{error}</div>}
         </div>
     );
 }

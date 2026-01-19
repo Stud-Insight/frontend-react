@@ -12,24 +12,7 @@ export default function FilesPage() {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    const loadFiles = useCallback(async () => {
-        // try {
-        //     setIsLoading(true);
-        //     setError(null);
-        //     const data = await FileService.listFiles();
-        //     setFiles(data);
-        // } catch (err) {
-        //     setError(err instanceof Error ? err.message : "Erreur lors du chargement");
-        // } finally {
-        //     setIsLoading(false);
-        // }
-    }, []);
-
-    useEffect(() => {
-        loadFiles();
-    }, [loadFiles]);
-
-    const mockFiles: Attachment[] = [
+	const mockFiles: Attachment[] = [
         {
             id: "1",
             original_filename: "document.pdf",
@@ -54,6 +37,23 @@ export default function FilesPage() {
     ];
 
 
+    const loadFiles = useCallback(async () => {
+        // try {
+        //     setIsLoading(true);
+        //     setError(null);
+        //     const data = await FileService.listFiles();
+        //     setFiles(data);
+        // } catch (err) {
+        //     setError(err instanceof Error ? err.message : "Erreur lors du chargement");
+        // } finally {
+        //     setIsLoading(false);
+        // }
+    }, []);
+
+    // useEffect(() => {
+    //     loadFiles();
+    // }, [loadFiles]);
+
     useEffect(() => {
         setFiles(mockFiles);
     }, []);
@@ -66,7 +66,6 @@ export default function FilesPage() {
 
     const handleUploadError = (errorMsg: string) => {
         setError(errorMsg);
-        setTimeout(() => setError(null), 5000);
     };
 
     const download_handle = (file: Attachment) => {
@@ -97,31 +96,32 @@ export default function FilesPage() {
             {successMessage && <InfoBox label={successMessage} type="success"/>}
 
             <FileUpload onUploadSuccess={handleUploadSuccess} onUploadError={handleUploadError} maxSize={50}/>
-            
-            <table className="file-list-table">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Type</th>
-                        <th>Taille</th>
-                        <th>Date</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {files.map((file, index) => (
-                        <tr key={index}>
-                            <td>{file.original_filename}</td>
-                            <td>{FileService.getFileIcon(file.content_type)}</td>
-                            <td>{FileService.formatFileSize(file.size)}</td>
-                            <td>{FileService.formatFileDate(file.created)}</td>
-                            <td className="file-list-table-clickable" onClick={() => download_handle(file)}>Télécharger</td>
-                            <td className="file-list-table-clickable" onClick={() => delete_handle(file)}>Supprimer</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            {files.length > 0 && 
+				<table className="file-list-table">
+					<thead>
+						<tr>
+							<th>Nom</th>
+							<th>Type</th>
+							<th>Taille</th>
+							<th>Date</th>
+							<th></th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{files.map((file, index) => (
+							<tr key={index}>
+								<td>{file.original_filename}</td>
+								<td>{FileService.getFileIcon(file.content_type)}</td>
+								<td>{FileService.formatFileSize(file.size)}</td>
+								<td>{FileService.formatFileDate(file.created)}</td>
+								<td className="file-list-table-clickable" onClick={() => download_handle(file)}>Télécharger</td>
+								<td className="file-list-table-clickable" onClick={() => delete_handle(file)}>Supprimer</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			}
         </DashboardPage>
     );
 }

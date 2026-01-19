@@ -1,6 +1,7 @@
 import React from "react";
 import { Conversation, getParticipantName, formatMessageTime } from "../../services/ChatService";
 import "./ChatSidebar.css";
+import { useAuth } from "../../context/AuthContext";
 
 interface ChatSidebarProps {
     conversations: Conversation[];
@@ -11,16 +12,16 @@ interface ChatSidebarProps {
 }
 
 export default function ChatSidebar({conversations, selectedId, onSelect, onNewChat, isLoading = false}: ChatSidebarProps){
-    // const { user } = useAuth();
+    const { user } = useAuth();
 
     const getConversationName = (conv: Conversation): string => {
         if (conv.name){
             return conv.name;
         }
 
-        // // For 1-on-1 conversations, show the other participant's name
-        // const other = conv.participants.find((p) => p.id !== user?.id);
-        // return other ? getParticipantName(other) : "Conversation";
+        // For 1-on-1 conversations, show the other participant's name
+        const other = conv.participants.find((p) => p.id !== user?.id);
+        return other ? getParticipantName(other) : "Conversation";
     };
 
     const getInitials = (conv: Conversation): string => {

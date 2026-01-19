@@ -12,6 +12,7 @@
 
 .users-table-style th {
     padding: 20px;
+	background-color: var(--pastel-col);
 }
 
 .users-table-style td {
@@ -19,6 +20,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: var(--light_gray-col);
+	background-color: var(--pastel-col);
     border-right: 0px;
     border-left: 0px;
     border-bottom: 0px;

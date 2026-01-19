@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ChatService, { Message, ConversationDetail, getParticipantName } from "../../services/ChatService";
+import { useAuth } from "../../context/AuthContext";
 import "./ChatWindow.css";
 
 interface ChatWindowProps {
@@ -16,6 +17,7 @@ export default function ChatWindow({ conversationId, conversationName, onBack }:
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const lastMessageIdRef = useRef<string | null>(null);
     const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+	const { user } = useAuth();
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -140,7 +142,7 @@ export default function ChatWindow({ conversationId, conversationName, onBack }:
                                     <span>{formatDate(msg.created)}</span>
                                 </div>
                             )}
-                            {/* <div className={`chat-message ${msg.sender.id === user?.id ? "own" : "other"}`}>
+                            <div className={`chat-message ${msg.sender.id === user?.id ? "own" : "other"}`}>
                                 {msg.sender.id !== user?.id && (
                                     <div className="chat-message-sender">
                                         {getParticipantName(msg.sender)}
@@ -150,7 +152,7 @@ export default function ChatWindow({ conversationId, conversationName, onBack }:
                                     <p>{msg.content}</p>
                                     <span className="chat-message-time">{formatTime(msg.created)}</span>
                                 </div>
-                            </div> */}
+                            </div>
                         </React.Fragment>
                     ))
                 )}
