@@ -1,6 +1,6 @@
 .chat-page {
     display: flex;
-    height: calc(100vh - 180px);
+	height: 100%;
     margin: -10px;
     background-color: #fff;
     border-radius: 8px;

@@ -3,7 +3,8 @@ import DashboardPage from "./DashboardPage.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
 import InputField from "../../components/input/InputField.tsx"
 import SubmitButton from "../../components/input/SubmitButton.tsx"
-import default_profile_image from "../../assets/default_profile.svg";
+import UserAvatar from "../../components/ui/UserAvatar.tsx";
+
 
 import "./ProfilePage.css"
 
@@ -22,7 +23,9 @@ export default function ProfilePage(){
 			<div className="main-profile-container">
 				<div className="sub-profile-container">
 					<div className="profile-image-container">
-						<img className="actual-profile-image-container" src={default_profile_image}/>
+						<div className="profile-avatar-container">
+							<UserAvatar user={user}/>
+						</div>
 						<label>{user?.first_name} {user?.last_name}</label>
 					</div>
 

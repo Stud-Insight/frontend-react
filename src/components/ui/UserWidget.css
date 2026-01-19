@@ -7,10 +7,9 @@
     box-sizing: border-box;
 }
 
-.user-profile-image {
-    border-radius: 50%;
-    object-fit: cover;
+.user-avatar-container {
     height: 50px;
+	width: 50px;
 }
 
 .user-profile-labals-layout {

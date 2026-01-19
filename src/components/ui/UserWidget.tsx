@@ -1,7 +1,7 @@
 import React from "react";
 import "./UserWidget.css"
 import { User } from "../../services/UserService.ts"
-import default_profile_image from "../../assets/default_profile.svg";
+import UserAvatar from "../ui/UserAvatar";
 import PermissionTag from "./PermissionTag.tsx";
 
 interface UserWidgetInterface {
@@ -24,7 +24,10 @@ export default function UserWidget({user, image}: UserWidgetInterface){
 
     return (
         <div className="user-profile-container">
-            <img className="user-profile-image" src={image ? default_profile_image : default_profile_image}/>
+			<div className="user-avatar-container">
+				<UserAvatar user={user}/>
+			</div>
+            
             <div className="user-profile-labals-layout">
                 <div className="user-profile-top-labels">
                     <label className="user-profile-labels" style={{fontWeight: "800"}}>{user?.first_name} {user?.last_name}</label>
