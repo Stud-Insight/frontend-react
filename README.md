@@ -1,15 +1,11 @@
 # Stud Insight
 
-## Building
-
-```bash
-npm run build
+## Pour dev:
+```
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-## Developing
-
-```bash
-npm i
-
-npm run dev
+## Pour prod:
+```
+docker compose -f docker-compose.prod.yml up --build
 ```

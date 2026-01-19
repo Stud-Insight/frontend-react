@@ -1,9 +1,7 @@
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL = "/api";
-
 const api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: process.env.API_URL,
     headers: { "Content-Type": "application/json" },
     withCredentials: true,
     timeout: 30000,

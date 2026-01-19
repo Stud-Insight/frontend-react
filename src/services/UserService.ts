@@ -1,10 +1,7 @@
 import axios, { AxiosError } from "axios";
 
-const API_BASE_URL = "/api";
-// const API_BASE_URL = "http://localhost:8080/api"
-
 const api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: process.env.API_URL,
     headers: { "Content-Type": "application/json" },
     withCredentials: true, // Pour envoyer les cookies de session
     timeout: 10000,
@@ -61,10 +58,8 @@ api.interceptors.request.use((config) => {
 const error_formatting = (error: AxiosError<ApiError>): never => {
     if (error.response) {
         throw new Error(error.message);
-    } else if (error.request) {
-        throw new Error("Erreur de connexion au serveur");
     } else {
-        throw new Error("Erreur inattendue");
+        throw new Error("Erreur de connexion au serveur");
     }
 };
 
