@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { FaHome, FaFile, FaBell, FaFolder, FaComments } from "react-icons/fa";
 import { FaBoxArchive } from "react-icons/fa6";
 import { IoMail, IoSettingsSharp } from "react-icons/io5";
@@ -20,7 +20,7 @@ import { useAuth } from "../../context/AuthContext.tsx";
 import "./DashboardPage.css"
 
 interface DashboardPageInterface {
-    children?: React.ReactNode;
+    children?: ReactNode;
 };
 
 export default function DashboardPage({children} : DashboardPageInterface){

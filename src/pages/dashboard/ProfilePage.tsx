@@ -40,8 +40,7 @@ export default function ProfilePage(){
 				</div>
 
 				<div className="profile-container">
-					<InputField label={"About Me"} value={aboutMe}/>
-					<InputDropdown label={"Rôle"} options={["User", "Extern", "Prof", "Admin"]}/>
+					<InputField label="About Me" value={aboutMe}/>
 				</div>
 			</div>
         </DashboardPage>

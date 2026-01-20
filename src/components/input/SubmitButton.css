@@ -9,7 +9,7 @@
     border-radius: 5px;
     border: none;
     font-family: var(--main-font);
-    font-weight: var(--big-bold);
+    font-weight: var(--main-bold);
     font-size: 15px;
     color: var(--white-col);
     background-color: var(--blue-col);
@@ -19,6 +19,10 @@
     transform: scale(0.97);
 }
 
+.submit-button-style:hover {
+	background-color: color-mix(in srgb, var(--blue-col) 85%, transparent);
+	transition: background-color, 0.3s
+}
 
 .submit-button-image {
     height: 90%;

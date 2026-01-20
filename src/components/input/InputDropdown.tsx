@@ -38,6 +38,8 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 			}
 		}
 
+		selection_handler(selected);
+
 		document.addEventListener("mousedown", clickout_handler);
 
 		return () => {

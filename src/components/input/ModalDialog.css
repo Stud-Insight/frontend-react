@@ -1,0 +1,45 @@
+.modal-dialog-layout {
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-dialog-content {
+	position: relative;
+	box-sizing: border-box;
+	width: 350px;
+	height: 500px;
+	background-color: var(--white-col);
+	border-radius: 10px;
+	padding: 20px;
+}
+
+.modal-dialog-content2 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+	height: 100%;
+	width: 100%;
+	gap: 10px;
+}
+
+.modal-title-close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: var(--light-gray-col);
+}
+
+.modal-title-close:hover {
+	color: var(--blue-col);
+	transition: color 0.3s;
+}

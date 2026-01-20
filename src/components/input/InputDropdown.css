@@ -2,6 +2,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+	width: 100%;
 }
 
 .dropdown-label {
@@ -16,6 +17,7 @@
 }
 
 .dropdown-layout-style {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
@@ -41,22 +43,26 @@
 }
 
 .dropdown-content-options {
+	position: absolute;
+	top: 120%;
+	width: 100%;
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
 	border-radius: 5px;
 	background-color: var(--light_gray-col);
 	padding: 4px;
+	z-index: 100;
 }
 
 .dropdown-option-style:hover {
 	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
-	transition: background-color 0.3s ease;
+	transition: background-color 0.3s;
 }
 
 .dropdown-option-style.selected {
 	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
-	transition: background-color 0.3s ease;
+	transition: background-color 0.3s;
 }
 
 .dropdown-option-style {
