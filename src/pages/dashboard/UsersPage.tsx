@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage.tsx";
 import UserService, {User} from "../../services/UserService.ts";
 import PermissionTag from "../../components/ui/PermissionTag.tsx";
@@ -6,37 +6,21 @@ import "./UsersPage.css"
 import "./DashboardPage.css"
 
 export default function UsersPage(){
+	const [users, setUsers] = useState<User[]>([]);
 
-    //TODO: Faire populer ce truc dynamiquement avec api
-    const users: User[] = [
-        {
-            id: "1",
-            email: "test@example.com",
-            first_name: "Clémentine",
-            last_name: "Nébut",
-            groups: [],
-            is_staff: false,
-            is_superuser: false,
-        },
-        {
-            id: "1",
-            email: "test@example.com",
-            first_name: "Clémentine",
-            last_name: "Nébut",
-            groups: [],
-            is_staff: false,
-            is_superuser: false,
-        },
-        {
-            id: "1",
-            email: "test@example.com",
-            first_name: "Clémentine",
-            last_name: "Nébut",
-            groups: [],
-            is_staff: false,
-            is_superuser: false,
-        }
-    ];
+	useEffect(() => {
+		const fetchUsers = async () => {
+			try {
+				const data = await UserService.getAllUsers();
+				setUsers(data);
+			} catch (err) {
+				console.error(err);
+			}
+		};
+
+		fetchUsers();
+	}, []);
+
 
     return (
         <DashboardPage>

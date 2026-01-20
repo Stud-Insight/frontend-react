@@ -75,6 +75,46 @@ export default class UserService {
         }
     }
 
+	public static async getAllUsers(): Promise<User[]> {
+		try {
+
+			//TODO: Faire populer ce truc dynamiquement avec api
+			const users: User[] = [
+				{
+					id: "1",
+					email: "test@example.com",
+					first_name: "Vincent",
+					last_name: "Boudet",
+					groups: [],
+					is_staff: false,
+					is_superuser: false,
+				},
+				{
+					id: "2",
+					email: "test@example.com",
+					first_name: "Clémentine",
+					last_name: "Nébut",
+					groups: [],
+					is_staff: true,
+					is_superuser: false,
+				},
+				{
+					id: "3",
+					email: "test@example.com",
+					first_name: "Giroudeau",
+					last_name: "Rodolphe",
+					groups: [],
+					is_staff: true,
+					is_superuser: true,
+				}
+			];
+
+			return users;
+		} catch (error){
+			error_formatting(error as AxiosError<ApiError>);
+		}	
+	}
+
     private static async checkActivationToken(token: string): Promise<{ valid: boolean; email: string }> {
         try {
             const response = await api.post<{ valid: boolean; email: string }>(

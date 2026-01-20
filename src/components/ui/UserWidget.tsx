@@ -28,7 +28,7 @@ export default function UserWidget({user, image}: UserWidgetInterface){
 				<UserAvatar user={user}/>
 			</div>
             
-            <div className="user-profile-labals-layout">
+            <div className="user-profile-labels-layout">
                 <div className="user-profile-top-labels">
                     <label className="user-profile-labels" style={{fontWeight: "800"}}>{user?.first_name} {user?.last_name}</label>
                     {<PermissionTag perm={perm}/>}

@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext.tsx";
 import InputField from "../../components/input/InputField.tsx"
 import SubmitButton from "../../components/input/SubmitButton.tsx"
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
-
+import InputDropdown from "../../components/input/InputDropdown.tsx";
 
 import "./ProfilePage.css"
 
@@ -41,6 +41,7 @@ export default function ProfilePage(){
 
 				<div className="profile-container">
 					<InputField label={"About Me"} value={aboutMe}/>
+					<InputDropdown label={"Rôle"} options={["User", "Extern", "Prof", "Admin"]}/>
 				</div>
 			</div>
         </DashboardPage>

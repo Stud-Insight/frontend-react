@@ -12,51 +12,22 @@ export default function FilesPage() {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-	const mockFiles: Attachment[] = [
-        {
-            id: "1",
-            original_filename: "document.pdf",
-            content_type: "application/pdf",
-            size: 245678,
-            created: "2025-01-01T10:15:00Z",
-        },
-        {
-            id: "2",
-            original_filename: "image.png",
-            content_type: "image/png",
-            size: 134567,
-            created: "2025-01-05T14:30:00Z",
-        },
-        {
-            id: "3",
-            original_filename: "notes.txt",
-            content_type: "text/plain",
-            size: 4567,
-            created: "2025-01-10T09:00:00Z",
-        },
-    ];
-
-
     const loadFiles = useCallback(async () => {
-        // try {
-        //     setIsLoading(true);
-        //     setError(null);
-        //     const data = await FileService.listFiles();
-        //     setFiles(data);
-        // } catch (err) {
-        //     setError(err instanceof Error ? err.message : "Erreur lors du chargement");
-        // } finally {
-        //     setIsLoading(false);
-        // }
+        try {
+            setIsLoading(true);
+            setError(null);
+            const data = await FileService.listFiles();
+            setFiles(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Erreur lors du chargement");
+        } finally {
+            setIsLoading(false);
+        }
     }, []);
-
-    // useEffect(() => {
-    //     loadFiles();
-    // }, [loadFiles]);
 
     useEffect(() => {
-        setFiles(mockFiles);
-    }, []);
+        loadFiles();
+    }, [loadFiles]);
 
     const handleUploadSuccess = (fileId: string, filename: string) => {
         setSuccessMessage(`Fichier "${filename}" uploade avec succes`);

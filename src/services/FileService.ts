@@ -103,8 +103,34 @@ export default class FileService {
 
     public static async listFiles(): Promise<Attachment[]> {
         try {
-            const response = await api.get<Attachment[]>("/attachments/");
-            return response.data;
+            // const response = await api.get<Attachment[]>("/attachments/");
+            // return response.data;
+
+			const mockFiles: Attachment[] = [
+				{
+					id: "1",
+					original_filename: "document.pdf",
+					content_type: "application/pdf",
+					size: 245678,
+					created: "2025-01-01T10:15:00Z",
+				},
+				{
+					id: "2",
+					original_filename: "image.png",
+					content_type: "image/png",
+					size: 134567,
+					created: "2025-01-05T14:30:00Z",
+				},
+				{
+					id: "3",
+					original_filename: "notes.txt",
+					content_type: "text/plain",
+					size: 2938,
+					created: "2025-01-10T09:00:00Z",
+				},
+			];
+
+			return mockFiles;
         } catch (error) {
             handleApiError(error as AxiosError<ApiError>);
         }
