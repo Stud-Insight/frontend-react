@@ -82,7 +82,7 @@ export default class UserService {
 			const users: User[] = [
 				{
 					id: "1",
-					email: "test@example.com",
+					email: "test@exemple.com",
 					first_name: "Vincent",
 					last_name: "Boudet",
 					groups: [],
@@ -91,7 +91,7 @@ export default class UserService {
 				},
 				{
 					id: "2",
-					email: "test@example.com",
+					email: "test@exemple.com",
 					first_name: "Clémentine",
 					last_name: "Nébut",
 					groups: [],
@@ -100,7 +100,7 @@ export default class UserService {
 				},
 				{
 					id: "3",
-					email: "test@example.com",
+					email: "test@exemple.com",
 					first_name: "Giroudeau",
 					last_name: "Rodolphe",
 					groups: [],

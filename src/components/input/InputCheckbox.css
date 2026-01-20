@@ -1,0 +1,28 @@
+.checkbox-style {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: none;
+	width: 15px;
+	height: 15px;
+	border-style: solid;
+    border-width: 2px;
+    border-color: var(--light_gray-col);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkbox-style.checked {
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+	transition: background-color 0.3s;
+}
+
+.checkbox-style-uncheck {
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.checkbox-style-check {
+	opacity: 1;
+	transition: opacity 0.2s;
+}

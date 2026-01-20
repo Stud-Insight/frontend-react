@@ -6,6 +6,7 @@ import ModalDialog from "../../components/input/ModalDialog.tsx";
 import InputField from "../../components/input/InputField.tsx";
 import InputDropdown from "../../components/input/InputDropdown.tsx";
 import SubmitButton from "../../components/input/SubmitButton.tsx";
+import InputCheckbox from "../../components/input/InputCheckbox.tsx";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
@@ -13,6 +14,7 @@ import "./DashboardPage.css"
 export default function UsersPage(){
 	const [users, setUsers] = useState<User[]>([]);
 	const [showModal, setShowModal] = useState(false);
+	const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set(['1', '2', '3']));
 
 	const [role, setRole] = useState("");
 	const [prenom, setPrenom] = useState("");
@@ -55,6 +57,14 @@ export default function UsersPage(){
 		setShowModal(false);
 	}
 
+	const user_selection_handler = (user_id: string) => {
+		if (selectedUsers.has(user_id)){
+			selectedUsers.delete(user_id);
+		} else {
+			selectedUsers.add(user_id);
+		}
+	}
+
     return (
         <DashboardPage>
             <label>Utilisateurs ({users.length})</label>
@@ -74,7 +84,7 @@ export default function UsersPage(){
                 <tbody>
                     {users.map((user, index) => (
                         <tr key={index}>
-                            <td><input type="checkbox" className="checkbox-users-selection"></input></td>
+                            <td><InputCheckbox value={selectedUsers.has(user.id)} onChange={() => user_selection_handler(user.id)}/></td>
                             <td>{user.first_name}</td>
 							<td>{user.last_name}</td>
                             <td>{user.email}</td>
