@@ -23,7 +23,7 @@
     gap: 6px;
     color: var(--gray-col);
     font-family: var(--main-font);
-    font-weight: var(--main-bold);
+    font-weight: var(--big-bold);
     font-size: medium;
 }
 

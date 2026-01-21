@@ -18,7 +18,7 @@ export default function UserAvatar({user}: User | null){
 
 	return (
 		<div>
-			
+			{/* TODO: a montrer le vrai avatar */}
 		</div>
 	);
 }

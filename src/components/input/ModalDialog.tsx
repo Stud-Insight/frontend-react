@@ -1,7 +1,7 @@
 import React, { useState, ReactNode }from "react";
 import { RxCross2 } from "react-icons/rx";
 
-import "./ModalDialog.css"
+import "./ModalDialog.css";
 
 interface ModalInterface {
 	label?: string;

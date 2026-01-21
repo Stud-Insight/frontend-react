@@ -9,7 +9,7 @@
     border-radius: 5px;
     border: none;
     font-family: var(--main-font);
-    font-weight: var(--main-bold);
+    font-weight: var(--big-bold);
     font-size: 15px;
     color: var(--white-col);
     background-color: var(--blue-col);

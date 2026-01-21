@@ -14,8 +14,7 @@
 .modal-dialog-content {
 	position: relative;
 	box-sizing: border-box;
-	width: 350px;
-	height: 500px;
+	width: 400px;
 	background-color: var(--white-col);
 	border-radius: 10px;
 	padding: 20px;
@@ -25,9 +24,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: space-evenly;
-	height: 100%;
-	width: 100%;
 	gap: 10px;
 }
 

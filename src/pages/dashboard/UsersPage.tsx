@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { RxCross2 } from "react-icons/rx";
 import DashboardPage from "./DashboardPage.tsx";
 import UserService, {User} from "../../services/UserService.ts";
 import PermissionTag from "../../components/ui/PermissionTag.tsx";
@@ -7,6 +8,8 @@ import InputField from "../../components/input/InputField.tsx";
 import InputDropdown from "../../components/input/InputDropdown.tsx";
 import SubmitButton from "../../components/input/SubmitButton.tsx";
 import InputCheckbox from "../../components/input/InputCheckbox.tsx";
+import InfoBox from "../../components/ui/InfoBox.tsx";
+import ConfirmationDialog from "../../components/input/ConfirmationDialog.tsx";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
@@ -14,8 +17,10 @@ import "./DashboardPage.css"
 export default function UsersPage(){
 	const [users, setUsers] = useState<User[]>([]);
 	const [showModal, setShowModal] = useState(false);
-	const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set(['1', '2', '3']));
-
+	const [checkAll, setCheckAll] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
+	const [userDelete, setUserDelete] = useState<User | null>(null);
 	const [role, setRole] = useState("");
 	const [prenom, setPrenom] = useState("");
 	const [nom, setNom] = useState("");
@@ -42,55 +47,98 @@ export default function UsersPage(){
 	}
 
 	const add_user_hanlder = () => {
-		console.log("Ajout du user: ");
-		console.log(role);
-		console.log(prenom);
-		console.log(nom);
-		console.log(email);
-		console.log(mdp);
+		try {
 
-		// setRole("");
-		// setPrenom("");
-		// setNom("");
-		// setEmail("");
-		// setMdp("");
-		setShowModal(false);
-	}
+			//TODO: Faire appelle API 
+			console.log("Ajout du user: ");
+			console.log(role);
+			console.log(prenom);
+			console.log(nom);
+			console.log(email);
+			console.log(mdp);
 
-	const user_selection_handler = (user_id: string) => {
-		if (selectedUsers.has(user_id)){
-			selectedUsers.delete(user_id);
-		} else {
-			selectedUsers.add(user_id);
+			setRole("");
+			setPrenom("");
+			setNom("");
+			setEmail("");
+			setMdp("");
+			setShowModal(false);
+			
+			setError("Erreur");
+		} catch (err){
+			setError(err instanceof Error ? err.message : "Erreur");
 		}
 	}
 
+	const user_selection_handler = (user_id: string) => {
+		setSelectedUsers(prev => {
+			const next = new Set(prev);
+
+			if (next.has(user_id)) {
+				next.delete(user_id);
+			} else {
+				next.add(user_id);
+			}
+
+			return next;
+		});
+
+		setCheckAll(false);
+	}
+
+	const user_checkall_handler = () => {
+ 		if (checkAll) {
+			setSelectedUsers(new Set());
+		} else {
+			setSelectedUsers(new Set(users.map(user => user.id)));
+		}
+
+    	setCheckAll(!checkAll);
+	}
+
+	const open_delete_handler = (user_id: User) => {
+		setUserDelete(user_id);
+	}
+
+	const delete_user_handler = () => {
+		try {
+			// TODO: call API pour supprimer utilisateur
+			console.log("Supprime utilisateur: ");
+			console.log(userDelete);
+
+			setUserDelete(null);
+			setError("Erreur");
+		} catch (err){
+			setError(err instanceof Error ? err.message : "Erreur");
+		}
+	}
     return (
         <DashboardPage>
             <label>Utilisateurs ({users.length})</label>
 
+			{error && <InfoBox label={error} type="error"/>}
             <table className="users-table-style">
                 <thead>
                     <tr>
-                        <th></th>
-						<th>Prenom</th>
-                        <th>Nom</th>
+                        <th><InputCheckbox value={checkAll} onChange={user_checkall_handler}/></th>
+						<th>Nom</th>
                         <th>Email</th>
                         <th>Date Activation</th>
                         <th>Dernière Connection</th>
                         <th>Role</th>
+						<th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {users.map((user, index) => (
                         <tr key={index}>
                             <td><InputCheckbox value={selectedUsers.has(user.id)} onChange={() => user_selection_handler(user.id)}/></td>
-                            <td>{user.first_name}</td>
-							<td>{user.last_name}</td>
+                            <td>{user.first_name} {user.last_name}</td>
                             <td>{user.email}</td>
                             <td>{"eelele"}</td>
                             <td>{"eelele"}</td>
                             <td><PermissionTag perm={"etu"}/></td>
+							<td><RxCross2 size={20} onClick={() => open_delete_handler(user)}/></td>
                         </tr>
                     ))}
                 </tbody>
@@ -98,6 +146,15 @@ export default function UsersPage(){
 
 			<SubmitButton label="Créer un utilisateur" onChange={open_modal_handler}/>
 
+			{userDelete &&
+				<ConfirmationDialog 
+				label="Supprimer cet utilisateur ?"
+				info={`L'utilisateur ${userDelete.first_name} ${userDelete.last_name} sera surpprimé de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
+				onCancel={() => setUserDelete(null)}
+				onConfirm={delete_user_handler}
+				/>
+			}
+			
 			{showModal && 
 				<ModalDialog label="Utilisateur" onClose={open_modal_handler}>
 					<InputDropdown label={"Rôle"} options={role_list} onChange={setRole}/>
