@@ -1,0 +1,9 @@
+.icon-button-close {
+	cursor: pointer;
+	color: var(--light-gray-col);
+}
+
+.icon-button-close:hover {
+	color: var(--blue-col);
+	transition: color 0.3s;
+}

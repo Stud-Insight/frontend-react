@@ -10,6 +10,8 @@ import SubmitButton from "../../components/input/SubmitButton.tsx";
 import InputCheckbox from "../../components/input/InputCheckbox.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import ConfirmationDialog from "../../components/input/ConfirmationDialog.tsx";
+import IconButton from "../../components/input/IconButton.tsx";
+
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
@@ -124,7 +126,7 @@ export default function UsersPage(){
                             <td>{"test"}</td>
                             <td>{"test"}</td>
                             <td><PermissionTag perm={`${user.is_superuser ? "admin" : "etu"}`}/></td>
-							<td><RxCross2 size={20} onClick={() => open_delete_handler(user)}/></td>
+							<td><IconButton icon={<RxCross2 size={20}/>} onClick={() => open_delete_handler(user)}/></td>
                         </tr>
                     ))}
                 </tbody>

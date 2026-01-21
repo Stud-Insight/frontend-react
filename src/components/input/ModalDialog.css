@@ -27,15 +27,8 @@
 	gap: 10px;
 }
 
-.modal-title-close {
+.modal-exit-button {
 	position: absolute;
 	top: 10px;
 	right: 10px;
-	cursor: pointer;
-	color: var(--light-gray-col);
-}
-
-.modal-title-close:hover {
-	color: var(--blue-col);
-	transition: color 0.3s;
 }

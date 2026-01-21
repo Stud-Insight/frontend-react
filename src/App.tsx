@@ -13,6 +13,7 @@ import StagesPage from "./pages/dashboard/StagesPage";
 import TERPage from "./pages/dashboard/TERPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
+import ProjetPage from "./pages/dashboard/ProjetPage";
 
 import "./index.css";
 
@@ -72,6 +73,7 @@ function AppRoutes() {
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
                 <Route path="profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
+				<Route path="projets" element={<ProtectedRoute><ProjetPage/></ProtectedRoute>}/>
                 {/* <Route path="settings" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
             </Route>
 
