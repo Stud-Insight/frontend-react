@@ -33,7 +33,7 @@ export default function UsersPage(){
 				const data = await UserService.getAllUsers();
 				setUsers(data);
 			} catch (err) {
-				console.error(err);
+				setError(err instanceof Error ? err.message : "Erreur");
 			}
 		};
 
@@ -46,25 +46,15 @@ export default function UsersPage(){
 		setShowModal(!showModal);
 	}
 
-	const add_user_hanlder = () => {
+	const add_user_hanlder = async () => {
 		try {
-
-			//TODO: Faire appelle API 
-			console.log("Ajout du user: ");
-			console.log(role);
-			console.log(prenom);
-			console.log(nom);
-			console.log(email);
-			console.log(mdp);
-
+			await UserService.createUser(role, nom, prenom, email, mdp);
 			setRole("");
 			setPrenom("");
 			setNom("");
 			setEmail("");
 			setMdp("");
 			setShowModal(false);
-			
-			setError("Erreur");
 		} catch (err){
 			setError(err instanceof Error ? err.message : "Erreur");
 		}
@@ -100,14 +90,10 @@ export default function UsersPage(){
 		setUserDelete(user_id);
 	}
 
-	const delete_user_handler = () => {
+	const delete_user_handler = async () => {
 		try {
-			// TODO: call API pour supprimer utilisateur
-			console.log("Supprime utilisateur: ");
-			console.log(userDelete);
-
+			UserService.deleteUser(userDelete?.id);
 			setUserDelete(null);
-			setError("Erreur");
 		} catch (err){
 			setError(err instanceof Error ? err.message : "Erreur");
 		}
@@ -122,10 +108,10 @@ export default function UsersPage(){
                     <tr>
                         <th><InputCheckbox value={checkAll} onChange={user_checkall_handler}/></th>
 						<th>Nom</th>
-                        <th>Email</th>
+                        <th>E-Mail</th>
                         <th>Date Activation</th>
-                        <th>Dernière Connection</th>
-                        <th>Role</th>
+                        <th>Dernière Connexion</th>
+                        <th>Rôle</th>
 						<th></th>
                     </tr>
                 </thead>
@@ -135,9 +121,9 @@ export default function UsersPage(){
                             <td><InputCheckbox value={selectedUsers.has(user.id)} onChange={() => user_selection_handler(user.id)}/></td>
                             <td>{user.first_name} {user.last_name}</td>
                             <td>{user.email}</td>
-                            <td>{"eelele"}</td>
-                            <td>{"eelele"}</td>
-                            <td><PermissionTag perm={"etu"}/></td>
+                            <td>{"test"}</td>
+                            <td>{"test"}</td>
+                            <td><PermissionTag perm={`${user.is_superuser ? "admin" : "etu"}`}/></td>
 							<td><RxCross2 size={20} onClick={() => open_delete_handler(user)}/></td>
                         </tr>
                     ))}
@@ -149,7 +135,7 @@ export default function UsersPage(){
 			{userDelete &&
 				<ConfirmationDialog 
 				label="Supprimer cet utilisateur ?"
-				info={`L'utilisateur ${userDelete.first_name} ${userDelete.last_name} sera surpprimé de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
+				info={`L'utilisateur "${userDelete.first_name} ${userDelete.last_name}" sera surpprimé de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
 				onCancel={() => setUserDelete(null)}
 				onConfirm={delete_user_handler}
 				/>
