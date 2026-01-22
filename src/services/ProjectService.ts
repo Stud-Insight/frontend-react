@@ -19,11 +19,11 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 export interface Project {
 	id: string;
 	ter_id?: string;
-	author?: User;
+	author?: User[];
 	externes?: User[];  
 	title: string;
 	description: string;
-	tache?: string[];
+	tasks?: string[];
 	language?: string[];
 	min_person?: number;
 	max_person?: number;
@@ -36,15 +36,17 @@ export default class ProjectService {
 				{
 					id: "1",
 					ter_id: "TER-2025",
-					author: {
-						id: "1",
-						first_name: "Sébastien",
-						last_name: "Da Silva",
-						email: "alice.dupont@univ.fr",
-						groups: [],
-						is_staff: true,
-						is_superuser: true,
-					},
+					author: [
+						{
+							id: "1",
+							first_name: "Sébastien",
+							last_name: "Da Silva",
+							email: "sebastien.dasilva@lirmm.fr",
+							groups: [],
+							is_staff: true,
+							is_superuser: true,
+						}
+					],
 					title: "Développement d’une application pour l’évaluation des étudiants lors des expériences professionnelles.",
 					description: `Dans le cadre de sa formation, un étudiant peut être amené à effectuer de nombreux
 						stages d’immersion dans le monde professionnel. Ces expériences doivent faire l’objet

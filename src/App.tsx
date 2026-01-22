@@ -13,7 +13,8 @@ import StagesPage from "./pages/dashboard/StagesPage";
 import TERPage from "./pages/dashboard/TERPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
-import ProjetPage from "./pages/dashboard/ProjetPage";
+import ProjectPage from "./pages/dashboard/ProjectPage";
+import GestionTERPage from "./pages/dashboard/GestionTERPage";
 
 import "./index.css";
 
@@ -73,8 +74,8 @@ function AppRoutes() {
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
                 <Route path="profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
-				<Route path="projets" element={<ProtectedRoute><ProjetPage/></ProtectedRoute>}/>
-                {/* <Route path="settings" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
+				<Route path="projets" element={<ProtectedRoute><ProjectPage/></ProtectedRoute>}/>
+				<Route path="admin_ter" element={<ProtectedRoute><GestionTERPage/></ProtectedRoute>}/>
             </Route>
 
             <Route path="/" element={<RootRedirect/>} />

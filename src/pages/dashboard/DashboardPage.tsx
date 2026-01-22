@@ -1,21 +1,20 @@
 import React from "react";
-import { useState, useEffect, ReactNode } from "react";
-import { FaHome, FaFile, FaBell, FaFolder, FaComments } from "react-icons/fa";
+import { useState, ReactNode } from "react";
+import { FaHome, FaFile, FaFolder, FaComments } from "react-icons/fa";
 import { FaBoxArchive } from "react-icons/fa6";
-import { IoMail, IoSettingsSharp } from "react-icons/io5";
+import { IoMail } from "react-icons/io5";
 import { HiUserGroup } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
+import { AiFillAppstore } from "react-icons/ai";
 
 import { useNavigate, useLocation } from "react-router-dom";
 
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
 import Logo from "../../components/ui/Logo.tsx";
-import Divider from "../../components/ui/Divider.tsx";
-import UserWidget from "../../components/ui/UserWidget.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
-import UserService, { User } from "../../services/UserService.ts"
-
+import UserWidget from "../../components/ui/UserWidget.tsx";
+import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./DashboardPage.css"
@@ -50,9 +49,9 @@ export default function DashboardPage({children} : DashboardPageInterface){
         <div className="dashboard-content">
             <div className="dashboard-sidebar-content">
                 <Logo width={"200"} height={"50"} large={true} className="logo-style-dashboard"/>
-                <Divider/>
+                <HorizontalDivider/>
                 <UserWidget user={user}/>
-                <Divider/>
+                <HorizontalDivider/>
 
                 <NavigationButton label="Accueil" active={currentPage == "home"} icon={<FaHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
                 {/* <NavigationButton label={"Stages"} active={currentPage == "stage"} icon={<IoMail/>} id="stage" onClick={(id) => page_change_handler(id)}/> */}
@@ -60,21 +59,22 @@ export default function DashboardPage({children} : DashboardPageInterface){
                 <NavigationButton label="Fichiers" active={currentPage == "files"} icon={<FaFolder/>} id="files" onClick={(id) => page_change_handler(id)}/>
                 <NavigationButton label="Messages" active={currentPage == "chat"} icon={<FaComments/>} id="chat" onClick={(id) => page_change_handler(id)}/>
                 <NavigationButton label="Profile" active={currentPage == "profile"} icon={<FaUser/>} id="profile" onClick={(id) => page_change_handler(id)}/>
-				<NavigationButton label="Projets" active={currentPage == "projets"} icon={<FaFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
+				<NavigationButton label="Sujets" active={currentPage == "projets"} icon={<FaFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
 
-                {user?.is_staff && (
+                {user?.is_superuser && 
                     <>
-                        <Divider/>
+                        <HorizontalDivider/>
+						<NavigationButton label="Gestion TER" active={currentPage == "admin_ter"} icon={<AiFillAppstore/>} id="admin_ter" onClick={(id) => page_change_handler(id)}/>
                         <NavigationButton label="Utilisateurs" active={currentPage == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
                         <NavigationButton label="Archives" active={currentPage == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
                     </>
-                )}
+                }
 
-                <Divider/>
-                <NavigationButton icon={<MdLogout/>} label="Déconnection" onClick={logout_handle}/>
+                <HorizontalDivider/>
+                <NavigationButton icon={<MdLogout/>} label="Déconnexion" onClick={logout_handle}/>
             </div>
 
-            <HorizontalDivider/>
+            <VerticalDivider/>
 
              <div className="dashboard-rightside-main">
                 <div className="dashboard-main-content">

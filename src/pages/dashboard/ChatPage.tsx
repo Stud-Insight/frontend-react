@@ -5,6 +5,7 @@ import ChatWindow from "../../components/chat/ChatWindow";
 import NewChatDialog from "../../components/chat/NewChatDialog";
 import ChatService, { Conversation, getParticipantName } from "../../services/ChatService";
 import { useAuth } from "../../context/AuthContext";
+
 import "./ChatPage.css";
 
 export default function ChatPage() {

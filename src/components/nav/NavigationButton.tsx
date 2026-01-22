@@ -29,8 +29,6 @@ export default function NavigationButton({label, icon, offset = 0, size, onClick
                 </span>
                 <label>{label}</label>
             </div>
-
-            {active ? <IoIosArrowForward/> : undefined}
         </button>
     )
 }

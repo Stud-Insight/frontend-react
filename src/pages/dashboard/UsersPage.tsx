@@ -12,7 +12,6 @@ import InfoBox from "../../components/ui/InfoBox.tsx";
 import ConfirmationDialog from "../../components/input/ConfirmationDialog.tsx";
 import IconButton from "../../components/input/IconButton.tsx";
 
-
 import "./UsersPage.css"
 import "./DashboardPage.css"
 
@@ -102,8 +101,12 @@ export default function UsersPage(){
 	}
     return (
         <DashboardPage>
-            <label>Utilisateurs ({users.length})</label>
-
+			<div className="dashboard-content-header-style">
+				<label>Utilisateurs ({users.length})</label>
+				<div>
+					<SubmitButton label="Créer un utilisateur" onChange={open_modal_handler}/>
+				</div>
+			</div>
 			{error && <InfoBox label={error} type="error"/>}
             <table className="users-table-style">
                 <thead>
@@ -132,8 +135,6 @@ export default function UsersPage(){
                 </tbody>
             </table>
 
-			<SubmitButton label="Créer un utilisateur" onChange={open_modal_handler}/>
-
 			{userDelete &&
 				<ConfirmationDialog 
 				label="Supprimer cet utilisateur ?"
@@ -150,7 +151,7 @@ export default function UsersPage(){
 					<InputField label={"Nom"} value={nom} onChange={setNom}/>
 					<InputField label={"E-Mail"} value={email} onChange={setEmail}/>
 					<InputField label={"Mot de passe"} value={mdp} onChange={setMdp}/>
-					<SubmitButton label="Créer Utilisateur" onChange={add_user_hanlder}/>
+					<SubmitButton label="Ajouter" onChange={add_user_hanlder}/>
 				</ModalDialog>
 			}
         </DashboardPage>

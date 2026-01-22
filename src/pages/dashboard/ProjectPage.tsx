@@ -11,6 +11,7 @@ import ProjectService from "../../services/ProjectService.ts";
 import ConfirmationDialog from "../../components/input/ConfirmationDialog.tsx";
 
 import "./ProjectPage.css"
+import "./DashboardPage.css"
 
 export default function ProjetPage(){
 	const [titre, setTitre] = useState("");
@@ -62,7 +63,13 @@ export default function ProjetPage(){
 
 	return (
 		<DashboardPage>
-			<label>Projets ({projetList.length})</label>
+			<div className="dashboard-content-header-style">
+				<label>Sujets ({projetList.length})</label>
+				<div>
+					<SubmitButton label="Créer un sujet" onChange={() => setCreateProject(true)}/>
+				</div>
+			</div>
+		
 			{error && <InfoBox label={error} type="error"/>}
 
 			<div className="project-list-layout">
@@ -71,13 +78,11 @@ export default function ProjetPage(){
 				))}
 			</div>
 
-			<SubmitButton label="Créer un projet" onChange={() => setCreateProject(true)}/>
-
 			{createProject &&
-				<ModalDialog label="Projet" onClose={() => setCreateProject(false)}>
+				<ModalDialog label="Sujet" onClose={() => setCreateProject(false)}>
 					<InputField label={"Titre"} value={titre} onChange={setTitre}/>
 					<InputField label={"Description"} value={desc} onChange={setDesc}/>
-					<SubmitButton label="Créer Utilisateur" onChange={project_create_handler}/>
+					<SubmitButton label="Ajouter" onChange={project_create_handler}/>
 				</ModalDialog>
 			}
 

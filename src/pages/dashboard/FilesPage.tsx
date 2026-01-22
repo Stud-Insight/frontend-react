@@ -4,6 +4,7 @@ import FileUpload from "../../components/file/FileUpload";
 import FileList from "../../components/file/FileList";
 import FileService, { Attachment } from "../../services/FileService";
 import InfoBox from "../../components/ui/InfoBox";
+
 import "./FilesPage.css";
 
 export default function FilesPage() {

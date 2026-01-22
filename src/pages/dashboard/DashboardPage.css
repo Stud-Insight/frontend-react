@@ -4,6 +4,13 @@
     justify-content: center;
 }
 
+.dashboard-content-header-style {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
 .dashboard-content {
     width: 100%;
     height: 100%;
@@ -48,3 +55,4 @@
     gap: 20px;
 	overflow-y: auto; 
 }
+

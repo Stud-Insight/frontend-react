@@ -18,16 +18,10 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 	}
 };
 
-export interface ActiveProject {
-	encadrant: User;
-	group: Group;
-	project_leader: User
-	project: Project;
-};
-
 export interface TER {
 	titre: string;
-	projects: ActiveProject[];
+	groups: Group[];
+	projects: Project[];
 	statut: string;
 };
 

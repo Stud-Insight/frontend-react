@@ -5,7 +5,7 @@ import InputField from "../../components/input/InputField.tsx";
 import LinkButton from "../../components/nav/LinkButton.tsx";
 import SubmitButton from "../../components/input/SubmitButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
-import Divider from "../../components/ui/Divider.tsx";
+import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";
 import UserService from "../../services/UserService.ts";
 
@@ -49,7 +49,7 @@ export default function AccountRecoveryPage() {
                     onChange={setEmail}
                     disabled={isSubmitting}
                 />
-                <Divider />
+                <HorizontalDivider />
                 <SubmitButton
                     label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}
                     type="submit"

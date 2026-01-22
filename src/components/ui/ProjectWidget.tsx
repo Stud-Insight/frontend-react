@@ -1,6 +1,7 @@
 import React from "react";
 import { Sujet } from "../../services/ProjectService";
-import HorizontalDivider from "./HorizontalDivider";
+import { User } from "../../services/UserService";
+import VerticalDivider from "./VerticalDivider";
 import { FaUser } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
@@ -24,9 +25,12 @@ export default function ProjectWidget({ show_more = true, project, onDelete, onE
 	return (
 		<div className="project-widget-layout">
 			<label className="project-widget-title-style">{project.title}</label>
-			<label className="project-widget-description-style">Encadrant: {project.author?.first_name} {project.author?.last_name.toUpperCase()}</label>
-			<label className="project-widget-description-style">Description: {project.description}</label>
+			{project.author.map((author: User, index) => (
+				<label className="project-widget-description-style"> Encadrant: {author.first_name} {author.last_name.toUpperCase()}</label>
+			))}
 
+			<label className="project-widget-description-style">{project.description}</label>
+			
 			<div className="project-widget-edit">
 				<IconButton icon={<MdDownload/>} onClick={onDownload}/>
 				<IconButton icon={<MdModeEdit/>} onClick={onEdit}/>
@@ -36,7 +40,7 @@ export default function ProjectWidget({ show_more = true, project, onDelete, onE
 			{show_more && 
 				<>	
 					<div className="project-widget-tache-layout">
-						{project.tache?.map((tache, index) => (
+						{project.tasks?.map((tache, index) => (
 							<div key={index} className="project-widget-description-style"> - {tache}</div>
 						))}
 					</div>
