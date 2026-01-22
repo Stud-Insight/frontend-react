@@ -8,7 +8,7 @@
     border-width: 1px;
 	border-radius: 10px;
 	background-color: var(--pastel-col);
-    border-color: var(--light_gray-col);
+    border-color: var(--gray2-col);
     padding: 15px;
 	width: 100%;
 }
@@ -49,7 +49,7 @@
 	flex-direction: row;
 	padding: 8px;
 	font-size: 12px;
-	background-color: var(--light_gray-col);
+	background-color: var(--gray2-col);
 	border-radius: 5px;
 	gap: 2px;
 

@@ -3,14 +3,14 @@ import "./SubmitButton.css"
 import um_logo_image from "../../assets/logo_um.png";
 import { MdDangerous } from "react-icons/md";
 
-interface SubmitButtonInterface {
+interface SubmitButtonProps {
     label?: string;
     type?: "button" | "submit";
     style?: "default" | "um" | "cancel" | "danger";
     onChange?: () => void;
 };
 
-export default function SubmitButton({label = "button", onChange, type = "button", style = "default"}: SubmitButtonInterface){
+export default function SubmitButton({label = "button", onChange, type = "button", style = "default"}: SubmitButtonProps){
     if (style == "um"){
         return (
             <button type={type} className="submit-button-style" style={{backgroundColor: "var(--cyan-col)"}} onClick={onChange ? () => onChange() : undefined}>
@@ -31,7 +31,7 @@ export default function SubmitButton({label = "button", onChange, type = "button
 
 	if (style == "cancel"){
         return (
-            <button type={type} className="submit-button-style" style={{backgroundColor: "var(--gray-col)"}} onClick={onChange ? () => onChange() : undefined}>
+            <button type={type} className="submit-button-style" style={{backgroundColor: "var(--black-col)"}} onClick={onChange ? () => onChange() : undefined}>
                 <span className="button-label">{label}</span>
             </button>
         );

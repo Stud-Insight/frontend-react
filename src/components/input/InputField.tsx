@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./InputField.css"
 import { IoEye } from "react-icons/io5";
 
-interface InputFieldInterface {
+interface InputFieldProps {
     label?: string,
     icon?: React.ReactNode,
     is_password?: boolean,
@@ -13,7 +13,7 @@ interface InputFieldInterface {
     onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, icon, value, is_password, offset = 0, onChange, placeholder = ""}: InputFieldInterface){
+export default function InputField({label, icon, value, is_password, offset = 0, onChange, placeholder = ""}: InputFieldProps){
     const [showPassword, setShowPassword] = useState(false);
 
     return (

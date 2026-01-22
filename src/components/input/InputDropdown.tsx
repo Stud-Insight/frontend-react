@@ -5,7 +5,7 @@ import { FaCheck } from "react-icons/fa6";
 
 import "./InputDropdown.css"
 
-interface InputDropdownInterface {
+interface InputDropdownProps {
 	label?: string;
 	default_index?: number;
 	options: string[];
@@ -13,7 +13,7 @@ interface InputDropdownInterface {
 	onChange?: (value: string) => void; 
 };
 
-export default function InputDropdown({label, default_index = 0, close_after_selection = true, options, onChange}: InputDropdownInterface){
+export default function InputDropdown({label, default_index = 0, close_after_selection = true, options, onChange}: InputDropdownProps){
 	const [open, setOpen] = useState(false);
 	const [selected, setSelected] = useState(options[default_index]);
 	const dropdownRef = useRef<HTMLDivElement>(null);

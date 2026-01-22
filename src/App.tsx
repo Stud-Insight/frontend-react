@@ -6,15 +6,12 @@ import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/HomePage";
-import UsersPage from "./pages/dashboard/UsersPage";
-import FilesPage from "./pages/dashboard/FilesPage";
-import ChatPage from "./pages/dashboard/ChatPage";
-import StagesPage from "./pages/dashboard/StagesPage";
 import TERPage from "./pages/dashboard/TERPage";
-import ArchivePage from "./pages/dashboard/ArchivePage";
-import ProfilePage from "./pages/dashboard/ProfilePage";
+import ChatPage from "./pages/dashboard/ChatPage";
 import ProjectPage from "./pages/dashboard/ProjectPage";
-import GestionTERPage from "./pages/dashboard/GestionTERPage";
+import TERAdminPage from "./pages/dashboard/TERAdminPage";
+import UsersPage from "./pages/dashboard/UsersPage";
+import ArchivePage from "./pages/dashboard/ArchivePage";
 
 import "./index.css";
 
@@ -67,15 +64,12 @@ function AppRoutes() {
 
             <Route path="/dashboard">
                 <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
-                <Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
-                <Route path="stage" element={<ProtectedRoute><StagesPage/></ProtectedRoute>}/>
+               	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
                 <Route path="ter" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
-                <Route path="files" element={<ProtectedRoute><FilesPage/></ProtectedRoute>}/>
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
-                <Route path="profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
 				<Route path="projets" element={<ProtectedRoute><ProjectPage/></ProtectedRoute>}/>
-				<Route path="admin_ter" element={<ProtectedRoute><GestionTERPage/></ProtectedRoute>}/>
+				<Route path="admin_ter" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
             </Route>
 
             <Route path="/" element={<RootRedirect/>} />

@@ -1,5 +1,5 @@
 .permission-tag-style {
-    --permission-color: var(--gray-col);
+    --permission-color: var(--black-col);
     display: flex;
     align-items: center;
     justify-content: center;

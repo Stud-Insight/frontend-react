@@ -1,6 +1,6 @@
 import React from "react";
 
-interface LogoInterface {
+interface LogoProps {
   width?: string;
   height?: string;
   primaryColor?: string;
@@ -9,7 +9,7 @@ interface LogoInterface {
   className?: string;
 }
 
-export default function Logo({width, height, primaryColor = "var(--blue-col)", secondaryColor = "var(--dark_gray-col)", large = false, className = ""}: LogoInterface){
+export default function Logo({width, height, primaryColor = "var(--blue-col)", secondaryColor = "var(--black-col)", large = false, className = ""}: LogoProps){
     const finalWidth = large ? "809" : "315";
     const finalHeight = large ? "140" : "246";
     const viewBox = `0 0 ${finalWidth} ${finalHeight}`;

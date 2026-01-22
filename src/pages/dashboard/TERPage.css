@@ -1,0 +1,5 @@
+.ter-page-container-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}

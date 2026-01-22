@@ -1,13 +1,12 @@
 import React from "react";
 import DashboardPage from "./DashboardPage";
-import "./ProjectPage.css"
+import "./MeetingPage.css"
 
-export default function ProjectPage(){
+
+export default function MeetingPage(){
 	return (
 		<DashboardPage>
-			<div>
-
-			</div>
+			meeting
 		</DashboardPage>
 	)
 }

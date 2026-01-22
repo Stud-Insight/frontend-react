@@ -4,8 +4,8 @@
     align-items: center;
     gap: 10px;
     width: 100%;
-    background-color: var(--light_gray-col);
-    color: var(--gray-col);
+    background-color: var(--gray2-col);
+    color: var(--black-col);
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
@@ -25,8 +25,8 @@
 }
 
 .info-box-info {
-    background-color: var(--light_gray-col);
-    color: var(--gray-col);
+    background-color: var(--gray2-col);
+    color: var(--black-col);
 }
 
 .info-box-error {

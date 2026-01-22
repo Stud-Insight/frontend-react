@@ -5,7 +5,7 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    color: var(--light_gray-col);
+    color: var(--gray2-col);
     font-family: var(--main-font);
     font-weight: var(--main-weight);
 }
@@ -13,5 +13,5 @@
 .sep {
     height: 1.5px;
     width: 100%;
-    background-color: var(--light_gray-col);
+    background-color: var(--gray2-col);
 }

@@ -4,13 +4,13 @@ import IconButton from "./IconButton";
 
 import "./ModalDialog.css";
 
-interface ModalInterface {
+interface ModalProps {
 	label?: string;
 	children: ReactNode;
 	onClose?: () => void; 
 };
 
-export default function ModalDialog({label, onClose, children}: ModalInterface){
+export default function ModalDialog({label, onClose, children}: ModalProps){
 	const close_handler = () => {
 		onClose ? onClose() : undefined;
 	};

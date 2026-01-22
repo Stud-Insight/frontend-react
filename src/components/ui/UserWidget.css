@@ -1,34 +1,23 @@
-.user-profile-container {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    box-sizing: border-box;
+.user-widget-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 	gap: 20px;
+	height: 50px;
+	border-radius: 10px;
+	padding: 15px;
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
 }
 
-.user-avatar-container {
-    height: 50px;
+.user-widget-right {
 	width: 50px;
+	height: 50px;
 }
 
-.user-profile-labels-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.user-profile-labels {
-    color: var(--gray-col);
-    font-family: var(--main-font);
-    font-weight: 500;
-    font-size: 12px;
-}
-
-.user-profile-top-labels {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
+.user-widget-left {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	font-weight: 100;
+	font-size: 14px;
 }

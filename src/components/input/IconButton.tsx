@@ -1,12 +1,12 @@
 import React, {ReactNode} from "react";
 import "./IconButton.css"
 
-interface IconButtonInterface {
+interface IconButtonProps {
 	icon: ReactNode;
 	onClick: () => void;
 };
 
-export default function IconButton({icon, onClick}: IconButtonInterface){
+export default function IconButton({icon, onClick}: IconButtonProps){
 	return (
 		<div className="icon-button-close" onClick={onClick}>
 			{icon}

@@ -1,11 +1,11 @@
 import React from "react";
 import "./HorizontalDivider.css"
 
-interface DividerInterface {
+interface DividerProps {
     label?: string
 };
 
-export default function HorizontalDivider({label}: DividerInterface){
+export default function HorizontalDivider({label}: DividerProps){
     return label ? (
         <div className="divider-style">
             <div className="sep" />

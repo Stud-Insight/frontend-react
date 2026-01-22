@@ -1,17 +1,18 @@
 body {
     margin: 0px;
     padding: 0px;
+	overflow: hidden;
 }
 
 :root {
     --deep_blue-col: #26266e;
 	--blue-col: #0c5deb;
     --cyan-col: #2596be;
-    --dark_gray-col: #333333;
-    --gray-col: #636363;
-    --light_gray-col: #e8e8e8;
+    --black-col: #333333;
+    --gray1-col: #636363;
+	--gray2-col: #e8e8e8;
+	--gray3-col: #f7f7f7;
     --white-col: #ffffff;
-	--pastel-col: #fafafa;
     --red-col: #ff3333;
     --green-col: #00cc00;
     --yellow-col: #ffcc00;

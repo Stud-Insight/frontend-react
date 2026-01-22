@@ -1,0 +1,41 @@
+.schedule-event-widget {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	box-sizing: border-box;
+	gap: 10px;
+	font-weight: 100;
+	font-size: 14px;
+	padding: 5px;
+	border-radius: 10px;
+}
+
+.schedule-event-widget-icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 40px;
+	height: 40px;
+}
+
+.schedule-event-widget-text {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.schedule-event-widget.pending {
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+}
+
+.schedule-event-widget.completed {
+	background-color: color-mix(in srgb, var(--green-col) 10%, transparent);
+}
+
+.schedule-event-widget-icon.pending {
+	color: var(--blue-col);
+}
+
+.schedule-event-widget-icon.completed {
+	color: var(--green-col);
+}

@@ -1,11 +1,11 @@
 import React from "react";
 import "./PermissionTag.css"
 
-interface PermissionTagInterface {
+interface PermissionTagProps {
     perm?: "etu" | "prof" | "admin" | "extern";
 };
 
-export default function PermissionTag({ perm }: PermissionTagInterface){
+export default function PermissionTag({ perm }: PermissionTagProps){
     switch (perm){
         case "etu": {
             return (

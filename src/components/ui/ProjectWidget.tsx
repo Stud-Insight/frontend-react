@@ -10,7 +10,7 @@ import IconButton from "../input/IconButton";
 
 import "./ProjectWidget.css"
 
-interface ProjectWidgetInterface {
+interface ProjectWidgetProps {
 	project: Sujet;
 	show_more?: boolean;
 	onDownload?: () => void;
@@ -18,7 +18,7 @@ interface ProjectWidgetInterface {
 	onEdit?: () => void;
 };
 
-export default function ProjectWidget({ show_more = true, project, onDelete, onEdit, onDownload }: ProjectWidgetInterface){
+export default function ProjectWidget({ show_more = true, project, onDelete, onEdit, onDownload }: ProjectWidgetProps){
 	const min = project.min_person;
 	const max = project.max_person;
 

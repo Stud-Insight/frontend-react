@@ -4,14 +4,14 @@ import SubmitButton from "./SubmitButton";
 
 import "./ConfirmationDialog.css";
 
-interface ConfirmationDialogInterface {
+interface ConfirmationDialogProps {
 	label?: string;
 	info?: string;
 	onCancel?: () => void;
 	onConfirm?: () => void;
 }
 
-export default function ConfirmationDialog({label, info, onCancel, onConfirm}: ConfirmationDialogInterface){
+export default function ConfirmationDialog({label, info, onCancel, onConfirm}: ConfirmationDialogProps){
 	return (
 		<ModalDialog onClose={onCancel}>
 			<div className="confirmation-dialog-layout">
