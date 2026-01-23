@@ -14,6 +14,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	border-radius: 7px;
 	width: 40px;
 	height: 40px;
 }
@@ -21,21 +22,16 @@
 .schedule-event-widget-text {
 	display: flex;
 	flex-direction: column;
-	gap: 3px;
-}
-
-.schedule-event-widget.pending {
-	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
-}
-
-.schedule-event-widget.completed {
-	background-color: color-mix(in srgb, var(--green-col) 10%, transparent);
+	font-weight: var(--mid-bold);
+	gap: 8px;
 }
 
 .schedule-event-widget-icon.pending {
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
 	color: var(--blue-col);
 }
 
 .schedule-event-widget-icon.completed {
+	background-color: color-mix(in srgb, var(--green-col) 10%, transparent);
 	color: var(--green-col);
 }

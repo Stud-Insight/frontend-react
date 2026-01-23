@@ -1,0 +1,32 @@
+.project-widget-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.project-widget-tag-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	font-weight: var(--mid-bold);
+}
+
+.project-widget-tag-style {
+	display: flex;
+	flex-direction: row;
+	padding: 8px;
+	font-size: 12px;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+	border-radius: 10px;
+	gap: 2px;
+}
+
+.project-widget-footer-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	justify-content: right;
+	font-size: 23px;
+}

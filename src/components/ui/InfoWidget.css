@@ -1,0 +1,35 @@
+.info-widget-main-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	border-radius: 10px;
+	padding: 25px;
+	gap: 20px;
+	background-color: var(--white-col);
+	box-shadow: 3px 3px 5px var(--gray2-col)
+}
+
+.info-widget-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.info-widget-icon {
+	display: flex;
+	height: 50px;
+	aspect-ratio: 1 / 1;
+	font-size: 20px;
+	background-color: red;
+	border-radius: 10px;
+	justify-content: center;
+	align-items: center;
+}
+
+.info-widget-text {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}

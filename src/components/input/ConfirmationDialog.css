@@ -15,7 +15,7 @@
 .confirmation-dialog-info {
 	font-size: 13px;
 	text-align: center;
-	font-weight: var(--small-bold);
+	font-weight: var(--mid-bold);
 }
 
 .confirmation-dialog-buttons-layout {

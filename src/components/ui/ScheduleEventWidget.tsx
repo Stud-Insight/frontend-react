@@ -21,7 +21,7 @@ export default function ScheduleEventWidget({label, date, completed}: ScheduleEv
 			</div>
 
 			<div className="schedule-event-widget-text">
-				<label style={{fontWeight: 400}}>{label}</label>
+				<label style={{fontWeight: "var(--big-bold)"}}>{label}</label>
 				<label>{date}</label>
 			</div>
 		</div>

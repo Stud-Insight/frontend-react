@@ -6,8 +6,8 @@ import "./TERAdminPage.css"
 export default function TERAdminPage(){
 	return (
 		<DashboardPage>
-			<h2>Available TER</h2>
-			Choose a TER to view detailed information about groups, projects, and professors
+			<label style={{fontWeight: 800, fontSize: "25px"}}>Gestion TER</label>
+			<label>Choose a TER to view detailed information about groups, projects, and professors.</label>
 		</DashboardPage>
 	)
 }

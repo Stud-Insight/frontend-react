@@ -20,11 +20,17 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 
 export interface TER {
 	titre: string;
+	code: string;
+	year: number;
 	groups: Group[];
 	projects: Project[];
 	statut: string;
+	start_date: string;
+	end_date: string;
 };
 
 export default class TERService {
+	public static async returnProject(titre: string){
 
+	}
 }

@@ -6,9 +6,8 @@ import "./ChatPage.css"
 export default function ChatPage(){
 	return (
 		<DashboardPage>
-			<div>
-
-			</div>
+			<label style={{fontWeight: 800, fontSize: "25px"}}>Messages</label>
+			<label>Les messages</label>
 		</DashboardPage>
 	)
 }

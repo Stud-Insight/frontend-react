@@ -27,11 +27,10 @@ interface DashboardPageProps {
 
 export default function DashboardPage({children} : DashboardPageProps){
     const { user } = useAuth();
-    const [userImage, setUserImage] = useState("");
-    
+	const { logout } = useAuth();
+
     const location = useLocation();
     const navigate = useNavigate();
-    const { logout } = useAuth();
     const currentPage = location.pathname.split("/").pop();
 
     const logout_handle = async () => {
@@ -55,7 +54,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<NavigationButton label="Accueil" active={currentPage == "home"} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="TER" active={currentPage == "ter"} icon={<TbSchool/>} id="ter" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Messages" active={currentPage == "chat"} icon={<LuMessageSquare/>} id="chat" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="Mes Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Calendrier" active={currentPage == "calender"} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => page_change_handler(id)}/>
 
 					{user?.is_superuser && 

@@ -10,7 +10,7 @@ interface TERWidgetInteface {
 export default function TERWidget({data}: TERWidgetInteface){
 	return (
 		<div>
-			{data.}
+		
 		</div>
 	);
 }	

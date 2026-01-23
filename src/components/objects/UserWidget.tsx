@@ -1,5 +1,5 @@
 import React from "react";
-import UserAvatar from "./UserAvatar";
+import UserAvatar from "../ui/UserAvatar";
 
 import { User } from "../../services/UserService";
 
@@ -13,12 +13,12 @@ interface UserWidgetProps {
 export default function UserWidget({ user, role }: UserWidgetProps){
 	return (
 		<div className="user-widget-layout">
-			<div className="user-widget-right">
+			<div className="user-widget-left">
 				<UserAvatar user={user}/>
 			</div>
 
-			<div className="user-widget-left">
-				<label style={{fontWeight: 400}}>{user.first_name} {user.last_name}</label>
+			<div className="user-widget-right">
+				<label style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</label>
 				<label>{role ? role : undefined}</label>
 				<label>{user.email}</label>
 			</div>

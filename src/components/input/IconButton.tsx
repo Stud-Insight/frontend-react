@@ -3,7 +3,7 @@ import "./IconButton.css"
 
 interface IconButtonProps {
 	icon: ReactNode;
-	onClick: () => void;
+	onClick?: () => void;
 };
 
 export default function IconButton({icon, onClick}: IconButtonProps){

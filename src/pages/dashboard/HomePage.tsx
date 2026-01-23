@@ -9,10 +9,7 @@ export default function HomePage(){
 
 	return (
 		<DashboardPage>
-			<div>
-				<h2>Welcome back, {user?.first_name}!</h2>
-				Here's what's happening with your TER project
-			</div>
+			<label style={{fontWeight: 800, fontSize: "25px"}}>Bonjour, {user?.first_name}!</label>
 		</DashboardPage>
 	)
 }
