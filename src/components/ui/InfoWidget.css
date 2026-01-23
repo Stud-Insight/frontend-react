@@ -3,9 +3,9 @@
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
+	justify-content: space-between;
 	border-radius: 10px;
 	padding: 25px;
-	gap: 20px;
 	background-color: var(--white-col);
 	box-shadow: 3px 3px 5px var(--gray2-col)
 }
@@ -13,14 +13,15 @@
 .info-widget-layout {
 	display: flex;
 	flex-direction: row;
-	gap: 10px;
+	gap: 15px;
+	height: 100%;
 }
 
 .info-widget-icon {
 	display: flex;
-	height: 50px;
+	padding: 10px;
 	aspect-ratio: 1 / 1;
-	font-size: 20px;
+	font-size: 24px;
 	background-color: red;
 	border-radius: 10px;
 	justify-content: center;
@@ -32,4 +33,5 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	color: var(--gray1-col);
 }

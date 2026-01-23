@@ -1,4 +1,5 @@
 .project-widget-layout {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
@@ -26,7 +27,69 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
+}
+
+.project-widget-footer-content {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 	gap: 10px;
-	justify-content: right;
 	font-size: 23px;
+	color: var(--gray1-col);
+}
+
+.project-widget-state-style {
+	display: flex;
+	flex-direction: row;
+	padding: 8px;
+	font-size: 12px;
+	border-radius: 10px;
+	gap: 2px;
+}
+.project-widget-task-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.project-widget-expandable {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	overflow: hidden;
+	max-height: 0;
+	opacity: 0;
+	transition: max-height 0.4s, opacity 0.4s;
+}
+
+.project-widget-expandable.expanded {
+	max-height: 500px;
+	opacity: 1;
+}
+
+.project-widget-state-style.draft {
+	color: var(--gray1-col);
+	background-color: color-mix(in srgb, var(--gray1-col) 20%, transparent);
+}
+
+.project-widget-expand-button {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	font-size: 20px;
+}
+.project-widget-state-style.submitted {
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+}
+
+.project-widget-state-style.approved {
+	color: var(--green-col);
+	background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
+}
+
+.project-widget-state-style.rejected {
+	color: var(--red-col);
+	background-color: color-mix(in srgb, var(--red-col) 20%, transparent);
 }

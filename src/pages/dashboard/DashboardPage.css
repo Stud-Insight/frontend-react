@@ -103,3 +103,11 @@
 	gap: 10px;
 	justify-items: center;
 }
+
+.dashbord-mini-info-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	gap: 30px;
+}

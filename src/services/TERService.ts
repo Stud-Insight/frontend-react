@@ -30,7 +30,5 @@ export interface TER {
 };
 
 export default class TERService {
-	public static async returnProject(titre: string){
 
-	}
 }

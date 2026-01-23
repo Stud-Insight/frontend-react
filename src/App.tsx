@@ -12,6 +12,7 @@ import ProjectPage from "./pages/dashboard/ProjectPage";
 import TERAdminPage from "./pages/dashboard/TERAdminPage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
+import StagePage from "./pages/dashboard/StagePage";
 
 import "./index.css";
 
@@ -67,6 +68,7 @@ function AppRoutes() {
                	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
                 <Route path="ter" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
+				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
 				<Route path="projets" element={<ProtectedRoute><ProjectPage/></ProtectedRoute>}/>
 				<Route path="admin_ter" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>

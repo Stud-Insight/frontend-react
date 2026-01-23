@@ -15,6 +15,7 @@ import { FaRegFolder } from "react-icons/fa";
 import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
 import { HiOutlineCalendar } from "react-icons/hi";
+import { MdWorkOutline } from "react-icons/md";
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
@@ -53,6 +54,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 
 					<NavigationButton label="Accueil" active={currentPage == "home"} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="TER" active={currentPage == "ter"} icon={<TbSchool/>} id="ter" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="Stages" active={currentPage == "stages"} icon={<MdWorkOutline/>} id="stages" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Messages" active={currentPage == "chat"} icon={<LuMessageSquare/>} id="chat" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Mes Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Calendrier" active={currentPage == "calender"} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => page_change_handler(id)}/>

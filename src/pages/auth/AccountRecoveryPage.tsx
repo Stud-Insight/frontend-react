@@ -43,7 +43,7 @@ export default function AccountRecoveryPage() {
                 {success && <InfoBox label={success} type="success"/>}
                 <InputField
                     label="E-Mail"
-                    icon={<IoMail />}
+                    icon={<IoMail />}	
                     is_password={false}
                     value={email}
                     onChange={setEmail}
