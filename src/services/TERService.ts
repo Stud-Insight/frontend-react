@@ -18,15 +18,35 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 	}
 };
 
-export interface TER {
+export interface GroupObjective {
+	title: string;
+	done: boolean;
+};
+
+export interface GroupProject {
+	id: string;
+	group_leader: User;
 	titre: string;
+	group: Group;
+	objectives: GroupObjective[];
+  	project?: Project;
+	correcteur?: User;	
+};
+
+export interface Notation {
+	titre: string;
+	max_notation: number;
+	coef: number;
+};
+
+export interface TER {
+	title: string;
 	code: string;
 	year: number;
-	groups: Group[];
-	projects: Project[];
+	groups: GroupProject[];
 	statut: string;
-	start_date: string;
-	end_date: string;
+	startDate: string;
+	endDate: string;
 };
 
 export default class TERService {

@@ -12,7 +12,6 @@ import ConfirmationDialog from "../../components/input/ConfirmationDialog";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoBan } from "react-icons/io5";
-
 import { FiUser } from "react-icons/fi";
 
 import "./UsersPage.css"

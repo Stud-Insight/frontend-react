@@ -1,0 +1,32 @@
+.group-project-widget-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	height: 100%;
+}
+
+.group-project-widget-title {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	align-items: center;
+	gap: 18px;
+}
+
+.group-project-widget-title-right {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.info-widget-icon {
+	display: flex;
+	padding: 10px;
+	aspect-ratio: 1 / 1;
+	font-size: 24px;
+	border-radius: 10px;
+	justify-content: center;
+	align-items: center;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+}

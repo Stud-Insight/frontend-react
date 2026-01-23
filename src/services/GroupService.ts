@@ -18,8 +18,6 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 
 export interface Group {
 	id: string;
-	titre: string;
-	leader: User
 	students: User[];
 };
 
