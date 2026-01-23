@@ -30,3 +30,35 @@
 	color: var(--blue-col);
 	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
 }
+
+.group-project-footer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+}
+
+.group-project-footer-buttons {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	font-size: 20px;
+}
+
+.group-project-name-tags-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.group-project-name-tags {
+	display: flex;
+	flex-direction: row;
+	padding: 8px;
+	font-size: 12px;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+	border-radius: 10px;
+	gap: 2px;
+}

@@ -21,7 +21,7 @@
     flex-direction: row;
     align-items: center;
     gap: 6px;
-    color: var(--black-col);
+    color: var(--gray1-col);
     font-family: var(--main-font);
     font-weight: var(--big-bold);
     font-size: medium;

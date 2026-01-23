@@ -13,6 +13,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoBan } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
+import UserAvatar from "../../components/ui/UserAvatar";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
@@ -74,6 +75,8 @@ export default function UsersPage(){
                     <tr>
                         <th><InputCheckbox/></th>
 						<th>Profile</th>
+						<th>Nom</th>
+						<th>E-Mail</th>
 						<th>Role</th>
                         <th>Date Activation</th>
                         <th>Dernière Connexion</th>
@@ -81,10 +84,16 @@ export default function UsersPage(){
                     </tr>
                 </thead>
                 <tbody>
-		 			{users.map((user, index) => (
+		 			{users && users.map((user, index) => (
                         <tr key={index}>
                             <td><InputCheckbox/></td>
-                            <td><UserWidget user={user}/></td>
+                            <td>
+								<div className="users-table-avatar-container">
+									<UserAvatar user={user}/>
+								</div>
+							</td>
+							<td>{user.first_name} {user.last_name}</td>
+							<td>{user.email}</td>
 							<td>Admin</td>
                             <td>{"test"}</td>
                             <td>{"test"}</td>

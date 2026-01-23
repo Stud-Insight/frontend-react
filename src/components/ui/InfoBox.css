@@ -26,7 +26,7 @@
 
 .info-box-info {
     background-color: var(--gray2-col);
-    color: var(--black-col);
+    color: var(--gray1-col);
 }
 
 .info-box-error {

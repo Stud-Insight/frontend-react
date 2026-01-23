@@ -10,8 +10,13 @@
 }
 
 .users-table-style th {
-    padding: 13px;
+    padding: 20px;
 	background-color: var(--white-col);
+}
+
+.users-table-avatar-container {
+	width: 40px;
+	height: 40px;
 }
 
 .users-table-style td {
@@ -23,7 +28,7 @@
     border-right: 0px;
     border-left: 0px;
     border-bottom: 0px;
-    padding: 13px;
+    padding: 20px;
 }
 
 .users-table-options {
