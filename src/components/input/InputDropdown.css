@@ -1,7 +1,7 @@
 .dropdown-main-super-layout {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 8px;
 	width: 100%;
 }
 
@@ -10,10 +10,9 @@
     flex-direction: row;
     align-items: center;
     gap: 6px;
-    color: var(--black-col);
+    color: var(--gray1-col);
     font-family: var(--main-font);
     font-weight: var(--big-bold);
-    font-size: medium;
 }
 
 .dropdown-layout-style {
@@ -21,7 +20,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 5px;
-	font-weight: var(--mid-bold);
 }
 
 .dropdown-main-style {
@@ -29,6 +27,7 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	font-size: 2px;
 	padding: 10px;
 	box-sizing: border-box;
 	background-color: var(--gray2-col);
@@ -36,8 +35,6 @@
     border-radius: 5px;
     height: 35px;
 	width: 100%;
-    font-size: 14px;
-    font-family: var(--main-font);
     font-size: medium;
 	cursor: pointer;
 }

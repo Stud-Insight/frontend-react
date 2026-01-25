@@ -51,19 +51,20 @@ export default function DashboardPage({children} : DashboardPageProps){
         <div className="dashboard-content">
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
-
+					{/* <Logo width="auto" large={true}/> */}
+					<HorizontalDivider/>
 					<NavigationButton label="Accueil" active={currentPage == "home"} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="TER" active={currentPage == "ter"} icon={<TbSchool/>} id="ter" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="TER" active={currentPage == "select"} icon={<TbSchool/>} id="ter/select" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Stages" active={currentPage == "stages"} icon={<MdWorkOutline/>} id="stages" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Messages" active={currentPage == "chat"} icon={<LuMessageSquare/>} id="chat" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="Mes Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Calendrier" active={currentPage == "calender"} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => page_change_handler(id)}/>
 
 					{user?.is_superuser && 
 						<>
 							<HorizontalDivider/>
-							<NavigationButton label="Gestion TER" active={currentPage == "admin_ter"} icon={<AiOutlineAppstore size={25}/>} id="admin_ter" onClick={(id) => page_change_handler(id)}/>
-							<NavigationButton label="Utilisateurs" active={currentPage == "users"} icon={<FiUsers/>} id="users" onClick={(id) => page_change_handler(id)}/>
+							<NavigationButton label="Mes Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
+							<NavigationButton label="Gestion TERs" active={currentPage == "list"} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => page_change_handler(id)}/>
+							<NavigationButton label="Gestion Utilisateurs" active={currentPage == "users"} icon={<FiUsers/>} id="users" onClick={(id) => page_change_handler(id)}/>
 							<NavigationButton label="Archives" active={currentPage == "archive"} icon={<FiArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
 							<HorizontalDivider/>
 						</>
@@ -88,7 +89,6 @@ export default function DashboardPage({children} : DashboardPageProps){
 							<UserAvatar user={user}/>
 						</div>
 					</div>
-					
 				</div>
 
 				<HorizontalDivider/>

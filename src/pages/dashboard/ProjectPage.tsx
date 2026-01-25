@@ -8,7 +8,7 @@ import InfoBox from "../../components/ui/InfoBox";
 import ProjectWidget from "../../components/objects/ProjectWidget";
 import { MdAdd } from "react-icons/md";
 import ConfirmationDialog from "../../components/input/ConfirmationDialog";
-
+import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
 
 import "./ProjectPage.css"
@@ -67,7 +67,9 @@ export default function ProjectPage(){
 				</div>
 			
 				<div className="dashboard-top-button-layout">
-					<SubmitButton label="Créer un projet"/>
+					<div style={{width: "auto"}}>
+						<SubmitButton icon={<FaPlus/>} label="Créer Un Projet"/>
+					</div>
 				</div>
 			</div>
 			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de projets TER.</label>

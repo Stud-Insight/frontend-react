@@ -10,6 +10,8 @@ import { MdOutlineEdit } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
+import TagWidget from "../ui/TagWidget";
+import { FaRegFile, FaRegClock } from "react-icons/fa";
 
 import "./ProjectWidget.css"
 
@@ -53,13 +55,22 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 	return (
 		<ContainerWidget>
 			<div className="project-widget-layout">
-
 				<div className="project-widget-expand-button">
-					<IconButton icon={expand ? <IoIosArrowDown/> : <IoIosArrowUp/>} onClick={() => setExpand(!expand)}/>
+					<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
 				</div>
 
-				<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{project.title}</label>
-
+				<div className="projet-widget-title-container">
+					<div className="info-widget-icon">
+						<FaRegFile/>
+					</div>
+					<div className="project-widget-title-right">
+						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{project.title}</label>
+						{project.author && project.author.map((user, index) => (
+							<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{user.first_name} {user.last_name.toUpperCase()}</label>
+						))}
+					</div>
+				</div>
+				
 				<div className={`project-widget-expandable ${expand ? " expanded" : ""}`}>
 					<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{project.description}</label>
 
@@ -72,13 +83,13 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 				
 				<div className="project-widget-tag-layout">
 					{project.min_person && project.max_person ? 
-						<div className="project-widget-tag-style">{project.min_person} - {project.max_person} Etudiants</div>
+						<TagWidget label={`${project.min_person} - ${project.max_person} Etudiants`} color="var(--blue-col)"/>
 					:
-						<div className="project-widget-tag-style">{Math.max(project.min_person, project.max_person)} Etudiants</div>
+						<TagWidget label={`${Math.max(project.min_person, project.max_person)} Etudiants`} color="var(--blue-col)"/>
 					}
 					
 					{project.language?.map((lang, index) => (
-						<div className="project-widget-tag-style">{lang}</div>
+						<TagWidget label={lang} color="var(--blue-col)"/>
 					))}
 				</div>
 				

@@ -1,12 +1,12 @@
 import React from "react";
 
 interface LogoProps {
-  width?: string;
-  height?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  large?: boolean;
-  className?: string;
+	width?: string;
+	height?: string;
+	primaryColor?: string;
+	secondaryColor?: string;
+	large?: boolean;
+	className?: string;
 }
 
 export default function Logo({width, height, primaryColor = "var(--blue-col)", secondaryColor = "var(--black-col)", large = false, className = ""}: LogoProps){

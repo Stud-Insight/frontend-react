@@ -5,12 +5,12 @@
     border-style: solid;
     border-radius: 10px;
 	border-color: var(--white-col);
-    font-size: 13px;
+    font-size: 11px;
 	box-shadow: 3px 3px 5px var(--gray2-col)
 }
 
 .users-table-style th {
-    padding: 20px;
+    padding: 16px;
 	background-color: var(--white-col);
 }
 
@@ -28,12 +28,12 @@
     border-right: 0px;
     border-left: 0px;
     border-bottom: 0px;
-    padding: 20px;
+    padding: 16px;
 }
 
 .users-table-options {
 	display: flex;
 	flex-direction: row;
-	gap: 20px;
-	font-size: 20px;
+	gap: 12px;
+	font-size: 14px;
 }

@@ -3,11 +3,10 @@ import axios, { AxiosError } from "axios";
 const api = axios.create({
     baseURL: process.env.API_URL,
     headers: { "Content-Type": "application/json" },
-    withCredentials: true, // Pour envoyer les cookies de session
+    withCredentials: true,
     timeout: 10000,
 });
 
-// Types
 export interface Group {
     name: string;
     permissions: string[];
@@ -21,6 +20,8 @@ export interface User {
     groups: Group[];
     is_staff: boolean;
     is_superuser: boolean;
+	date_joined?: string;
+    last_login?: string | null;
 }
 
 export interface CreateUserPayload {
@@ -106,14 +107,13 @@ export default class UserService {
 	public static async deleteUser(id: string | undefined): Promise<void> {
 		try {
 			await this.getCSRFToken();
-
-			//TODO: delete user fonction
+			await api.delete(`/users/${id}`);
 		} catch (error) {
 			error_formatting(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async createUser(role: string, nom: string, prenom: string, email: string, mdp: string): Promise<User> {
+	public static async createUser(role: string, nom: string, prenom: string, email: string): Promise<User> {
 		try {
 			await this.getCSRFToken();
 
@@ -121,6 +121,7 @@ export default class UserService {
 				email: email,
 				first_name: prenom,
 				last_name: nom,
+				groups: []
         	};
 
 			const response = await api.post<User>("/users/create", p);
@@ -140,12 +141,10 @@ export default class UserService {
                 password,
             });
             
-            // Sauvegarder le nouveau CSRF token
             if (response.data.csrf_token) {
                 localStorage.setItem("csrf_token", response.data.csrf_token);
             }
 
-            // Sauvegarder les infos utilisateur
             localStorage.setItem("user", JSON.stringify(response.data.user));
 
             return response.data;

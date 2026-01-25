@@ -44,115 +44,180 @@ export interface TER {
 	code: string;
 	year: number;
 	groups: GroupProject[];
+	projects: Project[];
 	status: string;
 	startDate: string;
 	endDate: string;
 };
 
+const alice: User = {
+	id: "u1",
+	first_name: "Alice",
+	last_name: "Martin",
+	email: "alice.martin@gmail.com",
+	groups: [],
+	is_staff: false,
+	is_superuser: false,
+};
+
+const bob: User = {
+	id: "u2",
+	first_name: "Bob",
+	last_name: "Durand",
+	email: "bob.durand@gmail.com",
+	groups: [],
+	is_staff: false,
+	is_superuser: false,
+};
+
+const charlie: User = {
+	id: "u3",
+	first_name: "Charlie",
+	last_name: "Dupont",
+	email: "charlie.dupont@gmail.com",
+	groups: [],
+	is_staff: false,
+	is_superuser: false,
+};
+
+const encadrant: User = {
+	id: "u4",
+	first_name: "Sébastien",
+	last_name: "Da Silva",
+	email: "sebastien.dasilva@lirmm.fr",
+	groups: [],
+	is_staff: true,
+	is_superuser: false,
+};
+
+/* ---------------- PROJECTS ---------------- */
+const projectA: Project = {
+	id: "p1",
+	ter_id: "TER-2026",
+	author: [encadrant],
+	title: "Plateforme d’évaluation des stages",
+	description: "Application web pour gérer les évaluations de stages.",
+	tasks: [
+		"Analyse des besoins",
+		"Développement frontend",
+		"Développement backend",
+	],
+	status: ProjectStatus.PUBLISHED,
+	created_date: "2026-09-01",
+	language: ["React", "TypeScript", "Django"],
+	min_person: 2,
+	max_person: 4,
+};
+
+const projectB: Project = {
+	id: "p2",
+	ter_id: "TER-2026",
+	author: [encadrant],
+	title: "Application mobile de gestion de planning",
+	description: "Outil mobile pour gérer les emplois du temps.",
+	tasks: ["UX design", "Mobile dev", "Tests"],
+	status: ProjectStatus.PUBLISHED,
+	created_date: "2026-09-05",
+	language: ["Flutter", "Firebase"],
+	min_person: 2,
+	max_person: 3,
+};
+
+const projectC: Project = {
+	id: "p3",
+	ter_id: "TER-2026",
+	author: [encadrant],
+	title: "Outil d’analyse de données pédagogiques",
+	description: "Analyse statistique des performances étudiantes.",
+	tasks: ["Data collection", "Data analysis", "Visualization"],
+	status: ProjectStatus.DRAFT,
+	created_date: "2026-09-10",
+	language: ["Python", "Pandas", "Matplotlib"],
+	min_person: 1,
+	max_person: 2,
+};
+
+/* ---------------- GROUPS ---------------- */
+const group1: Group = {
+	id: "g1",
+	students: [alice, bob],
+};
+
+const group2: Group = {
+	id: "g2",
+	students: [charlie, bob],
+};
+
+const group3: Group = {
+	id: "g3",
+	students: [alice, charlie],
+};
+
+/* ---------------- GROUP PROJECTS ---------------- */
+const groupProject1: GroupProject = {
+	id: "gp1",
+	titre: "Groupe Alpha",
+	group_leader: alice,
+	group: group1,
+	project: projectA,
+	objectives: [
+		{ title: "Cahier des charges", done: true },
+		{ title: "Prototype", done: false },
+	],
+	correcteur: encadrant,
+};
+
+const groupProject2: GroupProject = {
+	id: "gp2",
+	titre: "Groupe Beta",
+	group_leader: charlie,
+	group: group2,
+	project: projectB,
+	objectives: [
+		{ title: "Maquettes UX", done: true },
+		{ title: "Démo fonctionnelle", done: true },
+	],
+	correcteur: encadrant,
+};
+
+const groupProject3: GroupProject = {
+	id: "gp3",
+	titre: "Groupe Gamma",
+	group_leader: alice,
+	group: group3,
+	project: projectC,
+	objectives: [
+		{ title: "Maquettes UX", done: true },
+		{ title: "Démo fonctionnelle", done: true },
+	],
+	correcteur: encadrant,
+};
+
+/* ---------------- TER ---------------- */
+const mockTER: TER = {
+	title: "TER Informatique 2026",
+	code: "TER-2026",
+	year: 2026,
+	status: "EN_COURS",
+	startDate: "2026-09-01",
+	endDate: "2027-01-31",
+	groups: [groupProject1, groupProject2, groupProject3],
+	projects: [projectA, projectB, projectC],
+};
+
 export default class TERService {
-	public static async getTER(): Promise<TER>{
+	public static async getAllTER(): Promise<TER[]> {
 		try {
-			const mock_project: Project = {
-				id: "1",
-				ter_id: "TER-2025",
-				author: [
-					{
-						id: "1",
-						first_name: "Sébastien",
-						last_name: "Da Silva",
-						email: "sebastien.dasilva@lirmm.fr",
-						groups: [],
-						is_staff: true,
-						is_superuser: true,
-					}
-				],
-				title: "Développement d’une application pour l’évaluation des étudiants lors des expériences professionnelles.",
-				description: `Dans le cadre de sa formation, un étudiant peut être amené à effectuer de nombreux
-					stages d’immersion dans le monde professionnel. Ces expériences doivent faire l’objet
-					d’une évaluation de la part de l’encadrant en entreprise, ce qui entraîne de nombreux
-					échanges de courriels et de documents.
-		
-					Afin de faciliter cela et, surtout, d’automatiser les interactions, le développement
-					d’une application web a été démarré l’année dernière et doit se poursuivre cette année.
-		
-					Cette application devra permettre de gérer la totalité des étudiants du département
-					d’informatique, leurs encadrants industriels, voire académiques, ainsi que l’ensemble
-					des organismes qui accueillent les stagiaires.
-		
-					La solution devra être facilement utilisable par des non-informaticiens et permettre
-					l’importation et l’exportation de la totalité des données. De plus, une fonction de
-					recherche sera mise en place sur l’ensemble des informations de l’application.
-		
-					Un ensemble de documents est disponible pour la prise en main du projet, dont des
-					cahiers techniques et les rapports écrits l’année dernière.
-				`,
-				tasks: [
-					"Analyse des besoins",
-					"Conception de l’architecture",
-					"Développement frontend",
-					"Développement backend",
-					"Tests et documentation",
-				],
-				status: ProjectStatus.DRAFT,
-				created_date: "Septembre 10, 2025",
-				language: ["JavaScript", "TypeScript", "React", "Node.js"],
-				min_person: 2,
-				max_person: 4	
-			};
-		
-			const mock_user: User = {
-				id: "3",
-				email: "vincent@gmail.com",
-				first_name: "Vincent",
-				last_name: "Hannah",
-				groups: [],
-				is_staff: false,
-				is_superuser: false,
-			};
-		
-			const mock_leader: User = {
-				id: "3",
-				email: "lukas@gmail.com",
-				first_name: "Lukas",
-				last_name: "Bobbi",
-				groups: [],
-				is_staff: false,
-				is_superuser: false,
-			};
-		
-			const group_mock: Group = {
-				id: "2",
-				students: [
-					mock_leader,
-					mock_user,
-					mock_user,
-					mock_user,
-				]
-			}
-
-			const groupproject_mock: GroupProject = {
-				id: "G0",
-				group_leader: mock_leader,
-				titre: "Groupe A",
-				group: group_mock,
-				objectives: [],
-				project: mock_project
-			};
-
-			const mock_ter: TER = {
-				title: "Projet Programmation 2026",
-				code: "TER-2026",
-				year: 2026,
-				groups: [
-					groupproject_mock
-				],
-				status: "ee",
-				startDate: "",
-				endDate: "",
-			}
-
-			return mock_ter;
-		} catch (error){
+			return [mockTER];
+		} catch (error) {
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+	
+	public static async getTER(): Promise<TER> {
+		try {
+			return mockTER;
+		} catch (error) {
 			error_formatting(error as AxiosError<ApiError>);
 		}
 	}

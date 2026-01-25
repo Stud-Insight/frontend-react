@@ -53,8 +53,8 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 
 			<div className="dropdown-layout-style" ref={dropdownRef}>
 				<div className={open ? "dropdown-main-style active" : "dropdown-main-style"} onClick={open_handler}>
-					<label>{selected}</label>
-					{open ? <IoIosArrowUp/> : <IoIosArrowDown/>}
+					<span>{selected}</span>
+					{open ? <IoIosArrowDown/> : <IoIosArrowUp/>}
 				</div>
 
 				{open && 

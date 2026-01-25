@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import DashboardPage from "./DashboardPage";
+import DashboardPage from "../dashboard/DashboardPage";
 import ContainerWidget from "../../components/ui/ContainerWidget";
 import UserWidget from "../../components/objects/UserWidget";
 import ScheduleEventWidget from "../../components/ui/ScheduleEventWidget";
@@ -15,10 +15,10 @@ import { User } from "../../services/UserService";
 import { Project, ProjectStatus } from "../../services/ProjectService";
 import InfoWidget from "../../components/ui/InfoWidget";
 
-import "./TERPage.css"
-import "./DashboardPage.css"
+import "./TERInfoPage.css"
+import "../dashboard/DashboardPage.css"
 
-export default function TERPage(){
+export default function TERInfoPage(){
 	const [error, setError] = useState<string | null>();
 	const [project, setProject] = useState<Project | null>();
 	

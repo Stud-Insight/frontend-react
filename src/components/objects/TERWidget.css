@@ -1,0 +1,25 @@
+.ter-widget-title-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+}
+
+.ter-widget-icon {
+	display: flex;
+	padding: 10px;
+	font-size: 24px;
+	border-radius: 10px;
+	justify-content: center;
+	align-items: center;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent)
+}
+
+.ter-widget-date-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	align-items: center;
+	color: var(--gray1-col);
+}

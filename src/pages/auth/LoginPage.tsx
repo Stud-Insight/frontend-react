@@ -9,9 +9,12 @@ interface LoginPageProps {
 export default function LoginPage({children}: LoginPageProps){
     return (
         <div className="login-page-background">
-            <div className="login-page-container">
+            <div className="login-page-layout">
                 <Logo width={"400"} large={true} className="login-logo-style"/>
-                {children}
+
+				<div className="login-page-children-style">
+		 			{children}
+				</div>
             </div>
         </div>
     );

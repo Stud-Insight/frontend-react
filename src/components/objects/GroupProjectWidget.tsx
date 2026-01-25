@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
 import ContainerWidget from "../ui/ContainerWidget";
 import { GroupProject } from "../../services/TERService";
-import { FiUsers } from "react-icons/fi";
+import { FiUsers, FiUser } from "react-icons/fi";
 import IconButton from "../input/IconButton";
 import HorizontalDivider from "../ui/HorizontalDivider";
+import SubmitButton from "../input/SubmitButton";
 import "./GroupProjectWidget.css"
 
 import { MdDeleteOutline } from "react-icons/md";
@@ -42,8 +43,11 @@ export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
 					))}
 				</div>
 				
-				<label style={{fontWeight: "var(--small-bold)", color: "var(--gray1-col)"}}>Projet</label>
-				<label style={{fontWeight: "var(--big-bold)"}}>{group.project?.title}</label>
+				{group.group.students.length > 0 ?
+					<SubmitButton label={"Demande Rejoindre"}/>
+				:
+					<SubmitButton label={"Rejoindre"}/>
+				}
 			</div>
 			
 			

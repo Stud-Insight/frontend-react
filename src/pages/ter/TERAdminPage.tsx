@@ -1,23 +1,18 @@
 import React, {useState, useEffect}from "react";
-import DashboardPage from "./DashboardPage";
+import DashboardPage from "../dashboard/DashboardPage";
 import InfoWidget from "../../components/ui/InfoWidget";
-import ContainerWidget from "../../components/ui/ContainerWidget";
 import GroupProjectWidget from "../../components/objects/GroupProjectWidget";
 import SubmitButton from "../../components/input/SubmitButton";
 import InfoBox from "../../components/ui/InfoBox";
 
-import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
+import { FaRegFile } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-import { GroupProject, GroupObjective } from "../../services/TERService";
-import { Group } from "../../services/GroupService";
-import { User } from "../../services/UserService";
+import { FaPlus } from "react-icons/fa6";
 import TERService, { TER } from "../../services/TERService";
 
-import { ProjectStatus, Project } from "../../services/ProjectService";
-
-import "./DashboardPage.css"
+import "../dashboard/DashboardPage.css"
 import "./TERAdminPage.css"
 
 export default function TERAdminPage(){
@@ -40,7 +35,7 @@ export default function TERAdminPage(){
 
 	return (
 		<DashboardPage>
-			<label style={{fontWeight: 800, fontSize: "25px"}}>Gestion TER</label>
+			<label style={{fontWeight: 800, fontSize: "25px"}}>Gestion TERs</label>
 			<label>Choose a TER to view detailed information about groups, projects, and professors.</label>
 
 			<div className="dashbord-mini-info-layout">
@@ -58,7 +53,9 @@ export default function TERAdminPage(){
 				</div>
 			
 				<div className="dashboard-top-button-layout">
-					<SubmitButton label="Créer un groupe"/>
+					<div style={{width: "auto"}}>
+						<SubmitButton icon={<FaPlus/>} label="Ajouter Groupe"/>
+					</div>
 				</div>
 			</div>
 
