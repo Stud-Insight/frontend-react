@@ -52,7 +52,6 @@ export default function DashboardPage({children} : DashboardPageProps){
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
 					{/* <Logo width="auto" large={true}/> */}
-					<HorizontalDivider/>
 					<NavigationButton label="Accueil" active={currentPage == "home"} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="TER" active={currentPage == "select"} icon={<TbSchool/>} id="ter/select" onClick={(id) => page_change_handler(id)}/>
 					<NavigationButton label="Stages" active={currentPage == "stages"} icon={<MdWorkOutline/>} id="stages" onClick={(id) => page_change_handler(id)}/>

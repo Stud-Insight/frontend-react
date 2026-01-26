@@ -18,38 +18,57 @@ const error_formatting = (error: AxiosError<ApiError>): never => {
 	}
 };
 
-export interface GroupObjective {
-	title: string;
-	done: boolean;
+export enum TERStatus {
+	EN_COURS,
+	ARCHIVED
 };
 
-export interface GroupProject {
-	id: string;
-	group_leader: User;
-	titre: string;
-	group: Group;
-	objectives: GroupObjective[];
-  	project?: Project;
-	correcteur?: User;	
-};
-
-export interface Notation {
+export interface TERNotation {
 	titre: string;
 	max_notation: number;
 	coef: number;
 };
 
+export interface GroupObjective {
+	title: string;
+	done: boolean;
+};
+
+export interface TERGroup {
+	id: string;
+	leader?: User;
+	titre: string;
+	members: User[];
+	objectives?: GroupObjective[];
+  	project?: Project;
+	correcteur?: User;	
+};
+
+export interface TERPayload {
+	id: number;
+	title: string;
+	code: string;
+	year: number;
+	status: string;
+	start_date: string;
+	end_date: string;
+	max_groups: number;
+}
+
 export interface TER {
 	title: string;
 	code: string;
 	year: number;
-	groups: GroupProject[];
+	groups: TERGroup[];
 	projects: Project[];
+	notation: TERNotation[];
+	max_allowed_groups: number;
 	status: string;
 	startDate: string;
 	endDate: string;
 };
 
+/* ---------------- USERS ---------------- */
 const alice: User = {
 	id: "u1",
 	first_name: "Alice",
@@ -137,28 +156,12 @@ const projectC: Project = {
 	max_person: 2,
 };
 
-/* ---------------- GROUPS ---------------- */
-const group1: Group = {
+/* ---------------- TER GROUPS ---------------- */
+const group1: TERGroup = {
 	id: "g1",
-	students: [alice, bob],
-};
-
-const group2: Group = {
-	id: "g2",
-	students: [charlie, bob],
-};
-
-const group3: Group = {
-	id: "g3",
-	students: [alice, charlie],
-};
-
-/* ---------------- GROUP PROJECTS ---------------- */
-const groupProject1: GroupProject = {
-	id: "gp1",
 	titre: "Groupe Alpha",
-	group_leader: alice,
-	group: group1,
+	leader: alice,
+	members: [alice, bob],
 	project: projectA,
 	objectives: [
 		{ title: "Cahier des charges", done: true },
@@ -167,11 +170,11 @@ const groupProject1: GroupProject = {
 	correcteur: encadrant,
 };
 
-const groupProject2: GroupProject = {
-	id: "gp2",
+const group2: TERGroup = {
+	id: "g2",
 	titre: "Groupe Beta",
-	group_leader: charlie,
-	group: group2,
+	leader: charlie,
+	members: [charlie, bob],
 	project: projectB,
 	objectives: [
 		{ title: "Maquettes UX", done: true },
@@ -180,11 +183,11 @@ const groupProject2: GroupProject = {
 	correcteur: encadrant,
 };
 
-const groupProject3: GroupProject = {
-	id: "gp3",
+const group3: TERGroup = {
+	id: "g3",
 	titre: "Groupe Gamma",
-	group_leader: alice,
-	group: group3,
+	leader: alice,
+	members: [alice, charlie],
 	project: projectC,
 	objectives: [
 		{ title: "Maquettes UX", done: true },
@@ -193,27 +196,38 @@ const groupProject3: GroupProject = {
 	correcteur: encadrant,
 };
 
+/* ---------------- TER NOTATION ---------------- */
+const notation: TERNotation[] = [
+	{ titre: "Rapport", max_notation: 20, coef: 2 },
+	{ titre: "Soutenance", max_notation: 20, coef: 3 },
+	{ titre: "Travail en groupe", max_notation: 20, coef: 1 },
+];
+
 /* ---------------- TER ---------------- */
 const mockTER: TER = {
 	title: "TER Informatique 2026",
 	code: "TER-2026",
 	year: 2026,
-	status: "EN_COURS",
+	status: TERStatus.EN_COURS,
 	startDate: "2026-09-01",
 	endDate: "2027-01-31",
-	groups: [groupProject1, groupProject2, groupProject3],
+	max_allowed_groups: 10,
+	groups: [group1, group2, group3],
 	projects: [projectA, projectB, projectC],
+	notation,
 };
+
 
 export default class TERService {
 	public static async getAllTER(): Promise<TER[]> {
 		try {
-			return [mockTER];
+			const response = await api.get<TER[]>("/ter/");
+			return response.data;
 		} catch (error) {
 			error_formatting(error as AxiosError<ApiError>);
 		}
 	}
-	
+
 	public static async getTER(): Promise<TER> {
 		try {
 			return mockTER;

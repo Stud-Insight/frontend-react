@@ -6,16 +6,14 @@ import { IoEye } from "react-icons/io5";
 interface InputFieldProps {
     label?: string,
     icon?: React.ReactNode,
-    is_password?: boolean,
     placeholder?: string,
     offset?: number;
     value?: string
+	type?: string;
     onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, icon, value, is_password, offset = 0, onChange, placeholder = ""}: InputFieldProps){
-    const [showPassword, setShowPassword] = useState(false);
-
+export default function InputField({label, type = "text", icon, value, offset = 0, onChange, placeholder = ""}: InputFieldProps){
     return (
         <div className="input-field-container">
             {(icon || label) && (
@@ -33,7 +31,7 @@ export default function InputField({label, icon, value, is_password, offset = 0,
                 className = "input-field" 
                 value = {value ? value : ""}
                 placeholder = {placeholder}
-                type = {is_password ? (showPassword ? "text" : "password") : "text"}
+                type = {type}
                 onChange={onChange ? (e) => onChange(e.target.value) : undefined}
             />
         </div>

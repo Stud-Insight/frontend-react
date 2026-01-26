@@ -20,6 +20,7 @@ export enum ProjectStatus {
 	DRAFT,
 	SUBMITTED,
 	APPROVED,
+	PUBLISHED,
 	REJECTED
 };
 

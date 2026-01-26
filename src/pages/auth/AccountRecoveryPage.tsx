@@ -41,19 +41,18 @@ export default function AccountRecoveryPage() {
                 <InfoBox label="Veuillez saisir votre adresse e-mail pour recevoir un lien de reinitialisation de votre mot de passe." />
                 {error && <InfoBox label={error} type="error"/>}
                 {success && <InfoBox label={success} type="success"/>}
+				
                 <InputField
                     label="E-Mail"
+					type="email"
                     icon={<IoMail />}	
-                    is_password={false}
                     value={email}
                     onChange={setEmail}
-                    disabled={isSubmitting}
                 />
                 <HorizontalDivider />
                 <SubmitButton
                     label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}
                     type="submit"
-                    disabled={isSubmitting}
                 />
                 <LinkButton
                     label="Retour a la page de connexion"

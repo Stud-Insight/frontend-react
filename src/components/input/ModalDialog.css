@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,7 +14,6 @@
 .modal-dialog-content {
 	position: relative;
 	box-sizing: border-box;
-	width: 400px;
 	background-color: var(--white-col);
 	border-radius: 10px;
 	padding: 20px;

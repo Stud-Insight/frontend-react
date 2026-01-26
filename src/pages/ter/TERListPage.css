@@ -1,0 +1,20 @@
+.ter-list-addter-layout {
+	display: flex;
+	flex-direction: column;
+	width: 700px;
+	gap: 30px;
+}
+
+.ter-list-addter-container {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	gap: 30px;
+}
+
+.ter-list-addter-container-insider {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	gap: 10px;
+}

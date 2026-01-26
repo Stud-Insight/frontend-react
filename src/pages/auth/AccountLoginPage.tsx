@@ -41,32 +41,10 @@ export default function AccountLoginPage() {
         <LoginPage>
             <form method="POST" className="content-style-div" onSubmit={login_handle}>
                 {error ? <InfoBox label={error} type="error"/> : undefined}
-                <InputField
-                    label="E-Mail"
-                    value={email}
-                    onChange={setEmail}
-                    icon={<IoMail />}
-                    disabled={isSubmitting}
-                />
-                <InputField
-                    label="Mot de passe"
-                    value={password}
-                    onChange={setPassword}
-                    icon={<FaLock />}
-                    is_password={true}
-                    offset={-1.8}
-                    disabled={isSubmitting}
-                />
-                <LinkButton
-                    label="Mot de passe oublie ?"
-                    redirection="/auth/recovery"
-                    push_right={true}
-                />
-                <SubmitButton
-                    label={isSubmitting ? "Connexion..." : "Se connecter"}
-                    type="submit"
-                    disabled={isSubmitting}
-                />
+                <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail />}/>
+                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock />} offset={-1.8}/>
+                <LinkButton label="Mot de passe oublie ?" redirection="/auth/recovery" push_right={true}/>
+                <SubmitButton label={isSubmitting ? "Connexion..." : "Se connecter"} type="submit"/>
             </form>
         </LoginPage>
     );

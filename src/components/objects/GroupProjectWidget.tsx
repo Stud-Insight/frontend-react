@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import ContainerWidget from "../ui/ContainerWidget";
-import { GroupProject } from "../../services/TERService";
+import { TERGroup } from "../../services/TERService";
 import { FiUsers, FiUser } from "react-icons/fi";
 import IconButton from "../input/IconButton";
 import HorizontalDivider from "../ui/HorizontalDivider";
@@ -12,7 +12,7 @@ import { MdOutlineEdit } from "react-icons/md";
 import ProgressWidget from "../ui/ProgressWidget";
 
 interface GroupProjectWidgetProps {
-	group: GroupProject;
+	group: TERGroup;
 };
 
 export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
@@ -38,12 +38,12 @@ export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
 				</div>	
 
 				<div className="group-project-name-tags-layout">
-					{group.group.students.map((stud, index) => (
+					{group.members.map((stud, index) => (
 						<label className="group-project-name-tags">{stud.first_name} {stud.last_name}</label>
 					))}
 				</div>
 				
-				{group.group.students.length > 0 ?
+				{group.members.length > 0 ?
 					<SubmitButton label={"Demande Rejoindre"}/>
 				:
 					<SubmitButton label={"Rejoindre"}/>
