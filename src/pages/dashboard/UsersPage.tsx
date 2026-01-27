@@ -51,29 +51,43 @@ export default function UsersPage(){
 	// EXTERNE = "Externe"
 	// ADMIN = "Admin"
 
+	const roles: string[] = [
+		"Étudiant",
+		"Respo TER",
+		"Respo Stage",
+		"Encadrant",
+		"Externe",
+		"Admin"
+	]
+
 	const tagRoleMap = new Map<string, string>([
-		["Étudiant", "--blue-col"],
-		["Respo TER", "--purple-col"],
-		["Respo Stage", "--purple-col"],
-		["Encadrant", "--orange-col"],
-		["Externe", "--orange-col"],
-		["Admin", "--red-col"],
+		[roles[0], "--blue-col"],
+		[roles[1], "--purple-col"],
+		[roles[2], "--purple-col"],
+		[roles[3], "--purple-col"],
+		[roles[4], "--orange-col"],
+		[roles[5], "--red-col"],
 	]);
 
 	const modalWidth: number = 500;
 
-	const getStudentCount = () => {
-		let count: number = 0;
+	const getCountData = () => {
+		let countMap: Map<string, number> = new Map<string, number>();
+
+		roles.forEach(role => {
+			countMap.set(role, 0);
+		});
 
 		{users && users.map((user, index) => (
 			user.groups.map((group, index1) => {
-				if (group.name == "Étudiant") {
-					count += 1;
-				}				
+				let t: number | undefined = countMap.get(group.name);
+				if (t != undefined){
+					countMap.set(group.name, t + 1);
+				}
 			})
 		))}
 
-		return count;
+		return countMap;
 	};
 
 	const getAllUsers = async () => {
@@ -99,9 +113,9 @@ export default function UsersPage(){
 	const deleteHandle = async () => {
 		try {
 			await UserService.deleteUser(deleteUser?.id);
-			setSuccess(`Utilisateur "${deleteUser?.first_name} ${deleteUser?.last_name}" a était supprimé du système!`);
-			getAllUsers();
+			setSuccess(`Utilisateur "${deleteUser?.first_name} ${deleteUser?.last_name}" a été supprimé du système.`);
 			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -111,9 +125,10 @@ export default function UsersPage(){
 
 	const createHandle = async () => {
 		try {
-			await UserService.createUser(role, nom, prenom, mail);
-			setSuccess(`Utilisateur "${prenom} ${nom}" a était ajouté au système!`);
+			await UserService.createUser([role], nom, prenom, mail);
+			setSuccess(`Utilisateur "${prenom} ${nom}" a été ajouté au système.`);
 			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -138,20 +153,24 @@ export default function UsersPage(){
 	}
 
 	const editHandlePreload = (user: User) => {
+		setEditUser(user);
 		setMail(user.email);
 		setPrenom(user.first_name);
 		setNom(user.last_name);
-		
+
+		console.log(user.groups[0]);
+
 		if (user.groups.length > 0){
 			setRole(user.groups[0].name);
 		}
-
-		setEditUser(user);
 	}
 
 	const editHandle = async () => {
 		try {
-
+			await UserService.updateUser(editUser?.id, prenom, nom, mail, [role]);
+			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -204,20 +223,19 @@ export default function UsersPage(){
 
 			{createUser && 
 				<ModalDialog onClose={() => setCreateUser(false)} width={modalWidth}>
-					<InputField value={nom ? nom : undefined} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputField value={prenom ? prenom : undefined} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
-					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputDropdown label="Rôle" default_index={0} options={["Étudiant", "Respo TER", "Respo Stage", "Encadrant", "Externe", "Admin"]} onChange={setRole}/>
+					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
+					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
+					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
 					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
 
 			{editUser && 
 				<ModalDialog onClose={() => setEditUser(null)} width={modalWidth}>
-					<InputField value={nom ? nom : undefined} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputField value={prenom ? prenom : undefined} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
-					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputDropdown label="Rôle" default_index={0} options={["Étudiant", "Respo TER", "Respo Stage", "Encadrant", "Externe", "Admin"]} onChange={setRole}/>
+					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
+					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
 					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
@@ -256,17 +274,21 @@ export default function UsersPage(){
 				</div>
 			</div>
 
-			<label style={{color: "var(--gray1-col)"}}>Gestion des utilisateurs.</label>
+			<label style={{color: "var(--gray1-col)"}}>Gérez les comptes utilisateurs, leurs rôles et leurs accès à la plateforme.</label>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="Etudiant" icon={<FiUser/>} info={getStudentCount()} color="var(--blue-col)"/>
-				<InfoWidget label="Enseignant" icon={<FiUser/>} info={0} color="var(--purple-col)"/>
-				<InfoWidget label="Extern" icon={<FiUser/>} info={0} color="var(--orange-col)"/>
-				<InfoWidget label="Administrateur" icon={<FiUser/>} info={0} color="var(--red-col)"/>
+				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color={`var(--blue-col)`}/>
+				<InfoWidget label="Etudiant" icon={<FiUser/>} info={getCountData().get("Étudiant")} color="var(--blue-col)"/>
+				<InfoWidget label="Externe" icon={<FiUser/>} info={getCountData().get("Externe")} color="var(--orange-col)"/>
+			</div>
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Encadrant" icon={<FiUser/>} info={getCountData().get("Encadrant")} color="var(--purple-col)"/>
+				<InfoWidget label="Résponsable" icon={<FiUser/>} info={getCountData().get("Respo Stage") + getCountData().get("Respo TER")} color="var(--purple-col)"/>
+				<InfoWidget label="Admin" icon={<FiUser/>} info={getCountData().get("Admin")} color="var(--red-col)"/>
 			</div>
 
 			<table className="users-table-style">

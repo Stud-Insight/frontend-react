@@ -8,14 +8,15 @@ import "./InputDropdown.css"
 interface InputDropdownProps {
 	label?: string;
 	default_index?: number;
+	value?: string;
 	options: string[];
 	close_after_selection?: boolean;
 	onChange?: (value: string) => void; 
 };
 
-export default function InputDropdown({label, default_index = 0, close_after_selection = true, options, onChange}: InputDropdownProps){
+export default function InputDropdown({label, default_index = 0, value, close_after_selection = true, options, onChange}: InputDropdownProps){
 	const [open, setOpen] = useState(false);
-	const [selected, setSelected] = useState(options[default_index]);
+	const [selected, setSelected] = useState<string>(options[default_index]);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const open_handler = () => {
@@ -39,6 +40,7 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 		}
 
 		selection_handler(selected);
+		value && setSelected(value);
 
 		document.addEventListener("mousedown", clickout_handler);
 

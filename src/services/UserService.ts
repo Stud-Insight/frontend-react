@@ -90,7 +90,7 @@ export default class UserService {
 				groups: roles,
 			};
 
-			await api.put(`/users/${id}`);
+			await api.put(`/users/${id}`, load);
 		} catch (error){
 			error_formatting(error as AxiosError<ApiError>);
 		}
@@ -105,7 +105,7 @@ export default class UserService {
 		}
 	}
 
-	public static async createUser(role: string, nom: string, prenom: string, email: string): Promise<User> {
+	public static async createUser(roles: string[], nom: string, prenom: string, email: string): Promise<User> {
 		try {
 			await AuthService.getCSRFToken();
 
@@ -113,7 +113,7 @@ export default class UserService {
 				email: email,
 				first_name: prenom,
 				last_name: nom,
-				groups: []
+				groups: roles,
         	};
 
 			const response = await api.post<User>("/users/create", p);

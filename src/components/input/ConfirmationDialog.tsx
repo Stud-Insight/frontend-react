@@ -13,7 +13,7 @@ interface ConfirmationDialogProps {
 
 export default function ConfirmationDialog({label, info, onCancel, onConfirm}: ConfirmationDialogProps){
 	return (
-		<ModalDialog onClose={onCancel}>
+		<ModalDialog onClose={onCancel} width={500}>
 			<div className="confirmation-dialog-layout">
 				<label className="confirmation-dialog-titre">{label}</label>
 				<label className="confirmation-dialog-info">{info}</label>
