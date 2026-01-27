@@ -10,19 +10,22 @@ import { FaArrowTrendUp } from "react-icons/fa6";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
-import TERService, { TER } from "../../services/TERService";
+import TERService, { TERPeriod  } from "../../services/TERService";
+
+import { useParams } from "react-router-dom";
 
 import "../dashboard/DashboardPage.css"
 import "./TERAdminPage.css"
 
 export default function TERAdminPage(){
 	const [error, setError] = useState<string | null>(null);
-	const [selectedTER, setSelectedTER] = useState<TER | null>();
+	const { id } = useParams<{ id: string }>();
+	const [selectedTER, setSelectedTER] = useState<TERPeriod | null>();
 
 	useEffect(() => {
 		const getTer = async () => {
 			try {
-				const data = await TERService.getTER();
+				const data = await TERService.getPeriod(id);
 				setSelectedTER(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -39,7 +42,7 @@ export default function TERAdminPage(){
 			<label>Choose a TER to view detailed information about groups, projects, and professors.</label>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Groupes" icon={<FiUsers/>} info={selectedTER ? selectedTER?.groups.length : 0} color="var(--blue-col)"/>
+				<InfoWidget label="Groupes" icon={<FiUsers/>} info={0} color="var(--blue-col)"/>
 				<InfoWidget label="Projets" icon={<FaRegFile/>} info={0} color="var(--blue-col)"/>
 				<InfoWidget label="Encadrants" icon={<FiUser/>} info={0} color="var(--purple-col)"/>
 				<InfoWidget label="Avançement Moyen" icon={<FaArrowTrendUp/>} info={`${0 * 100}%`} color="var(--orange-col)"/>
@@ -59,9 +62,9 @@ export default function TERAdminPage(){
 				</div>
 			</div>
 
-			{selectedTER && selectedTER?.groups.map((group, index) => (
+			{/* {selectedTER && selectedTER?.groups.map((group, index) => (
 				<GroupProjectWidget group={group}/>
-			))}
+			))} */}
 			
 		</DashboardPage>
 	)

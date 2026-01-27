@@ -6,7 +6,7 @@ import { Group } from "./GroupService";
 const api = axios.create({
     baseURL: process.env.API_URL,
     headers: { "Content-Type": "application/json" },
-    withCredentials: true, // Pour envoyer les cookies de session
+    withCredentials: true,
     timeout: 10000,
 });
 
@@ -44,194 +44,117 @@ export interface TERGroup {
 	correcteur?: User;	
 };
 
-export interface TERPayload {
-	id: number;
+export interface TERSubject {
+	id: string;
 	title: string;
-	code: string;
-	year: number;
-	status: string;
-	start_date: string;
-	end_date: string;
+	description: string;
+	domain: string;
+	status: "draft" | "submitted" | "validated" | "rejected";
 	max_groups: number;
+	ter_period_id: string;
+	professor?: User;
+	supervisor?: User;
+	is_favorite?: boolean;
 }
 
-export interface TER {
-	title: string;
-	code: string;
-	year: number;
-	groups: TERGroup[];
-	projects: Project[];
-	notation: TERNotation[];
-	max_allowed_groups: number;
-	status: string;
-	startDate: string;
-	endDate: string;
-};
+export interface TERPeriodCreatePayload {
+	name: string;
+	academic_year: string;
+	group_formation_start: string;
+	group_formation_end: string;
+	subject_selection_start: string;
+	subject_selection_end: string;
+	assignment_date: string;
+	project_start: string;
+	project_end: string;
+	min_group_size?: number;
+	max_group_size?: number;
+}
 
-/* ---------------- USERS ---------------- */
-const alice: User = {
-	id: "u1",
-	first_name: "Alice",
-	last_name: "Martin",
-	email: "alice.martin@gmail.com",
-	groups: [],
-	is_staff: false,
-	is_superuser: false,
-};
+export interface TERPeriod {
+	id: string;
+	name: string;
+	academic_year: string;
+	status: "draft" | "open" | "closed" | "archived";
+	group_formation_start: string;
+	group_formation_end: string;
+	subject_selection_start?: string;
+	subject_selection_end?: string;
+	assignment_date?: string;
+	project_start?: string;
+	project_end?: string;
+	min_group_size: number;
+	max_group_size: number;
+}
 
-const bob: User = {
-	id: "u2",
-	first_name: "Bob",
-	last_name: "Durand",
-	email: "bob.durand@gmail.com",
-	groups: [],
-	is_staff: false,
-	is_superuser: false,
-};
-
-const charlie: User = {
-	id: "u3",
-	first_name: "Charlie",
-	last_name: "Dupont",
-	email: "charlie.dupont@gmail.com",
-	groups: [],
-	is_staff: false,
-	is_superuser: false,
-};
-
-const encadrant: User = {
-	id: "u4",
-	first_name: "Sébastien",
-	last_name: "Da Silva",
-	email: "sebastien.dasilva@lirmm.fr",
-	groups: [],
-	is_staff: true,
-	is_superuser: false,
-};
-
-/* ---------------- PROJECTS ---------------- */
-const projectA: Project = {
-	id: "p1",
-	ter_id: "TER-2026",
-	author: [encadrant],
-	title: "Plateforme d’évaluation des stages",
-	description: "Application web pour gérer les évaluations de stages.",
-	tasks: [
-		"Analyse des besoins",
-		"Développement frontend",
-		"Développement backend",
-	],
-	status: ProjectStatus.PUBLISHED,
-	created_date: "2026-09-01",
-	language: ["React", "TypeScript", "Django"],
-	min_person: 2,
-	max_person: 4,
-};
-
-const projectB: Project = {
-	id: "p2",
-	ter_id: "TER-2026",
-	author: [encadrant],
-	title: "Application mobile de gestion de planning",
-	description: "Outil mobile pour gérer les emplois du temps.",
-	tasks: ["UX design", "Mobile dev", "Tests"],
-	status: ProjectStatus.PUBLISHED,
-	created_date: "2026-09-05",
-	language: ["Flutter", "Firebase"],
-	min_person: 2,
-	max_person: 3,
-};
-
-const projectC: Project = {
-	id: "p3",
-	ter_id: "TER-2026",
-	author: [encadrant],
-	title: "Outil d’analyse de données pédagogiques",
-	description: "Analyse statistique des performances étudiantes.",
-	tasks: ["Data collection", "Data analysis", "Visualization"],
-	status: ProjectStatus.DRAFT,
-	created_date: "2026-09-10",
-	language: ["Python", "Pandas", "Matplotlib"],
-	min_person: 1,
-	max_person: 2,
-};
-
-/* ---------------- TER GROUPS ---------------- */
-const group1: TERGroup = {
-	id: "g1",
-	titre: "Groupe Alpha",
-	leader: alice,
-	members: [alice, bob],
-	project: projectA,
-	objectives: [
-		{ title: "Cahier des charges", done: true },
-		{ title: "Prototype", done: false },
-	],
-	correcteur: encadrant,
-};
-
-const group2: TERGroup = {
-	id: "g2",
-	titre: "Groupe Beta",
-	leader: charlie,
-	members: [charlie, bob],
-	project: projectB,
-	objectives: [
-		{ title: "Maquettes UX", done: true },
-		{ title: "Démo fonctionnelle", done: true },
-	],
-	correcteur: encadrant,
-};
-
-const group3: TERGroup = {
-	id: "g3",
-	titre: "Groupe Gamma",
-	leader: alice,
-	members: [alice, charlie],
-	project: projectC,
-	objectives: [
-		{ title: "Maquettes UX", done: true },
-		{ title: "Démo fonctionnelle", done: true },
-	],
-	correcteur: encadrant,
-};
-
-/* ---------------- TER NOTATION ---------------- */
-const notation: TERNotation[] = [
-	{ titre: "Rapport", max_notation: 20, coef: 2 },
-	{ titre: "Soutenance", max_notation: 20, coef: 3 },
-	{ titre: "Travail en groupe", max_notation: 20, coef: 1 },
-];
-
-/* ---------------- TER ---------------- */
-const mockTER: TER = {
-	title: "TER Informatique 2026",
-	code: "TER-2026",
-	year: 2026,
-	status: TERStatus.EN_COURS,
-	startDate: "2026-09-01",
-	endDate: "2027-01-31",
-	max_allowed_groups: 10,
-	groups: [group1, group2, group3],
-	projects: [projectA, projectB, projectC],
-	notation,
-};
-
+export interface TERPeriodStats {
+	subjects: number;
+	projects: number;
+	groups: number;
+	students: number;
+}
 
 export default class TERService {
-	public static async getAllTER(): Promise<TER[]> {
+	public static async getAllPeriods(): Promise<TERPeriod[]> {
 		try {
-			const response = await api.get<TER[]>("/ter/");
-			return response.data;
-		} catch (error) {
+			const res = await api.get<TERPeriod[]>("/ter/periods/");
+			return res.data;
+		} catch (error){
 			error_formatting(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async getTER(): Promise<TER> {
+	public static async getPeriodStats(id: string): Promise<TERPeriodStats> {
 		try {
-			return mockTER;
-		} catch (error) {
+			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}/stats`);
+			return res.data;
+		} catch (error){
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getPeriod(id: string): Promise<TERPeriod>{
+		try {
+			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}`);
+			return res.data;		
+		} catch (error){
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[]> {
+		try {
+			// const p: TERPeriodCreatePayload = {
+			// 	name: title,
+			// 	academic_year: academic_year,
+			// 	group_formation_start: groupStartDate,
+			// 	group_formation_end: groupEndDate,
+			// 	subject_selection_start: groupStartDate,
+			// 	subject_selection_end: groupEndDate,
+			// 	assignment_date: assignmentDate,
+			// 	project_start: start_date,
+			// 	project_end: end_date,
+			// 	min_group_size: 2,
+			// 	max_group_size: 4,
+			// };
+
+			const mock: TERPeriodCreatePayload = {
+				name: "TER Informatique",
+				academic_year: "2026-2027",
+				group_formation_start: "2026-09-01",
+				group_formation_end: "2026-09-10",
+				subject_selection_start: "2026-09-11",
+				subject_selection_end: "2026-09-25",
+				assignment_date: "2026-09-30",
+				project_start: "2026-10-01",
+				project_end: "2027-01-31",
+				min_group_size: 2,
+				max_group_size: 4,
+			};
+
+			const res = await api.post<TERPeriod>("/ter/periods/", mock);
+			return res.data;
+		} catch (error){
 			error_formatting(error as AxiosError<ApiError>);
 		}
 	}

@@ -104,6 +104,22 @@ export default class UserService {
 		}	
 	}
 
+	public static async importUserCSV(file: File): Promise<void> {
+		try {
+			const formData = new FormData();
+
+			formData.append("file", file);
+
+			await api.post("/users/import-csv", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+		} catch (error) {
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async deleteUser(id: string | undefined): Promise<void> {
 		try {
 			await this.getCSRFToken();

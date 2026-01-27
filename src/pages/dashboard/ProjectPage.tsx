@@ -84,7 +84,7 @@ export default function ProjectPage(){
 			</div>
 
 			{projects.map((proj, index) => (
-				<ProjectWidget project={proj} onDelete={() => setDeleteProject(proj)} onEdit={() => edit_handle()}/>
+				<ProjectWidget key={index} project={proj} onDelete={() => setDeleteProject(proj)} onEdit={() => edit_handle()}/>
 			))}
 
 			{deleteProject &&

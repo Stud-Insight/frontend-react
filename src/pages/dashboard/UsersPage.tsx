@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import DashboardPage from "./DashboardPage";
 import SubmitButton from "../../components/input/SubmitButton";
 import InfoBox from "../../components/ui/InfoBox";
@@ -42,19 +42,17 @@ export default function UsersPage(){
 	const [mail, setMail] = useState<string | null>(null);
 	const [role, setRole] = useState<string | null>(null);
 
-	useEffect(() => {
-		const getAllUsers = async () => {
-			try {
-				const data = await UserService.getAllUsers();
-				setUsers(data);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		}
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-		getAllUsers();
-	}, []);
+	const getAllUsers = async () => {
+		try {
+			const data = await UserService.getAllUsers();
+			setUsers(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
 
 	const userSelectionHandle = (id: string) => {
 		if (selectedUsers.has(id)){
@@ -69,8 +67,9 @@ export default function UsersPage(){
 	const deleteHandle = async () => {
 		try {
 			await UserService.deleteUser(deleteUser?.id);
-			setSuccess(`Utilisateur (${deleteUser?.first_name} ${deleteUser?.last_name}) a était supprimé du système!`);
-			setTimeout(() => setSuccess(null), 3000);
+			setSuccess(`Utilisateur "${deleteUser?.first_name} ${deleteUser?.last_name}" a était supprimé du système!`);
+			getAllUsers();
+			setTimeout(() => setSuccess(null), 5000);
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -81,13 +80,13 @@ export default function UsersPage(){
 	const createHandle = async () => {
 		try {
 			await UserService.createUser(role ? role : "", nom ? nom : "", prenom ? prenom : "", mail ? mail : "");
-			setSuccess(`Utilisateur (${prenom} ${nom}) a était ajouté au système!`);
+			setSuccess(`Utilisateur "${prenom} ${nom}" a était ajouté au système!`);
 			setMail(null);
 			setPrenom(null);
 			setNom(null);
 			setRole(null);
 
-			setTimeout(() => setSuccess(null), 3000);
+			setTimeout(() => setSuccess(null), 5000);
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -134,10 +133,34 @@ export default function UsersPage(){
         });
 	}
 	
-	const tag_class: string = "users-table-tag";
+	const fileSelectionHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
 
+		if (!file.name.endsWith(".csv")) {
+			setError("Veuillez sélectionner un fichier CSV.");
+			return;
+		}
+
+		try {
+			await UserService.importUserCSV(file);
+			setSuccess(`Fichier ${file.name} importé avec succès.`);
+			getAllUsers();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	useEffect(() => {
+		getAllUsers();
+	}, []);
+	
 	return (
 		<DashboardPage>
+			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
+
 			{createUser && 
 				<ModalDialog label="Creation user" onClose={() => setCreateUser(false)}>
 					<InputField value={nom ? nom : undefined} icon={<FiUser/>} label="Nom" onChange={setNom}/>
@@ -183,7 +206,7 @@ export default function UsersPage(){
 
 				<div className="dashboard-top-button-layout">
 					<div style={{width: "auto"}}>
-						<SubmitButton icon={<CgExport/>} label="Importer CSV"/>
+						<SubmitButton icon={<CgExport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
 					</div>
 
 					<div style={{width: "auto"}}>

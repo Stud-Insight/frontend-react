@@ -86,9 +86,9 @@ function AppRoutes() {
             </Route>
 
 			<Route path="/dashboard/ter">
-				<Route path="admin" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
 				<Route path="select" element={<ProtectedRoute><TERSelectionPage/></ProtectedRoute>}/>
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
+				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
 			</Route>
 
             <Route path="/" element={<RootRedirect/>} />

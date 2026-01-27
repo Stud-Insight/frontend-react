@@ -4,7 +4,7 @@ import { User } from "./UserService"
 const api = axios.create({
     baseURL: process.env.API_URL,
     headers: { "Content-Type": "application/json" },
-    withCredentials: true, // Pour envoyer les cookies de session
+    withCredentials: true,
     timeout: 10000,
 });
 

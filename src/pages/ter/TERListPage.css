@@ -5,16 +5,16 @@
 	gap: 30px;
 }
 
-.ter-list-addter-container {
+.ter-list-addter-row {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 	gap: 30px;
 }
 
-.ter-list-addter-container-insider {
+.ter-list-addter-container {
 	display: flex;
 	flex-direction: column;
-	flex: 1;
-	gap: 10px;
+	width: 100%;
+	gap: 30px;
 }
