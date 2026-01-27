@@ -7,17 +7,18 @@ import "./ModalDialog.css";
 interface ModalProps {
 	label?: string;
 	children: ReactNode;
+	width?: number;
 	onClose?: () => void; 
 };
 
-export default function ModalDialog({label, onClose, children}: ModalProps){
+export default function ModalDialog({label, onClose, children, width = "auto"}: ModalProps){
 	const close_handler = () => {
 		onClose ? onClose() : undefined;
 	};
 
 	return (
 		<div className="modal-dialog-layout">
-			<div className="modal-dialog-content">
+			<div className="modal-dialog-content" style={{width: width}}>
 				<div className="modal-exit-button">
 					<IconButton icon={<RxCross2/>} onClick={close_handler}/>
 				</div>

@@ -66,7 +66,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 					<div className="project-widget-title-right">
 						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{project.title}</label>
 						{project.author && project.author.map((user, index) => (
-							<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{user.first_name} {user.last_name.toUpperCase()}</label>
+							<label key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}>{user.first_name} {user.last_name.toUpperCase()}</label>
 						))}
 					</div>
 				</div>
@@ -76,7 +76,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 
 					<div className="project-widget-task-list">
 						{project.tasks && project.tasks.map((task, index) => (
-							<div style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
+							<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
 						))}
 					</div>		
 				</div>
@@ -99,7 +99,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 
 						<div className="project-widget-footer-layout">
 							<div className="project-widget-footer-content">
-								<div className={get_status_class()}>{get_status_tag()}</div>
+								<TagWidget label={get_status_tag()} color="var(--blue-col)"/>
 								-
 								<label style={{fontSize: "14px"}}>{project.created_date}</label>
 							</div>

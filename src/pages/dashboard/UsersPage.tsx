@@ -37,12 +37,44 @@ export default function UsersPage(){
 	const [editUser, setEditUser] = useState<User | null>(null);
 	const [blockUser, setBlockUser] = useState<User | null>(null);
 	const [selectedUsers, setSelectedUsers] = useState(new Set(["1", "2"]));
-	const [prenom, setPrenom] = useState<string | null>(null);
-	const [nom, setNom] = useState<string | null>(null);
-	const [mail, setMail] = useState<string | null>(null);
-	const [role, setRole] = useState<string | null>(null);
+	const [prenom, setPrenom] = useState<string>("");
+	const [nom, setNom] = useState<string>("");
+	const [mail, setMail] = useState<string>("");
+	const [role, setRole] = useState<string>("");
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	// ETUDIANT = "Étudiant"
+	// RESPO_TER = "Respo TER"
+	// RESPO_STAGE = "Respo Stage"
+	// ENCADRANT = "Encadrant"
+	// EXTERNE = "Externe"
+	// ADMIN = "Admin"
+
+	const tagRoleMap = new Map<string, string>([
+		["Étudiant", "--blue-col"],
+		["Respo TER", "--purple-col"],
+		["Respo Stage", "--purple-col"],
+		["Encadrant", "--orange-col"],
+		["Externe", "--orange-col"],
+		["Admin", "--red-col"],
+	]);
+
+	const modalWidth: number = 500;
+
+	const getStudentCount = () => {
+		let count: number = 0;
+
+		{users && users.map((user, index) => (
+			user.groups.map((group, index1) => {
+				if (group.name == "Étudiant") {
+					count += 1;
+				}				
+			})
+		))}
+
+		return count;
+	};
 
 	const getAllUsers = async () => {
 		try {
@@ -79,19 +111,18 @@ export default function UsersPage(){
 
 	const createHandle = async () => {
 		try {
-			await UserService.createUser(role ? role : "", nom ? nom : "", prenom ? prenom : "", mail ? mail : "");
+			await UserService.createUser(role, nom, prenom, mail);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a était ajouté au système!`);
-			setMail(null);
-			setPrenom(null);
-			setNom(null);
-			setRole(null);
-
 			setTimeout(() => setSuccess(null), 5000);
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
 
+		setMail("");
+		setPrenom("");
+		setNom("");
+		setRole("");
 		setCreateUser(false);
 	}
 
@@ -110,6 +141,10 @@ export default function UsersPage(){
 		setMail(user.email);
 		setPrenom(user.first_name);
 		setNom(user.last_name);
+		
+		if (user.groups.length > 0){
+			setRole(user.groups[0].name);
+		}
 
 		setEditUser(user);
 	}
@@ -121,6 +156,12 @@ export default function UsersPage(){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
+
+		setMail("");
+		setPrenom("");
+		setNom("");
+		setRole("");
+		setEditUser(null);
 	}
 
 	const dateFormat = (dateString: string) => {
@@ -162,21 +203,21 @@ export default function UsersPage(){
 			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
 
 			{createUser && 
-				<ModalDialog label="Creation user" onClose={() => setCreateUser(false)}>
+				<ModalDialog onClose={() => setCreateUser(false)} width={modalWidth}>
 					<InputField value={nom ? nom : undefined} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={prenom ? prenom : undefined} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
-					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" onChange={setMail}/>
-					<InputDropdown label="Rôle" default_index={0} options={["Etudiant", "Extern", "Enseignant", "Administrateur"]} onChange={setRole}/>
+					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
+					<InputDropdown label="Rôle" default_index={0} options={["Étudiant", "Respo TER", "Respo Stage", "Encadrant", "Externe", "Admin"]} onChange={setRole}/>
 					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
 
 			{editUser && 
-				<ModalDialog label="Edit user" onClose={() => setEditUser(null)}>
+				<ModalDialog onClose={() => setEditUser(null)} width={modalWidth}>
 					<InputField value={nom ? nom : undefined} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={prenom ? prenom : undefined} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
-					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" onChange={setMail}/>
-					<InputDropdown label="Rôle" default_index={0} options={["Etudiant", "Extern", "Enseignant", "Administrateur"]} onChange={setRole}/>
+					<InputField value={mail ? mail : undefined} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
+					<InputDropdown label="Rôle" default_index={0} options={["Étudiant", "Respo TER", "Respo Stage", "Encadrant", "Externe", "Admin"]} onChange={setRole}/>
 					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
@@ -222,7 +263,7 @@ export default function UsersPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="Etudiant" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="Etudiant" icon={<FiUser/>} info={getStudentCount()} color="var(--blue-col)"/>
 				<InfoWidget label="Enseignant" icon={<FiUser/>} info={0} color="var(--purple-col)"/>
 				<InfoWidget label="Extern" icon={<FiUser/>} info={0} color="var(--orange-col)"/>
 				<InfoWidget label="Administrateur" icon={<FiUser/>} info={0} color="var(--red-col)"/>
@@ -238,7 +279,6 @@ export default function UsersPage(){
                         <th>Dâte Activation</th>
                         <th>Dâte Connexion</th>
 						<th>Rôle</th>
-						{/* <th>Status</th> */}
 						<th></th>
                     </tr>
                 </thead>
@@ -255,8 +295,13 @@ export default function UsersPage(){
 							<td>{user.email}</td>
                             <td>{dateFormat(user.date_joined)}</td>
                             <td>{user.last_login ? dateFormat(user.last_login): undefined}</td>
-							<td><TagWidget label={"Administrateur"} color="var(--red-col)"/></td>
-							{/* <td><TagWidget label={"Actif"} color="var(--green-col)"/></td> */}
+							<td>
+								<div className="users-table-tag-layout">
+									{user.groups.map((role, index) => (
+										<TagWidget label={role.name} color={`var(${tagRoleMap.get(role.name)})`}/>
+									))}
+								</div>
+							</td>
 
 							<td>
 								<div className="users-table-options">

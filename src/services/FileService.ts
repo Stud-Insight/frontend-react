@@ -7,7 +7,6 @@ const api = axios.create({
     timeout: 30000,
 });
 
-// Types
 export interface Attachment {
     id: string;
     original_filename: string;
@@ -26,15 +25,6 @@ interface ApiError {
     code: string;
     message: string;
 }
-
-// Intercepteur CSRF
-api.interceptors.request.use((config) => {
-    const csrfToken = localStorage.getItem("csrf_token");
-    if (csrfToken && config.method !== "get") {
-        config.headers["X-CSRFToken"] = csrfToken;
-    }
-    return config;
-});
 
 const handleApiError = (error: AxiosError<ApiError>): never => {
     if (error.response) {

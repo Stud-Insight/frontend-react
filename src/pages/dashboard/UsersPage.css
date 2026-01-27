@@ -37,3 +37,9 @@
 	gap: 12px;
 	font-size: 18px;
 }
+
+.users-table-tag-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
