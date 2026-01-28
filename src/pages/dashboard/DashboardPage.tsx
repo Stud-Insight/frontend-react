@@ -30,9 +30,8 @@ export default function DashboardPage({children} : DashboardPageProps){
     const { user } = useAuth();
 	const { logout } = useAuth();
 
-    const location = useLocation();
+    const { pathname } = useLocation();
     const navigate = useNavigate();
-    const currentPage = location.pathname.split("/").pop();
 
     const logout_handle = async () => {
         try {
@@ -47,27 +46,42 @@ export default function DashboardPage({children} : DashboardPageProps){
         navigate("/dashboard/" + id);
     }
 
+	const isRole = (role: string) => {
+		user?.groups.forEach((group, index) => {
+			if (group.name == role) {
+				return true;
+			}
+		});	
+		return false;
+	}
+	const roles: string[] = [
+		"Étudiant",
+		"Respo TER",
+		"Respo Stage",
+		"Encadrant",
+		"Externe",
+		"Admin"
+	]
+
     return (
         <div className="dashboard-content">
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
 					{/* <Logo width="auto" large={true}/> */}
-					<NavigationButton label="Accueil" active={currentPage == "home"} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="TER" active={currentPage == "select"} icon={<TbSchool/>} id="ter/select" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="Stages" active={currentPage == "stages"} icon={<MdWorkOutline/>} id="stages" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="Messages" active={currentPage == "chat"} icon={<LuMessageSquare/>} id="chat" onClick={(id) => page_change_handler(id)}/>
-					<NavigationButton label="Calendrier" active={currentPage == "calender"} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => page_change_handler(id)}/>
-
-					{user?.is_superuser && 
-						<>
-							<HorizontalDivider/>
-							<NavigationButton label="Mes Projets" active={currentPage == "projets"} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
-							<NavigationButton label="Gestion TERs" active={currentPage == "list"} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => page_change_handler(id)}/>
-							<NavigationButton label="Gestion Utilisateurs" active={currentPage == "users"} icon={<FiUsers/>} id="users" onClick={(id) => page_change_handler(id)}/>
-							<NavigationButton label="Archives" active={currentPage == "archive"} icon={<FiArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
-							<HorizontalDivider/>
-						</>
-					}
+					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => page_change_handler(id)}/>
+					<NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => page_change_handler(id)}/>
+					<HorizontalDivider/>
+					
+					<>
+						<NavigationButton label="Mes Projets" active={pathname.startsWith("/dashboard/projets")} icon={<FaRegFolder/>} id="projets" onClick={(id) => page_change_handler(id)}/>
+						<NavigationButton label="Gestion TERs" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => page_change_handler(id)}/>
+						<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => page_change_handler(id)}/>
+						<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
+						<HorizontalDivider/>
+					</>
 				</div>
 
 				<div className="dashboard-sidebar-content">

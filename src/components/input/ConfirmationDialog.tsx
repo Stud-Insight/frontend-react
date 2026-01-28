@@ -18,8 +18,8 @@ export default function ConfirmationDialog({label, info, onCancel, onConfirm}: C
 				<label className="confirmation-dialog-titre">{label}</label>
 				<label className="confirmation-dialog-info">{info}</label>
 				<div className="confirmation-dialog-buttons-layout">
-					<SubmitButton label="Annuler" style="cancel" onChange={onCancel}/>
-					<SubmitButton label="Confirmer" style="danger" onChange={onConfirm}/>
+					<SubmitButton label="Annuler" style="cancel" width={`${100}%`} onChange={onCancel}/>
+					<SubmitButton label="Confirmer" style="danger" width={`${100}%`} onChange={onConfirm}/>
 				</div>
 			</div>
 		</ModalDialog>

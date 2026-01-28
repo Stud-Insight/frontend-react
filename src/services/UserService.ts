@@ -8,6 +8,15 @@ const api = axios.create({
     timeout: 10000,
 });
 
+export enum UserRole {
+	ETUDIANT = "Étudiant",
+	RESPO_TER = "Respo TER",
+	RESPO_STAGE = "Respo Stage",
+	ENCADRANT = "Encadrant",
+	EXTERNE = "Externe",
+	ADMIN = "Admin",
+}
+
 export interface Group {
     name: string;
     permissions: string[];

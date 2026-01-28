@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import DashboardPage from "./DashboardPage";
 import SubmitButton from "../../components/input/SubmitButton";
 import InfoBox from "../../components/ui/InfoBox";
-import UserService, { User } from "../../services/UserService";
+import UserService, { User, UserRole } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
 import IconButton from "../../components/input/IconButton";
@@ -12,7 +12,8 @@ import InputField from "../../components/input/InputField";
 import InputDropdown from "../../components/input/InputDropdown"
 import { LuMessageSquare } from "react-icons/lu";
 
-import { CgExport } from "react-icons/cg";
+import { CgExport, CgImport } from "react-icons/cg";
+
 import { FaPlus } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
@@ -36,7 +37,7 @@ export default function UsersPage(){
 	const [createUser, setCreateUser] = useState<boolean>(false);
 	const [editUser, setEditUser] = useState<User | null>(null);
 	const [blockUser, setBlockUser] = useState<User | null>(null);
-	const [selectedUsers, setSelectedUsers] = useState(new Set(["1", "2"]));
+	const [selectedUsers, setSelectedUsers] = useState(new Set([]));
 	const [prenom, setPrenom] = useState<string>("");
 	const [nom, setNom] = useState<string>("");
 	const [mail, setMail] = useState<string>("");
@@ -52,21 +53,21 @@ export default function UsersPage(){
 	// ADMIN = "Admin"
 
 	const roles: string[] = [
-		"Étudiant",
-		"Respo TER",
-		"Respo Stage",
-		"Encadrant",
-		"Externe",
-		"Admin"
+		UserRole.ETUDIANT,
+		UserRole.RESPO_TER,
+		UserRole.RESPO_STAGE, 
+		UserRole.ENCADRANT, 
+		UserRole.EXTERNE,
+		UserRole.ADMIN, 
 	]
 
 	const tagRoleMap = new Map<string, string>([
-		[roles[0], "--blue-col"],
-		[roles[1], "--purple-col"],
-		[roles[2], "--purple-col"],
-		[roles[3], "--purple-col"],
-		[roles[4], "--orange-col"],
-		[roles[5], "--red-col"],
+		[UserRole.ETUDIANT, "--blue-col"],
+		[UserRole.RESPO_TER, "--purple-col"],
+		[UserRole.RESPO_STAGE, "--purple-col"],
+		[UserRole.ENCADRANT, "--purple-col"],
+		[UserRole.EXTERNE, "--orange-col"],
+		[UserRole.ADMIN, "--red-col"],
 	]);
 
 	const modalWidth: number = 500;
@@ -101,13 +102,17 @@ export default function UsersPage(){
 	}
 
 	const userSelectionHandle = (id: string) => {
-		if (selectedUsers.has(id)){
-			selectedUsers.delete(id);
-		} else {
-			selectedUsers.add(id);
-		}
+		setSelectedUsers(prev => {
+			const newSet = new Set(prev);
 
-		setSelectedUsers(selectedUsers);
+			if (newSet.has(id)) {
+				newSet.delete(id);
+			} else {
+				newSet.add(id);
+			}
+
+			return newSet;
+		});
 	};
 
 	const deleteHandle = async () => {
@@ -157,8 +162,6 @@ export default function UsersPage(){
 		setMail(user.email);
 		setPrenom(user.first_name);
 		setNom(user.last_name);
-
-		console.log(user.groups[0]);
 
 		if (user.groups.length > 0){
 			setRole(user.groups[0].name);
@@ -265,7 +268,7 @@ export default function UsersPage(){
 
 				<div className="dashboard-top-button-layout">
 					<div style={{width: "auto"}}>
-						<SubmitButton icon={<CgExport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
+						<SubmitButton icon={<CgImport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
 					</div>
 
 					<div style={{width: "auto"}}>
@@ -281,14 +284,14 @@ export default function UsersPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color={`var(--blue-col)`}/>
-				<InfoWidget label="Etudiant" icon={<FiUser/>} info={getCountData().get("Étudiant")} color="var(--blue-col)"/>
-				<InfoWidget label="Externe" icon={<FiUser/>} info={getCountData().get("Externe")} color="var(--orange-col)"/>
+				<InfoWidget label="Étudiants" icon={<FiUser/>} info={getCountData().get("Étudiant")} color="var(--blue-col)"/>
+				<InfoWidget label="Externes" icon={<FiUser/>} info={getCountData().get("Externe")} color="var(--orange-col)"/>
 			</div>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Encadrant" icon={<FiUser/>} info={getCountData().get("Encadrant")} color="var(--purple-col)"/>
-				<InfoWidget label="Résponsable" icon={<FiUser/>} info={getCountData().get("Respo Stage") + getCountData().get("Respo TER")} color="var(--purple-col)"/>
-				<InfoWidget label="Admin" icon={<FiUser/>} info={getCountData().get("Admin")} color="var(--red-col)"/>
+				<InfoWidget label="Encadrants" icon={<FiUser/>} info={getCountData().get("Encadrant")} color="var(--purple-col)"/>
+				<InfoWidget label="Résponsables" icon={<FiUser/>} info={getCountData().get("Respo Stage") + getCountData().get("Respo TER")} color="var(--purple-col)"/>
+				<InfoWidget label="Administrateurs" icon={<FiUser/>} info={getCountData().get("Admin")} color="var(--red-col)"/>
 			</div>
 
 			<table className="users-table-style">
@@ -307,7 +310,9 @@ export default function UsersPage(){
                 <tbody>
 		 			{users && users.map((user, index) => (
                         <tr key={index}>
-                            <td><InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/></td>
+                            <td>
+								<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
+							</td>
                             <td>
 								<div className="users-table-avatar-container">
 									<UserAvatar user={user}/>
@@ -316,7 +321,7 @@ export default function UsersPage(){
 							<td>{user.first_name} {user.last_name}</td>
 							<td>{user.email}</td>
                             <td>{dateFormat(user.date_joined)}</td>
-                            <td>{user.last_login ? dateFormat(user.last_login): undefined}</td>
+                            <td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
 							<td>
 								<div className="users-table-tag-layout">
 									{user.groups.map((role, index) => (

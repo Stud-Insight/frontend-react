@@ -85,7 +85,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 					{project.min_person && project.max_person ? 
 						<TagWidget label={`${project.min_person} - ${project.max_person} Etudiants`} color="var(--blue-col)"/>
 					:
-						<TagWidget label={`${Math.max(project.min_person, project.max_person)} Etudiants`} color="var(--blue-col)"/>
+						<TagWidget label={`${project.max_person} Etudiants`} color="var(--blue-col)"/>
 					}
 					
 					{project.language?.map((lang, index) => (

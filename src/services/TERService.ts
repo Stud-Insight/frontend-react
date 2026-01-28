@@ -88,10 +88,15 @@ export interface TERPeriod {
 }
 
 export interface TERPeriodStats {
-	subjects: number;
-	projects: number;
-	groups: number;
-	students: number;
+    students_enrolled: number;
+    students_in_groups: number;
+    students_solitaires: number;
+    groups_total: number;
+    groups_complete: number;
+    groups_assigned: number;
+    subjects_total: number;
+    subjects_validated: number;
+    subjects_assigned: number;
 }
 
 export default class TERService {

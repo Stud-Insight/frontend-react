@@ -1,0 +1,5 @@
+.ter-admin-button-nav-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}

@@ -26,14 +26,15 @@ export enum ProjectStatus {
 
 export interface Project {
 	id: string;
+	title: string;
 	ter_id?: string;
 	author?: User[];
 	externes?: User[];  
-	title: string;
 	description: string;
 	tasks?: string[];
 	language?: string[];
 	created_date?: string;
+	modified_date?: string;
 	status: ProjectStatus;
 	min_person?: number;
 	max_person?: number;
