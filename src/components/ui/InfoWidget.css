@@ -1,15 +1,3 @@
-.info-widget-main-container {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	box-sizing: border-box;
-	justify-content: space-between;
-	border-radius: 10px;
-	padding: 25px;
-	background-color: var(--white-col);
-	box-shadow: 3px 3px 5px var(--gray2-col)
-}
-
 .info-widget-layout {
 	display: flex;
 	flex-direction: row;
@@ -33,4 +21,8 @@
 	flex-direction: column;
 	justify-content: space-between;
 	color: var(--gray1-col);
+}
+
+.info-widget-main-container.active {
+	background-color: var(--white-col);
 }

@@ -7,11 +7,13 @@ interface ContainerWidgetProps {
 	icon?: ReactNode;
 	label?: string;
 	children?: ReactNode;
+	active?: boolean;
+	onClick?: () => void;
 }
 
-export default function ContainerWidget({icon, label, children}: ContainerWidgetProps){
+export default function ContainerWidget({icon, label, active = false, children, onClick}: ContainerWidgetProps){
 	return (
-		<div className="container-widget-layout">
+		<div className={`container-widget-layout ${active ? "active" : undefined}`} onClick={onClick}>
 			{label != null && icon != null && 
 				<div className="container-widget-title">
 					{icon}
@@ -19,7 +21,6 @@ export default function ContainerWidget({icon, label, children}: ContainerWidget
 				</div>
 			}
 			
-
 			{label != null && icon != null && 
 				<HorizontalDivider/>
 			}

@@ -225,7 +225,7 @@ export default function UsersPage(){
 			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
 
 			{createUser && 
-				<ModalDialog onClose={() => setCreateUser(false)} width={modalWidth}>
+				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)} width={modalWidth}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
@@ -235,7 +235,7 @@ export default function UsersPage(){
 			}
 
 			{editUser && 
-				<ModalDialog onClose={() => setEditUser(null)} width={modalWidth}>
+				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
@@ -318,7 +318,12 @@ export default function UsersPage(){
 									<UserAvatar user={user}/>
 								</div>
 							</td>
-							<td>{user.first_name} {user.last_name}</td>
+							<td>
+								<div className="users-table-user-info">
+									<label>{user.first_name} {user.last_name}</label>
+									<label style={{color: "var(--gray1-col)"}}>{user.id.slice(0, 8)}</label>
+								</div>
+							</td>
 							<td>{user.email}</td>
                             <td>{dateFormat(user.date_joined)}</td>
                             <td>{user.last_login ? dateFormat(user.last_login): "?"}</td>

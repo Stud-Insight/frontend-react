@@ -71,6 +71,10 @@ export interface TERPeriodCreatePayload {
 	max_group_size?: number;
 }
 
+
+
+
+
 export interface TERPeriod {
 	id: string;
 	name: string;
@@ -99,7 +103,48 @@ export interface TERPeriodStats {
     subjects_assigned: number;
 }
 
+export interface TERStudent {
+	id: string;
+	first_name: string;
+	last_name: string;
+	email: string;
+}
+
 export default class TERService {
+	public static async getEnrolledStudents(id: string): Promise<User[]> {
+		try {
+			const res = await api.get<TERStudent[]>(
+				`/ter/periods/${id}/students`
+			);
+
+			const users: User[] = res.data.map((student) => ({
+				id: student.id,
+				first_name: student.first_name,
+				last_name: student.last_name,
+				email: student.email,
+				groups: [],
+			}));
+
+			return users;
+		} catch (error) {
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async addEnroleStudents(period_id: string, stud_ids: string[]): Promise<{ added: number; total_enrolled: number }> {
+		try {
+			const p = {
+				student_ids: stud_ids
+			}
+
+			const res = await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students`, p);
+
+			return res.data;
+		} catch (error) {
+			error_formatting(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async getAllPeriods(): Promise<TERPeriod[]> {
 		try {
 			const res = await api.get<TERPeriod[]>("/ter/periods/");

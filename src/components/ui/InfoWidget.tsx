@@ -8,12 +8,13 @@ interface InfoWidgetProps {
 	color: string;
 	label: string;
 	info: string | number;
+	active?: boolean;
 	onClick?: () => void;
 };
 
-export default function InfoWidget({icon, label, info, color, onClick}: InfoWidgetProps){
+export default function InfoWidget({icon, label, info, active = false, color, onClick}: InfoWidgetProps){
 	return (
-		<div className="info-widget-main-container" onClick={onClick}>
+		<ContainerWidget active={active} onClick={onClick}>
 			<div className="info-widget-layout">
 				<div className="info-widget-icon" style={{color: color, backgroundColor: `color-mix(in srgb, ${color} 20%, transparent)`}}>
 					{icon}
@@ -23,6 +24,6 @@ export default function InfoWidget({icon, label, info, color, onClick}: InfoWidg
 					<label style={{fontWeight: "var(--big-bold)", fontSize: 23, color: "var(--black-col)"}}>{info}</label>
 				</div>
 			</div>
-		</div>
+		</ContainerWidget>
 	)
 }

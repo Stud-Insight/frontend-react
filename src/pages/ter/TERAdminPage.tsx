@@ -16,46 +16,44 @@ import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineEdit } from "react-icons/md";
 import TERService, { TERPeriod  } from "../../services/TERService";
-
+import { User } from "../../services/UserService";
 import { useParams } from "react-router-dom";
+import UserAvatar from "../../components/ui/UserAvatar";
 import "../dashboard/UsersPage.css"
 import "../dashboard/DashboardPage.css"
 import "./TERAdminPage.css"
-
-function GroupesView() {
-  	return <div>Liste des groupes</div>;
-}
-
-function EncadrantsView() {
-  	return <div>Liste des encadrants</div>;
-}
-
-function ProjetsView() {
-  	return <div>Liste des projets</div>;
-}
-
-function ModaliteView() {
-  	return <div>Modalités du TER</div>;
-}
 
 export default function TERAdminPage(){
 	const { id } = useParams<{ id: string }>();
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [selectedTER, setSelectedTER] = useState<TERPeriod | null>();
-	const [currentPage, setCurrentPage] = useState<string>("etu");
+	const [currentPage, setCurrentPage] = useState<number>(0);
 	const [addingUser, setAddingUser] = useState<boolean>(false);
+	const [enrolledStudents, setEnrolledStudents] = useState<User[]>([]);
 
-	const addStudentHandle = async (selectedUsers: Set<string>) => {
+	const getAllTERStudents = async () => {
 		try {
-			console.log(selectedUsers);
-			setAddingUser(false);
-			setSuccess("Nice!")
-			setTimeout(() => setSuccess(null), 5000);
+			const data = await TERService.getEnrolledStudents(id);
+			setEnrolledStudents(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
+	}
+
+	const addStudentHandle = async (selectedUsers: Set<string>) => {
+		try {
+			await TERService.addEnroleStudents(id, Array.from(selectedUsers));
+			setSuccess(`Ajout de ${selectedUsers.size} étudiants avec succès.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllTERStudents();
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setAddingUser(false);
 	};
 	
 	const studentView = () => {
@@ -72,22 +70,67 @@ export default function TERAdminPage(){
 						<th>Nom</th>
 						<th>E-Mail</th>
 						<th>Groupe</th>
-						<th>Rôle</th>
 						<th></th>
 					</tr>
 				</thead>
-				
+				<tbody>
+					{enrolledStudents && enrolledStudents.map((user, index) => (
+						<tr key={index}>
+							<td>
+								<div className="users-table-avatar-container">
+									<UserAvatar user={user}/>
+								</div>
+							</td>
+							<td>{user.first_name} {user.last_name}</td>
+							<td>{user.email}</td>
+							<td>?</td>
+							<td></td>
+						</tr>
+					))}
+				</tbody>	
 			</table>
 		</>
 	}
 
-	const viewMap: Map<string, ReactNode> = new Map([
-		["etu", studentView()],
-		["grp", <GroupesView/>],
-		["enca", <EncadrantsView/>],
-		["proj", <ProjetsView/>],
-		["modal", <ModaliteView/>]
-	]);
+	const groupView = () => {
+		return <>
+			<div className="dashboard-top-layout">
+				<div></div>
+				<SubmitButton icon={<FaPlus/>} label="Créer Groupe"/>
+			</div>
+		</>
+	}
+	
+	const teacherView = () => {
+		return <>
+			<div className="dashboard-top-layout">
+				<div></div>
+				<SubmitButton icon={<FaPlus/>} label="Invite Enseignant"/>
+			</div>
+
+			<table className="users-table-style">
+				<thead>
+					<tr>
+						<th>Profile</th>
+						<th>Nom</th>
+						<th>E-Mail</th>
+						<th>Groupe</th>
+						<th>Sujet</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>	
+			</table>
+		</>
+	}
+
+	const projectView = () => {
+		return <>
+			
+		</>
+	}
 
 	useEffect(() => {
 		const getTer = async () => {
@@ -101,7 +144,16 @@ export default function TERAdminPage(){
 		}
 
 		getTer();
+		getAllTERStudents();
 	}, []);
+
+	const viewMap: Map<number, ReactNode> = new Map([
+		[0, studentView()],
+		[1, groupView()],
+		[2, teacherView()],
+		[3, projectView()],
+		[4, studentView()],
+	])
 
 	return (
 		<DashboardPage>
@@ -115,19 +167,17 @@ export default function TERAdminPage(){
 
 			<label style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, projets et participants.</label>
 
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Étudiants" active={currentPage == 0} icon={<FiUser/>} info={0} color={`var(--blue-col)`} onClick={() => setCurrentPage(0)}/>
+				<InfoWidget label="Groupes" active={currentPage == 1} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(1)}/>
+				<InfoWidget label="Enseignants" active={currentPage == 2} icon={<TbSchool/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
+				<InfoWidget label="Sujets" active={currentPage == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(3)}/>
+				<InfoWidget label="Modalité" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
+			</div>
+
 			{success && <InfoBox label={success} type="success"/> }
 			{error && <InfoBox label={error} type="error"/>}
 	
-			<ContainerWidget>
-				<div className="ter-admin-button-nav-layout">
-					<NavigationButton label="Etudiants" active={currentPage == "etu"} showBackground={true} icon={<FiUser/>} onClick={() => setCurrentPage("etu")}/>
-					<NavigationButton label="Groupes" active={currentPage == "grp"} showBackground={true} icon={<FiUsers/>} onClick={() => setCurrentPage("grp")}/>
-					<NavigationButton label="Encadrants" active={currentPage == "enca"} showBackground={true} icon={<TbSchool/>} onClick={() => setCurrentPage("enca")}/>
-					<NavigationButton label="Projets" active={currentPage == "proj"} showBackground={true} icon={<FaRegFile/>} onClick={() => setCurrentPage("proj")}/>
-					<NavigationButton label="Modalité" active={currentPage == "modal"} showBackground={true} icon={<TbSchool/>} onClick={() => setCurrentPage("modal")}/>
-				</div>
-			</ContainerWidget>
-
 			{viewMap.get(currentPage)}
 		</DashboardPage>
 	)

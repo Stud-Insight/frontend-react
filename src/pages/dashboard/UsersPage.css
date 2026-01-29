@@ -43,3 +43,9 @@
 	flex-direction: column;
 	gap: 5px;
 }
+
+.users-table-user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
