@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react";
-import DashboardPage from "../dashboard/DashboardPage";
-import InfoBox from "../../components/ui/InfoBox";
-import InfoWidget from "../../components/ui/InfoWidget";
-import TERService, { TER } from "../../services/TERService";
-import ContainerWidget from "../../components/ui/ContainerWidget";
-import GroupProjectWidget from "../../components/objects/GroupProjectWidget";
-import ProjectWidget from "../../components/objects/ProjectWidget";
+import DashboardPage from "../../dashboard/DashboardPage";
+import InfoBox from "../../../components/ui/InfoBox";
+import InfoWidget from "../../../components/ui/InfoWidget";
+import TERService, { TERPeriod } from "../../../services/TERService";
+import ContainerWidget from "../../../components/ui/ContainerWidget";
+import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
+import ProjectWidget from "../../../components/objects/ProjectWidget";
 
 import "./TERSelectionPage.css"
-import "../dashboard/DashboardPage.css"
+import "../../dashboard/DashboardPage.css"
 
 import { FaRegFile, FaRegClock } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
@@ -18,12 +18,12 @@ import { FaPlus } from "react-icons/fa6";
 
 export default function TERSelectionPage(){
 	const [error, setError] = useState<string | null>(null);
-	const [selectedTER, setSelectedTER] = useState<TER | null>();
+	const [selectedTER, setSelectedTER] = useState<TERPeriod | null>();
 	
 	useEffect(() => {
 		const getTer = async () => {
 			try {
-				const data = await TERService.getTER();
+				// const data = await TERService.getTER();
 				setSelectedTER(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -43,8 +43,8 @@ export default function TERSelectionPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Etudiants" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="Groupes" icon={<FiUsers/>} info={selectedTER ? selectedTER?.groups.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="Projets" icon={<FaRegFile/>} info={selectedTER ? selectedTER?.projects.length : 0} color="var(--blue-col)"/>
+				<InfoWidget label="Groupes" icon={<FiUsers/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="Projets" icon={<FaRegFile/>} info={0} color="var(--blue-col)"/>
 				<InfoWidget label="Deadline" icon={<FaRegClock/>} info={`100 Jours`} color="var(--orange-col)"/>
 			</div>
 
@@ -52,15 +52,15 @@ export default function TERSelectionPage(){
 			
 			<div className="ter-list-page-layout">
 				<div className="ter-list-group-layout">
-					{selectedTER && selectedTER.groups.map((group, index) => (
+					{/* {selectedTER && selectedTER.groups.map((group, index) => (
 						<GroupProjectWidget group={group}/>
-					))}
+					))} */}
 				</div>
 
 				<div className="ter-list-project-layout">
-					{selectedTER && selectedTER.projects.map((project, index) => (
+					{/* {selectedTER && selectedTER.projects.map((project, index) => (
 						<ProjectWidget project={project} privateMode={false}/>
-					))}
+					))} */}
 				</div>
 			</div>
 		</DashboardPage>

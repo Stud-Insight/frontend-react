@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react"
-import DashboardPage from "../dashboard/DashboardPage";
-import ContainerWidget from "../../components/ui/ContainerWidget";
-import UserWidget from "../../components/objects/UserWidget";
-import ScheduleEventWidget from "../../components/ui/ScheduleEventWidget";
-import InfoBox from "../../components/ui/InfoBox";
-import ProjectWidget from "../../components/objects/ProjectWidget";
+import DashboardPage from "../../dashboard/DashboardPage";
+import ContainerWidget from "../../../components/ui/ContainerWidget";
+import UserWidget from "../../../components/objects/UserWidget";
+import ScheduleEventWidget from "../../../components/ui/ScheduleEventWidget";
+import InfoBox from "../../../components/ui/InfoBox";
+import ProjectWidget from "../../../components/objects/ProjectWidget";
 
 import { FaRegClock, FaRegCheckCircle } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FiUsers } from "react-icons/fi";
 import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
-import { User } from "../../services/UserService";
-import { Project, ProjectStatus } from "../../services/ProjectService";
-import InfoWidget from "../../components/ui/InfoWidget";
+import { User } from "../../../services/UserService";
+import { Project, ProjectStatus } from "../../../services/ProjectService";
+import InfoWidget from "../../../components/ui/InfoWidget";
 
 import "./TERInfoPage.css"
-import "../dashboard/DashboardPage.css"
+import "../../dashboard/DashboardPage.css"
 
 export default function TERInfoPage(){
 	const [error, setError] = useState<string | null>();
