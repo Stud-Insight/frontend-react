@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { error_formatting, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -7,7 +8,6 @@ const api = axios.create({
     timeout: 10000,
 });
 
-// Types
 export interface Participant {
     id: string;
     email: string;
@@ -44,27 +44,6 @@ export interface ConversationDetail {
     modified: string;
 }
 
-interface ApiError {
-    code: string;
-    message: string;
-}
-
-// Intercepteur CSRF
-api.interceptors.request.use((config) => {
-    const csrfToken = localStorage.getItem("csrf_token");
-    if (csrfToken && config.method !== "get") {
-        config.headers["X-CSRFToken"] = csrfToken;
-    }
-    return config;
-});
-
-const handleApiError = (error: AxiosError<ApiError>): never => {
-    if (error.response) {
-        throw new Error(error.response.data?.message || "Une erreur est survenue");
-    }
-    throw new Error("Erreur de connexion au serveur");
-};
-
 export const getParticipantName = (participant: Participant): string => {
     if (participant.first_name || participant.last_name) {
         return `${participant.first_name} ${participant.last_name}`.trim();
@@ -89,26 +68,16 @@ export const formatMessageTime = (dateString: string): string => {
 };
 
 export default class ChatService {
-    /**
-     * Lister les conversations
-     */
     public static async listConversations(): Promise<Conversation[]> {
         try {
             const response = await api.get<Conversation[]>("/chat/conversations");
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 
-    /**
-     * Creer une conversation
-     */
-    public static async createConversation(
-        participantIds: string[],
-        name: string = "",
-        isGroup: boolean = false
-    ): Promise<Conversation> {
+    public static async createConversation(participantIds: string[], name: string = "", isGroup: boolean = false): Promise<Conversation> {
         try {
             const response = await api.post<Conversation>("/chat/conversations", {
                 participant_ids: participantIds,
@@ -117,38 +86,29 @@ export default class ChatService {
             });
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 
-    /**
-     * Obtenir une conversation avec ses messages
-     */
     public static async getConversation(conversationId: string): Promise<ConversationDetail> {
         try {
             const response = await api.get<ConversationDetail>(`/chat/conversations/${conversationId}`);
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 
-    /**
-     * Obtenir les nouveaux messages (polling)
-     */
     public static async getNewMessages(conversationId: string, afterMessageId?: string): Promise<Message[]> {
         try {
             const params = afterMessageId ? { after: afterMessageId } : {};
             const response = await api.get<Message[]>(`/chat/conversations/${conversationId}/messages`, { params });
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 
-    /**
-     * Envoyer un message
-     */
     public static async sendMessage(conversationId: string, content: string): Promise<Message> {
         try {
             const response = await api.post<{ success: boolean; message: Message }>(
@@ -157,20 +117,17 @@ export default class ChatService {
             );
             return response.data.message;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 
-    /**
-     * Lister les utilisateurs pour demarrer une conversation
-     */
     public static async listUsers(search: string = ""): Promise<Participant[]> {
         try {
             const params = search ? { search } : {};
             const response = await api.get<Participant[]>("/chat/users", { params });
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            error_formatting(error as AxiosError<ApiError>);
         }
     }
 }

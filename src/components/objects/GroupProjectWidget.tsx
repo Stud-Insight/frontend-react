@@ -1,29 +1,16 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import ContainerWidget from "../ui/ContainerWidget";
 import { TERGroup } from "../../services/TERService";
-import { FiUsers, FiUser } from "react-icons/fi";
-import IconButton from "../input/IconButton";
-import HorizontalDivider from "../ui/HorizontalDivider";
+import { FiUsers } from "react-icons/fi";
 import SubmitButton from "../input/SubmitButton";
-import "./GroupProjectWidget.css"
 
-import { MdDeleteOutline } from "react-icons/md";
-import { MdOutlineEdit } from "react-icons/md";
-import ProgressWidget from "../ui/ProgressWidget";
+import "./GroupProjectWidget.css"
 
 interface GroupProjectWidgetProps {
 	group: TERGroup;
 };
 
 export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
-	let completed_objectives: number = 0;
-
-	group.objectives.forEach((obj, index) => {
-		if (obj.done) {
-			completed_objectives += 1;
-		}
-	});
-
 	return (
 		<ContainerWidget>
 			<div className="group-project-widget-layout">

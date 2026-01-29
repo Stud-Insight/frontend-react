@@ -3,6 +3,7 @@ import { Project, ProjectStatus } from "../../services/ProjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../input/IconButton";
+import TagWidget from "../ui/TagWidget";
 
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
@@ -10,7 +11,6 @@ import { MdOutlineEdit } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import TagWidget from "../ui/TagWidget";
 import { FaRegFile, FaRegClock } from "react-icons/fa";
 
 import "./ProjectWidget.css"
@@ -35,22 +35,18 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 		[ProjectStatus.DRAFT, "Brouillon"],
 	]);
 
-	const get_status_class = ():string => {
-		var state_class: string = "project-widget-state-style";
+	// const get_status_class = ():string => {
+	// 	var state_class: string = "project-widget-state-style";
 
-		switch (project.status){
-			case ProjectStatus.APPROVED: state_class += " approved"; break;
-			case ProjectStatus.SUBMITTED: state_class += " submitted"; break;
-			case ProjectStatus.REJECTED: state_class += " rejected"; break;
-			default: state_class += " draft"; break;
-		}
+	// 	switch (project.status){
+	// 		case ProjectStatus.APPROVED: state_class += " approved"; break;
+	// 		case ProjectStatus.SUBMITTED: state_class += " submitted"; break;
+	// 		case ProjectStatus.REJECTED: state_class += " rejected"; break;
+	// 		default: state_class += " draft"; break;
+	// 	}
 		
-		return state_class;
-	};
-
-	const get_status_tag = () => {
-		return status_tag_map.get(project.status);
-	};
+	// 	return state_class;
+	// };
 
 	return (
 		<ContainerWidget>
@@ -99,7 +95,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 
 						<div className="project-widget-footer-layout">
 							<div className="project-widget-footer-content">
-								<TagWidget label={get_status_tag()} color="var(--blue-col)"/>
+								<TagWidget label={status_tag_map.get(project.status)} color="var(--blue-col)"/>
 								-
 								<label style={{fontSize: "14px"}}>{project.created_date}</label>
 							</div>

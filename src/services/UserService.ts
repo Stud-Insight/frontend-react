@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import AuthService from "./AuthService"
+import { error_formatting, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -49,20 +50,6 @@ export interface UpdateUserPayload {
 	groups: string[];
 };
 
-export interface ApiError {
-    code: string;
-    message: string;
-    details?: Record<string, any>;
-};
-
-const error_formatting = (error: AxiosError<ApiError>): never => {
-    if (error.response) {
-        throw new Error(error.message);
-    } else {
-        throw new Error("Erreur de connexion au serveur");
-    }
-};
-
 export default class UserService {
 	public static async importUserCSV(file: File): Promise<void> {
 		try {
@@ -80,13 +67,13 @@ export default class UserService {
 		}
 	}
 
-	public static async getAllUsers(): Promise<User[]> {
+	public static async getAllUsers(): Promise<User[] | null> {
 		try {
 			const response = await api.get<User[]>("/users/");
         	return response.data;
 		} catch (error){
 			error_formatting(error as AxiosError<ApiError>);
-		}	
+		}
 	}
 
 	public static async updateUser(id: string, first_name: string, last_name: string, email: string, roles: string[]): Promise<void> {
@@ -114,7 +101,7 @@ export default class UserService {
 		}
 	}
 
-	public static async createUser(roles: string[], nom: string, prenom: string, email: string): Promise<User> {
+	public static async createUser(roles: string[], nom: string, prenom: string, email: string): Promise<User | null> {
 		try {
 			await AuthService.getCSRFToken();
 

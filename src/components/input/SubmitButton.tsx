@@ -1,4 +1,4 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import "./SubmitButton.css"
 import um_logo_image from "../../assets/logo_um.png";
 import { MdDangerous } from "react-icons/md";

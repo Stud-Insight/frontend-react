@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from "react";
-import DashboardPage from "../dashboard/DashboardPage";
-import InfoBox from "../../components/ui/InfoBox";
-import SubmitButton from "../../components/input/SubmitButton";
-import InfoWidget from "../../components/ui/InfoWidget";
-import ModalDialog from "../../components/input/ModalDialog"
-import InputField from "../../components/input/InputField"
+import DashboardPage from "../../dashboard/DashboardPage";
+import InfoBox from "../../../components/ui/InfoBox";
+import SubmitButton from "../../../components/input/SubmitButton";
+import InfoWidget from "../../../components/ui/InfoWidget";
+import ModalDialog from "../../../components/input/ModalDialog"
+import InputField from "../../../components/input/InputField"
 
-import TERService, { TERPeriod } from "../../services/TERService";
-import TERWidget from "../../components/objects/TERWidget";
+import TERService, { TERPeriod } from "../../../services/TERService";
+import TERWidget from "../../../components/objects/TERWidget";
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile, FaRegClock } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
@@ -18,7 +18,7 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import "./TERListPage.css"
-import HorizontalDivider from "../../components/ui/HorizontalDivider";
+import HorizontalDivider from "../../../components/ui/HorizontalDivider";
 
 export default function TERListPage(){
 	const [error, setError] = useState<string | null>(null);
@@ -117,10 +117,9 @@ export default function TERListPage(){
 			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les TERs.</label>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="TER" icon={<TbSchool/>} info={terList ? terList.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="Etudiants" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="Groupes" icon={<FiUsers/>} info={0} color="var(--green-col)"/>
-				<InfoWidget label="Avancement Moyen" icon={<FaArrowTrendUp/>} info={0} color="var(--orange-col)"/>
+				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={terList ? terList.length : 0} color="var(--blue-col)"/>
+				<InfoWidget label="TER Active" icon={<TbSchool/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={0} color="var(--purple-col)"/>
 			</div>
 
 			{error && <InfoBox label={error} type="error"/>}

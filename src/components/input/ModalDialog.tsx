@@ -13,7 +13,7 @@ interface ModalDialogProps {
 };
 
 export default function ModalDialog({label, onClose, children, width}: ModalDialogProps){
-	const close_handler = () => {
+	const closeHandler = () => {
 		onClose ? onClose() : undefined;
 	};
 
@@ -22,7 +22,7 @@ export default function ModalDialog({label, onClose, children, width}: ModalDial
 			<div className="modal-dialog-content" style={{width: width ? width : "auto"}}>
 				<div className="modal-dialog-title">
 					<label className="modal-dialog-label">{label}</label>
-					<IconButton icon={<RxCross2/>} onClick={close_handler}/>
+					<IconButton icon={<RxCross2/>} onClick={closeHandler}/>
 				</div>
 				<HorizontalDivider/>
 				{children}

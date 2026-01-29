@@ -19,11 +19,11 @@ export default function InputDropdown({label, default_index = 0, value, close_af
 	const [selected, setSelected] = useState<string>(options[default_index]);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const open_handler = () => {
+	const openHandler = () => {
 		setOpen(!open);
 	};
 
-	const selection_handler = (opt: string) => {
+	const selectionHandler = (opt: string) => {
 		setSelected(opt);
 		onChange ? onChange(opt) : undefined;
 
@@ -33,19 +33,19 @@ export default function InputDropdown({label, default_index = 0, value, close_af
 	};
 
 	useEffect(() => {
-		const clickout_handler = (e: MouseEvent) => {
+		const clickoutHandler = (e: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)){
 				setOpen(false);
 			}
 		}
 
-		selection_handler(selected);
+		selectionHandler(selected);
 		value && setSelected(value);
 
-		document.addEventListener("mousedown", clickout_handler);
+		document.addEventListener("mousedown", clickoutHandler);
 
 		return () => {
-			document.removeEventListener("mousedown", clickout_handler)
+			document.removeEventListener("mousedown", clickoutHandler)
 		};
 	}, []);
 
@@ -54,7 +54,7 @@ export default function InputDropdown({label, default_index = 0, value, close_af
 			{label ? <label className="dropdown-label">{label}</label> : undefined}
 
 			<div className="dropdown-layout-style" ref={dropdownRef}>
-				<div className={open ? "dropdown-main-style active" : "dropdown-main-style"} onClick={open_handler}>
+				<div className={open ? "dropdown-main-style active" : "dropdown-main-style"} onClick={openHandler}>
 					<span>{selected}</span>
 					{open ? <IoIosArrowDown/> : <IoIosArrowUp/>}
 				</div>
@@ -64,14 +64,14 @@ export default function InputDropdown({label, default_index = 0, value, close_af
 						{options.map((opt, index) => {
 							if (opt == selected){
 								return (
-									<div key={index} className="dropdown-option-style selected" onClick={() => selection_handler(opt)}>
+									<div key={index} className="dropdown-option-style selected" onClick={() => selectionHandler(opt)}>
 										<label>{opt}</label>
 										<FaCheck/>
 									</div>
 								);
 							} else {
 								return (
-									<div key={index} className="dropdown-option-style" onClick={() => selection_handler(opt)}>
+									<div key={index} className="dropdown-option-style" onClick={() => selectionHandler(opt)}>
 										<label>{opt}</label>
 									</div>
 								);

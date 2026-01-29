@@ -30,6 +30,7 @@ import "./DashboardPage.css"
 
 export default function UsersPage(){
 	const { user } = useAuth();
+	const g = user;
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 	const [users, setUsers] = useState<User[] | null>([]);
@@ -44,13 +45,6 @@ export default function UsersPage(){
 	const [role, setRole] = useState<string>("");
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-	// ETUDIANT = "Étudiant"
-	// RESPO_TER = "Respo TER"
-	// RESPO_STAGE = "Respo Stage"
-	// ENCADRANT = "Encadrant"
-	// EXTERNE = "Externe"
-	// ADMIN = "Admin"
 
 	const roles: string[] = [
 		UserRole.ETUDIANT,
@@ -339,8 +333,13 @@ export default function UsersPage(){
 								<div className="users-table-options">
 									{/* <IconButton icon={<LuMessageSquare/>}/> */}
 									<IconButton icon={<MdOutlineEdit/>} onClick={() => editHandlePreload(user)}/>
-									<IconButton icon={<IoBan/>} onClick={() => setBlockUser(user)}/>
-									<IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteUser(user)}/>
+
+									{user.id != g?.id && 
+										<>
+											<IconButton icon={<IoBan/>} onClick={() => setBlockUser(user)}/>
+											<IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteUser(user)}/>
+										</>									
+									}
 								</div>
 							</td>
                         </tr>

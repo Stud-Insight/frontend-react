@@ -20,7 +20,7 @@ export default function InfoBox({ label, type = "info" }: InfoBoxProps) {
     };
 
     return (
-        <div className={`info-box info-box-${type}`}>
+        <div className={`info-box ${type}`}>
             <div className="info-box-icon">
                 {getIcon()}
             </div>

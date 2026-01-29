@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 
 import "./InputCheckbox.css"

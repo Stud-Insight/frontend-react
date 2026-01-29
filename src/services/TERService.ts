@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { User } from "./UserService"
 import { Project, ProjectStatus } from "./ProjectService";
-import { Group } from "./GroupService";
+import { error_formatting, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -9,14 +9,6 @@ const api = axios.create({
     withCredentials: true,
     timeout: 10000,
 });
-
-const error_formatting = (error: AxiosError<ApiError>): never => {
-	if (error.response) {
-		throw new Error(error.message);
-	} else {
-		throw new Error("Erreur de connexion au serveur");
-	}
-};
 
 export enum TERStatus {
 	EN_COURS,
@@ -71,10 +63,6 @@ export interface TERPeriodCreatePayload {
 	max_group_size?: number;
 }
 
-
-
-
-
 export interface TERPeriod {
 	id: string;
 	name: string;
@@ -111,7 +99,7 @@ export interface TERStudent {
 }
 
 export default class TERService {
-	public static async getEnrolledStudents(id: string): Promise<User[]> {
+	public static async getEnrolledStudents(id: string): Promise<User[] | null> {
 		try {
 			const res = await api.get<TERStudent[]>(
 				`/ter/periods/${id}/students`
@@ -131,7 +119,7 @@ export default class TERService {
 		}
 	}
 
-	public static async addEnroleStudents(period_id: string, stud_ids: string[]): Promise<{ added: number; total_enrolled: number }> {
+	public static async addEnroleStudents(period_id: string, stud_ids: string[]): Promise<{ added: number; total_enrolled: number } | null> {
 		try {
 			const p = {
 				student_ids: stud_ids
@@ -145,7 +133,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getAllPeriods(): Promise<TERPeriod[]> {
+	public static async getAllPeriods(): Promise<TERPeriod[] | null> {
 		try {
 			const res = await api.get<TERPeriod[]>("/ter/periods/");
 			return res.data;
@@ -154,7 +142,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getPeriodStats(id: string): Promise<TERPeriodStats> {
+	public static async getPeriodStats(id: string): Promise<TERPeriodStats | null> {
 		try {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}/stats`);
 			return res.data;
@@ -163,7 +151,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getPeriod(id: string): Promise<TERPeriod>{
+	public static async getPeriod(id: string): Promise<TERPeriod | null>{
 		try {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}`);
 			return res.data;		
@@ -172,22 +160,8 @@ export default class TERService {
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[]> {
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
 		try {
-			// const p: TERPeriodCreatePayload = {
-			// 	name: title,
-			// 	academic_year: academic_year,
-			// 	group_formation_start: groupStartDate,
-			// 	group_formation_end: groupEndDate,
-			// 	subject_selection_start: groupStartDate,
-			// 	subject_selection_end: groupEndDate,
-			// 	assignment_date: assignmentDate,
-			// 	project_start: start_date,
-			// 	project_end: end_date,
-			// 	min_group_size: 2,
-			// 	max_group_size: 4,
-			// };
-
 			const mock: TERPeriodCreatePayload = {
 				name: "TER Informatique",
 				academic_year: "2026-2027",

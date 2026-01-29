@@ -1,12 +1,13 @@
 import React, {useState, useEffect, ReactNode}from "react";
-import DashboardPage from "../dashboard/DashboardPage";
-import InfoWidget from "../../components/ui/InfoWidget";
-import GroupProjectWidget from "../../components/objects/GroupProjectWidget";
-import SubmitButton from "../../components/input/SubmitButton";
-import NavigationButton from "../../components/nav/NavigationButton";
-import InfoBox from "../../components/ui/InfoBox";
-import ContainerWidget from "../../components/ui/ContainerWidget";
-import UserSelectionDialog from "../../components/input/UserSelectionDialog";
+import DashboardPage from "../../dashboard/DashboardPage";
+import InfoWidget from "../../../components/ui/InfoWidget";
+import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
+import SubmitButton from "../../../components/input/SubmitButton";
+import NavigationButton from "../../../components/nav/NavigationButton";
+import InfoBox from "../../../components/ui/InfoBox";
+import ContainerWidget from "../../../components/ui/ContainerWidget";
+import UserSelectionDialog from "../../../components/input/UserSelectionDialog";
+import TagWidget from "../../../components/ui/TagWidget";
 
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
@@ -15,12 +16,12 @@ import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineEdit } from "react-icons/md";
-import TERService, { TERPeriod  } from "../../services/TERService";
-import { User } from "../../services/UserService";
+import TERService, { TERPeriod  } from "../../../services/TERService";
+import { User, UserRole } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
-import UserAvatar from "../../components/ui/UserAvatar";
-import "../dashboard/UsersPage.css"
-import "../dashboard/DashboardPage.css"
+import UserAvatar from "../../../components/ui/UserAvatar";
+import "../../dashboard/UsersPage.css"
+import "../../dashboard/DashboardPage.css"
 import "./TERAdminPage.css"
 
 export default function TERAdminPage(){
@@ -29,7 +30,8 @@ export default function TERAdminPage(){
 	const [error, setError] = useState<string | null>(null);
 	const [selectedTER, setSelectedTER] = useState<TERPeriod | null>();
 	const [currentPage, setCurrentPage] = useState<number>(0);
-	const [addingUser, setAddingUser] = useState<boolean>(false);
+	const [addingStudent, setAddingStudent] = useState<boolean>(false);
+	const [addingTeacher, setAddingTeacher] = useState<boolean>(false);
 	const [enrolledStudents, setEnrolledStudents] = useState<User[]>([]);
 
 	const getAllTERStudents = async () => {
@@ -45,7 +47,7 @@ export default function TERAdminPage(){
 	const addStudentHandle = async (selectedUsers: Set<string>) => {
 		try {
 			await TERService.addEnroleStudents(id, Array.from(selectedUsers));
-			setSuccess(`Ajout de ${selectedUsers.size} étudiants avec succès.`);
+			setSuccess(`Ajout de ${selectedUsers.size} étudiant(s) avec succès.`);
 			setTimeout(() => setSuccess(null), 5000);
 			getAllTERStudents();
 		} catch (err){
@@ -53,14 +55,14 @@ export default function TERAdminPage(){
 			setError(message);
 		}
 
-		setAddingUser(false);
+		setAddingStudent(false);
 	};
 	
 	const studentView = () => {
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<SubmitButton icon={<FaPlus/>} label="Ajoute Etudiant" onChange={() => setAddingUser(true)}/>
+				<SubmitButton icon={<FaPlus/>} label="Ajoute Etudiant" onChange={() => setAddingStudent(true)}/>
 			</div>
 				
 			<table className="users-table-style">
@@ -105,7 +107,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<SubmitButton icon={<FaPlus/>} label="Invite Enseignant"/>
+				<SubmitButton icon={<FaPlus/>} label="Invite Enseignant" onChange={() => setAddingTeacher(true)}/>
 			</div>
 
 			<table className="users-table-style">
@@ -149,28 +151,45 @@ export default function TERAdminPage(){
 
 	const viewMap: Map<number, ReactNode> = new Map([
 		[0, studentView()],
-		[1, groupView()],
-		[2, teacherView()],
+		[1, teacherView()],
+		[2, groupView()],
 		[3, projectView()],
 		[4, studentView()],
 	])
 
 	return (
 		<DashboardPage>
-			{addingUser && 
-				<UserSelectionDialog onClose={() => setAddingUser(false)} onConfirm={(users) => addStudentHandle(users)}/>
+			{addingStudent && 
+				<UserSelectionDialog 
+					label="Ajout etudiants au TER"
+					role_filter={[UserRole.ETUDIANT]} 
+					onClose={() => setAddingStudent(false)} 
+					onConfirm={(users) => addStudentHandle(users)}
+				/>
+			}
+
+			{addingTeacher &&
+				<UserSelectionDialog 
+					label="Ajout encadrants au TER"
+					role_filter={[UserRole.ENCADRANT, UserRole.EXTERNE, UserRole.RESPO_TER]} 
+					onClose={() => setAddingTeacher(false)} 
+				/>
 			}
 
 			<div className="dashboard-top-layout">
-				<label style={{fontWeight: 800, fontSize: "25px"}}>{selectedTER?.name}</label>
+				<div className="ter-admin-selected-ter-title">
+					<label style={{fontWeight: 800, fontSize: "25px"}}>{selectedTER?.name}</label>
+					<TagWidget label={selectedTER?.status.toUpperCase()} color="var(--blue-col)"/>
+				</div>
+				<div></div>
 			</div>
 
 			<label style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, projets et participants.</label>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Étudiants" active={currentPage == 0} icon={<FiUser/>} info={0} color={`var(--blue-col)`} onClick={() => setCurrentPage(0)}/>
-				<InfoWidget label="Groupes" active={currentPage == 1} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(1)}/>
-				<InfoWidget label="Enseignants" active={currentPage == 2} icon={<TbSchool/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
+				<InfoWidget label="Étudiants" active={currentPage == 0} icon={<FiUser/>} info={enrolledStudents.length} color={`var(--blue-col)`} onClick={() => setCurrentPage(0)}/>
+				<InfoWidget label="Enseignants" active={currentPage == 1} icon={<TbSchool/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(1)}/>
+				<InfoWidget label="Groupes" active={currentPage == 2} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
 				<InfoWidget label="Sujets" active={currentPage == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(3)}/>
 				<InfoWidget label="Modalité" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
 			</div>

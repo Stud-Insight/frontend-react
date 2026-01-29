@@ -31,7 +31,6 @@ export default function ProjectPage(){
 		p => p.status === ProjectStatus.APPROVED
 	).length;
 
-
 	useEffect(() => {
 		const getProjects = async () => {
 			try {
@@ -46,7 +45,7 @@ export default function ProjectPage(){
 		getProjects();
 	}, []);
 
-	const delete_handle = async (proj: Project) => {
+	const deleteHandle = async (proj: Project) => {
 		try {
 
 		} catch(err){
@@ -55,7 +54,7 @@ export default function ProjectPage(){
 		}
 	}
 
-	const edit_handle = (proj: Project) => {
+	const editHandle = (proj: Project) => {
 
 	}
 	
@@ -84,7 +83,7 @@ export default function ProjectPage(){
 			</div>
 
 			{projects.map((proj, index) => (
-				<ProjectWidget key={index} project={proj} onDelete={() => setDeleteProject(proj)} onEdit={() => edit_handle()}/>
+				<ProjectWidget key={index} project={proj} onDelete={() => setDeleteProject(proj)} onEdit={() => editHandle(proj)}/>
 			))}
 
 			{deleteProject &&
@@ -92,7 +91,7 @@ export default function ProjectPage(){
 					label="Supprimer ce projet?" 
 					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
 					onCancel={() => setDeleteProject(null)} 
-					onConfirm={delete_handle}
+					onConfirm={deleteHandle}
 				/>
 			}
 

@@ -7,7 +7,7 @@ import SubmitButton from "../../components/input/SubmitButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";
-import UserService from "../../services/UserService.ts";
+import AuthService from "../../services/AuthService.ts";
 
 import "./LoginPage.css";
 
@@ -17,7 +17,7 @@ export default function AccountRecoveryPage() {
     const [success, setSuccess] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const recovery_handle = async (event: React.FormEvent) => {
+    const recoveryHandle = async (event: React.FormEvent) => {
         event.preventDefault();
 
         setError(null);
@@ -25,7 +25,7 @@ export default function AccountRecoveryPage() {
         setIsSubmitting(true);
 
         try {
-            const response = await UserService.requestPasswordReset(email);
+            const response = await AuthService.requestPasswordReset(email);
             setSuccess(response.message);
         } catch (err) {
             const message = err instanceof Error ? err.message : "Erreur lors de l'envoi";
@@ -37,7 +37,7 @@ export default function AccountRecoveryPage() {
 
     return (
         <LoginPage>
-            <form method="POST" className="content-style-div" onSubmit={recovery_handle}>
+            <form method="POST" className="content-style-div" onSubmit={recoveryHandle}>
                 <InfoBox label="Veuillez saisir votre adresse e-mail pour recevoir un lien de reinitialisation de votre mot de passe." />
                 {error && <InfoBox label={error} type="error"/>}
                 {success && <InfoBox label={success} type="success"/>}

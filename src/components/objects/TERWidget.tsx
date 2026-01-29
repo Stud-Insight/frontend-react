@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import TERService, { TERPeriod, TERPeriodStats } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
 import TagWidget from "../ui/TagWidget";
-import VerticalDivider from "../ui/VerticalDivider";
 import SubmitButton from "../input/SubmitButton";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { HiOutlineCalendar } from "react-icons/hi";
-import { TbSchool } from "react-icons/tb";
-
-import "./TERWidget.css";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import ProgressWidget from "../ui/ProgressWidget";
+
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { HiOutlineCalendar } from "react-icons/hi";
+
+import "./TERWidget.css";
 
 interface TERWidgetProps {
   data: TERPeriod;

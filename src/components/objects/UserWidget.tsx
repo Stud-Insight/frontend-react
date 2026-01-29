@@ -3,7 +3,6 @@ import UserAvatar from "../ui/UserAvatar";
 import { User } from "../../services/UserService";
 import { MdDone } from "react-icons/md";
 
-
 import "./UserWidget.css"
 
 interface UserWidgetProps {

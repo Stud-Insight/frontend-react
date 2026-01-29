@@ -1,5 +1,6 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { User } from "./UserService"
+import { error_formatting, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -7,14 +8,6 @@ const api = axios.create({
     withCredentials: true,
     timeout: 10000,
 });
-
-const error_formatting = (error: AxiosError<ApiError>): never => {
-	if (error.response) {
-		throw new Error(error.message);
-	} else {
-		throw new Error("Erreur de connexion au serveur");
-	}
-};
 
 export enum ProjectStatus {
 	DRAFT,
@@ -41,7 +34,7 @@ export interface Project {
 };
 
 export default class ProjectService {
-	public static async getUserProjects(): Promise<Project[]> {
+	public static async getUserProjects(user_id: string): Promise<Project[] | null> {
 		try {
 			const mock_project: Project = {
 				id: "1",
