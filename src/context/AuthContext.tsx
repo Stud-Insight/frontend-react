@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import UserService, { User } from "../services/UserService";
+import AuthService from "../services/AuthService";
+import { User } from "../services/UserService";
 
 interface AuthContextType {
     user: User | null;
@@ -23,27 +24,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Verifier l'authentification au chargement
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                // D'abord essayer le localStorage pour un affichage rapide
-                const storedUser = UserService.getStoredUser();
+                const storedUser = AuthService.getStoredUser();
+
                 if (storedUser) {
                     setUser(storedUser);
                 }
 
-                // Toujours verifier avec le serveur (session cookie)
-                const serverUser = await UserService.getCurrentUser();
+                const serverUser = await AuthService.getCurrentUser();
                 if (serverUser) {
                     setUser(serverUser);
                 } else {
-                    // Session invalide, nettoyer
                     setUser(null);
                     localStorage.removeItem("user");
                 }
             } catch (err) {
-                // Erreur reseau ou non authentifie
                 setUser(null);
                 localStorage.removeItem("user");
             } finally {
@@ -58,7 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setError(null);
         
         try {
-            const response = await UserService.login(email, password);
+            const response = await AuthService.login(email, password);
             setUser(response.user);
         } catch (err) {
             const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -71,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const logout = async () => {
         try {
-            await UserService.logout();
+            await AuthService.logout();
         } catch (err) {
             // Ignorer les erreurs de deconnexion
         } finally {
@@ -82,7 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const refreshUser = async () => {
         try {
-            const currentUser = await UserService.getCurrentUser();
+            const currentUser = await AuthService.getCurrentUser();
             setUser(currentUser);
         } catch (err) {
             setUser(null);

@@ -7,7 +7,7 @@
 	height: 15px;
 	border-style: solid;
     border-width: 2px;
-    border-color: var(--light_gray-col);
+    border-color: var(--gray2-col);
     border-radius: 4px;
     cursor: pointer;
 }

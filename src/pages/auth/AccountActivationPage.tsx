@@ -5,7 +5,7 @@ import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
 import SubmitButton from "../../components/input/SubmitButton.tsx";
-import Divider from "../../components/ui/Divider.tsx";
+import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LinkButton from "../../components/nav/LinkButton.tsx";
 import LoginPage from "./LoginPage.tsx";
@@ -35,7 +35,7 @@ export default function AccountActivationPage(){
                     <InputField value={password_confirm} onChange={setPasswordConfirm} is_password={true} placeholder="Confirmation du mot de passe"/>
                 </div>
 
-                <Divider/>
+                <HorizontalDivider/>
                 <SubmitButton label="Valider"/>
 
                 {/*TODO CREER UN CAPTCHA POUR EVITER BOT */}

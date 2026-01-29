@@ -53,15 +53,3 @@
 .chat-placeholder-content button:hover {
     background-color: #3a7bc8;
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-    .chat-page {
-        flex-direction: column;
-    }
-
-    .chat-sidebar {
-        width: 100%;
-        max-height: 40vh;
-    }
-}

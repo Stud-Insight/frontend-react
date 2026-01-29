@@ -7,11 +7,10 @@ import ChatService, { Conversation, getParticipantName } from "../../services/Ch
 import { useAuth } from "../../context/AuthContext";
 import "./ChatPage.css";
 
-export default function ChatPage() {
+export default function ChatPage(){
     const { user } = useAuth();
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [showNewChat, setShowNewChat] = useState(false);
 
     const loadConversations = useCallback(async () => {
@@ -20,15 +19,12 @@ export default function ChatPage() {
             setConversations(data);
         } catch (err) {
             console.error("Error loading conversations:", err);
-        } finally {
-            setIsLoading(false);
         }
     }, []);
 
     useEffect(() => {
         loadConversations();
 
-        // Poll for new conversations/updates every 10 seconds
         const interval = setInterval(loadConversations, 10000);
         return () => clearInterval(interval);
     }, [loadConversations]);
@@ -40,14 +36,15 @@ export default function ChatPage() {
     const handleCreateConversation = async (participantId: string) => {
         try {
             const conv = await ChatService.createConversation([participantId]);
+
             setConversations((prev) => {
-                // Check if conversation already exists
                 const existing = prev.find((c) => c.id === conv.id);
                 if (existing) {
                     return prev;
                 }
                 return [conv, ...prev];
             });
+
             setSelectedConversation(conv);
         } catch (err) {
             console.error("Error creating conversation:", err);
@@ -70,7 +67,6 @@ export default function ChatPage() {
                     selectedId={selectedConversation?.id || null}
                     onSelect={handleSelectConversation}
                     onNewChat={() => setShowNewChat(true)}
-                    isLoading={isLoading}
                 />
 
                 {selectedConversation ? (

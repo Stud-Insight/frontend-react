@@ -4,8 +4,8 @@
     align-items: center;
     gap: 10px;
     width: 100%;
-    background-color: var(--light_gray-col);
-    color: var(--gray-col);
+    background-color: var(--gray2-col);
+    color: var(--black-col);
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
@@ -16,26 +16,27 @@
     letter-spacing: 0.6px;
 }
 
+.info-box.info {
+    background-color: var(--gray2-col);
+    color: var(--gray1-col);
+}
+
+.info-box.error {
+    color: color-mix(in srgb, var(--red-col) 90%, transparent);
+    background-color: color-mix(in srgb, var(--red-col) 20%, transparent);
+    border-color: color-mix(in srgb, var(--red-col) 60%, transparent);
+}
+
+.info-box.success {
+    color: var(--green-col);
+    background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
+    border-color: color-mix(in srgb, var(--green-col) 60%, transparent);
+}
+
 .info-box-icon {
     width: 30px;
     height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.info-box-info {
-    background-color: var(--light_gray-col);
-    color: var(--gray-col);
-}
-
-.info-box-error {
-    color: color-mix(in srgb, var(--red-col) 90%, transparent);
-    background-color: color-mix(in srgb, var(--red-col) 20%, transparent);
-    border-color: color-mix(in srgb, var(--red-col) 60%, transparent);
-}
-.info-box-success {
-    color: var(--green-col);
-    background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
-    border-color: color-mix(in srgb, var(--green-col) 60%, transparent);
 }

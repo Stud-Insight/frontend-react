@@ -5,21 +5,24 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 40px;
     gap: 20px;
-    color: var(--gray-col);
+	padding: 10px;
+    color: var(--black-col);
     font-family: var(--main-font);
-    font-weight: 500;
+    font-weight: var(--mid-bold);
     font-size: medium;
-    cursor: pointer;  
+    cursor: pointer;
+	border-radius: 10px;
     transition: transform 0.1s ease;
+	background-color: var(--white-col);
+	transition: background-color 0.3s;
 }
 
 .navigation-button-style.active {
-    font-weight: 700;
-    font-size: 1.2rem;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
 }
 
-.navigation-button-style:hover {
-    transform: scale(1.03);
+.navigation-button-style:not(.active):hover {
+    background-color: var(--gray3-col);
 }

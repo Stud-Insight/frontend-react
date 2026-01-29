@@ -1,38 +1,39 @@
 import React from "react";
-import { useState, useEffect, ReactNode } from "react";
-import { FaHome, FaFile, FaBell, FaFolder, FaComments } from "react-icons/fa";
-import { FaBoxArchive } from "react-icons/fa6";
-import { IoMail, IoSettingsSharp } from "react-icons/io5";
-import { HiUserGroup } from "react-icons/hi";
-import { MdLogout } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
-
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
 import Logo from "../../components/ui/Logo.tsx";
-import Divider from "../../components/ui/Divider.tsx";
-import UserWidget from "../../components/ui/UserWidget.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
-import UserService, { User } from "../../services/UserService.ts"
+import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
+import UserAvatar from "../../components/ui/UserAvatar.tsx";
 
+import { useState, ReactNode } from "react";
+import { FiArchive } from "react-icons/fi";
+import { MdLogout } from "react-icons/md";
+import { AiOutlineAppstore } from "react-icons/ai";
+import { FiUsers } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
+import { FaRegFolder } from "react-icons/fa";
+import { LuMessageSquare } from "react-icons/lu";
+import { TbSchool } from "react-icons/tb";
+import { HiOutlineCalendar } from "react-icons/hi";
+import { MdWorkOutline } from "react-icons/md";
+
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./DashboardPage.css"
 
-interface DashboardPageInterface {
+interface DashboardPageProps {
     children?: ReactNode;
 };
 
-export default function DashboardPage({children} : DashboardPageInterface){
+export default function DashboardPage({children} : DashboardPageProps){
     const { user } = useAuth();
-    const [userImage, setUserImage] = useState("");
-    
-    const location = useLocation();
-    const navigate = useNavigate();
-    const { logout } = useAuth();
-    const currentPage = location.pathname.split("/").pop();
+	const { logout } = useAuth();
 
-    const logout_handle = async () => {
+    const { pathname } = useLocation();
+    const navigate = useNavigate();
+
+    const logoutHandle = async () => {
         try {
             await logout();
             navigate("/");
@@ -41,56 +42,54 @@ export default function DashboardPage({children} : DashboardPageInterface){
         }
     }
 
-    const page_change_handler = (id: string) => {
-        console.log("Page clicked: ", id);
+    const pageHandle = (id: string) => {
         navigate("/dashboard/" + id);
     }
 
-    useEffect(() => {
-        // const test_user: User = {
-        //     id: "1",
-        //     email: "test@example.com",
-        //     first_name: "Clémentine",
-        //     last_name: "Nébut",
-        //     groups: [],
-        //     is_staff: false,
-        //     is_superuser: false,
-        // };
-        // setUser(test_user);
-
-    }, []);
-
     return (
         <div className="dashboard-content">
-            <div className="dashboard-sidebar-content">
-                <Logo width={"200"} height={"50"} large={true} className="logo-style-dashboard"/>
-                <Divider/>
-                <UserWidget user={user}/>
-                <Divider/>
+			<div className="dashboard-sidebar-layout">
+				<div className="dashboard-sidebar-content">
+					{/* <Logo width="auto" large={true}/> */}
+					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/>
+					<HorizontalDivider/>
+					
+					<>
+						<NavigationButton label="Mes Projets" active={pathname.startsWith("/dashboard/projets")} icon={<FaRegFolder/>} id="projets" onClick={(id) => pageHandle(id)}/>
+						<NavigationButton label="Gestion TERs" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+						<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
+						<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
+						<HorizontalDivider/>
+					</>
+				</div>
 
-                <NavigationButton label={"Accueil"} active={currentPage == "home"} icon={<FaHome/>} id="home" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Stages"} active={currentPage == "stage"} icon={<IoMail/>} id="stage" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"TERs"} active={currentPage == "ter"} icon={<FaFile/>} id="ter" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Fichiers"} active={currentPage == "files"} icon={<FaFolder/>} id="files" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Messages"} active={currentPage == "chat"} icon={<FaComments/>} id="chat" onClick={(id) => page_change_handler(id)}/>
-                <NavigationButton label={"Profile"} active={currentPage == "profile"} icon={<FaUser/>} id="profile" onClick={(id) => page_change_handler(id)}/>
+				<div className="dashboard-sidebar-content">
+					<HorizontalDivider/>
+					<NavigationButton icon={<MdLogout/>} label="Déconnexion" onClick={logoutHandle}/>
+				</div>
+			</div>
 
-                {user?.is_staff && (
-                    <>
-                        <Divider/>
-                        <NavigationButton label={"Utilisateurs"} active={currentPage == "users"} icon={<HiUserGroup/>} id="users" onClick={(id) => page_change_handler(id)}/>
-                        <NavigationButton label={"Archives"} active={currentPage == "archive"} icon={<FaBoxArchive/>} id="archive" onClick={(id) => page_change_handler(id)}/>
-                    </>
-                )}
+			<VerticalDivider/>
 
-                <Divider/>
-                <NavigationButton icon={<MdLogout/>} label="Déconnection" onClick={logout_handle}/>
-            </div>
+            <div className="dashboard-rightside-main">
+				<div className="dashboard-header-container">
+					{/* <MdNotificationsNone size={20}/> */}
 
-            <HorizontalDivider/>
+					<div className="dashboard-user-container">
+						<label>{user?.first_name} {user?.last_name}</label>
+						<div className="dashboard-avatar-container">
+							<UserAvatar user={user}/>
+						</div>
+					</div>
+				</div>
 
-             <div className="dashboard-rightside-main">
-                <div className="dashboard-main-content">
+				<HorizontalDivider/>
+				
+                <div className="dashboard-main-container">
                     {children}
                 </div>
             </div>

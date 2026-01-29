@@ -1,8 +1,18 @@
 import React from "react";
-import "./HorizontalDivider.css";
+import "./HorizontalDivider.css"
 
-export default function HorizontalDivider(){
-    return (
-        <div className="horizontal-divider-style"/>
+interface DividerProps {
+    label?: string
+};
+
+export default function HorizontalDivider({label}: DividerProps){
+    return label ? (
+        <div className="divider-style">
+            <div className="sep" />
+            <label>{label}</label>
+            <div className="sep" />
+        </div>
+    ) : (
+        <div className="sep" />
     );
 }

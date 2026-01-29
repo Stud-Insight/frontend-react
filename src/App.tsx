@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -6,17 +6,22 @@ import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/HomePage";
-import UsersPage from "./pages/dashboard/UsersPage";
-import FilesPage from "./pages/dashboard/FilesPage";
+import TERSelectionPage from "./pages/ter/user/TERSelectionPage";
+import TERInfoPage from "./pages/ter/user/TERInfoPage";
+import TERListPage from "./pages/ter/admin/TERListPage";
 import ChatPage from "./pages/dashboard/ChatPage";
-import StagesPage from "./pages/dashboard/StagesPage";
-import TERPage from "./pages/dashboard/TERPage";
+import ProjectPage from "./pages/dashboard/ProjectPage";
+import TERAdminPage from "./pages/ter/admin/TERAdminPage";
+import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
-import ProfilePage from "./pages/dashboard/ProfilePage";
-
+import StagePage from "./pages/dashboard/StagePage";
 import "./index.css";
 
-function ProtectedRoute({ children }: { children: React.ReactNode }){
+interface RouteProps {
+	children: ReactNode;
+};
+
+function ProtectedRoute({ children }: RouteProps){
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -27,10 +32,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }){
         return <Navigate to="/auth/login" replace />;
     }
 
-    return <>{children}</>;
+    return (
+		<>
+			{children}
+		</>
+	);
 }
 
-function PublicRoute({ children }: { children: React.ReactNode }){
+function PublicRoute({ children }: RouteProps){
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -41,7 +50,11 @@ function PublicRoute({ children }: { children: React.ReactNode }){
         return <Navigate to="/dashboard/home" replace />;
     }
 
-    return <>{children}</>;
+    return (
+		<>
+			{children}
+		</>
+	);
 }
 
 function RootRedirect() {
@@ -65,15 +78,18 @@ function AppRoutes() {
 
             <Route path="/dashboard">
                 <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
-                <Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
-                <Route path="stage" element={<ProtectedRoute><StagesPage/></ProtectedRoute>}/>
-                <Route path="ter" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
-                <Route path="files" element={<ProtectedRoute><FilesPage/></ProtectedRoute>}/>
+               	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
+				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
-                <Route path="profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
-                {/* <Route path="settings" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
+				<Route path="projets" element={<ProtectedRoute><ProjectPage/></ProtectedRoute>}/>
             </Route>
+
+			<Route path="/dashboard/ter">
+				<Route path="select" element={<ProtectedRoute><TERSelectionPage/></ProtectedRoute>}/>
+				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
+				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
+			</Route>
 
             <Route path="/" element={<RootRedirect/>} />
             <Route path="*" element={<RootRedirect/>} />

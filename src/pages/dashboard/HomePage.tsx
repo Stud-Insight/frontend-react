@@ -1,18 +1,15 @@
 import React from "react";
-import DashboardPage from "./DashboardPage.tsx";
+import DashboardPage from "./DashboardPage";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./HomePage.css"
 
 export default function HomePage(){
-    const { user } = useAuth();
+	const { user } = useAuth();
 
-    return (
-        <DashboardPage>
-            <div className="bonjour-div-message">
-                <label>Bonjour, {user?.first_name}.</label>
-                <label>Bienvenue sur votre tableau de bord où vous pouvez consulter vos différentes expériences.</label>
-            </div>
-        </DashboardPage>
-    )
+	return (
+		<DashboardPage>
+			<label style={{fontWeight: 800, fontSize: "25px"}}>Bonjour, {user?.first_name}!</label>
+		</DashboardPage>
+	)
 }

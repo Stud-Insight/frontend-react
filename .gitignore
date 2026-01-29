@@ -1,11 +1,7 @@
 node_modules
 public
 .DS_Store
-
-# Environment variables (contains secrets)
 .env
-
-# Docker volumes
-postgres-data/
-redis-data/
-minio-data/
+postgres-data
+redis-data
+minio-data

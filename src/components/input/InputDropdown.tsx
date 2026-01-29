@@ -5,24 +5,25 @@ import { FaCheck } from "react-icons/fa6";
 
 import "./InputDropdown.css"
 
-interface InputDropdownInterface {
+interface InputDropdownProps {
 	label?: string;
 	default_index?: number;
+	value?: string;
 	options: string[];
 	close_after_selection?: boolean;
 	onChange?: (value: string) => void; 
 };
 
-export default function InputDropdown({label, default_index = 0, close_after_selection = true, options, onChange}: InputDropdownInterface){
+export default function InputDropdown({label, default_index = 0, value, close_after_selection = true, options, onChange}: InputDropdownProps){
 	const [open, setOpen] = useState(false);
-	const [selected, setSelected] = useState(options[default_index]);
+	const [selected, setSelected] = useState<string>(options[default_index]);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const open_handler = () => {
+	const openHandler = () => {
 		setOpen(!open);
 	};
 
-	const selection_handler = (opt: string) => {
+	const selectionHandler = (opt: string) => {
 		setSelected(opt);
 		onChange ? onChange(opt) : undefined;
 
@@ -32,18 +33,19 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 	};
 
 	useEffect(() => {
-		const clickout_handler = (e: MouseEvent) => {
+		const clickoutHandler = (e: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)){
 				setOpen(false);
 			}
 		}
 
-		selection_handler(selected);
+		selectionHandler(selected);
+		value && setSelected(value);
 
-		document.addEventListener("mousedown", clickout_handler);
+		document.addEventListener("mousedown", clickoutHandler);
 
 		return () => {
-			document.removeEventListener("mousedown", clickout_handler)
+			document.removeEventListener("mousedown", clickoutHandler)
 		};
 	}, []);
 
@@ -52,9 +54,9 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 			{label ? <label className="dropdown-label">{label}</label> : undefined}
 
 			<div className="dropdown-layout-style" ref={dropdownRef}>
-				<div className={open ? "dropdown-main-style active" : "dropdown-main-style"} onClick={open_handler}>
-					<label>{selected}</label>
-					{open ? <IoIosArrowUp/> : <IoIosArrowDown/>}
+				<div className={open ? "dropdown-main-style active" : "dropdown-main-style"} onClick={openHandler}>
+					<span>{selected}</span>
+					{open ? <IoIosArrowDown/> : <IoIosArrowUp/>}
 				</div>
 
 				{open && 
@@ -62,14 +64,14 @@ export default function InputDropdown({label, default_index = 0, close_after_sel
 						{options.map((opt, index) => {
 							if (opt == selected){
 								return (
-									<div key={index} className="dropdown-option-style selected" onClick={() => selection_handler(opt)}>
+									<div key={index} className="dropdown-option-style selected" onClick={() => selectionHandler(opt)}>
 										<label>{opt}</label>
 										<FaCheck/>
 									</div>
 								);
 							} else {
 								return (
-									<div key={index} className="dropdown-option-style" onClick={() => selection_handler(opt)}>
+									<div key={index} className="dropdown-option-style" onClick={() => selectionHandler(opt)}>
 										<label>{opt}</label>
 									</div>
 								);

@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -7,7 +8,6 @@ const api = axios.create({
     timeout: 30000,
 });
 
-// Types
 export interface Attachment {
     id: string;
     original_filename: string;
@@ -21,27 +21,6 @@ export interface UploadResponse {
     message: string;
     file_id: string;
 }
-
-interface ApiError {
-    code: string;
-    message: string;
-}
-
-// Intercepteur CSRF
-api.interceptors.request.use((config) => {
-    const csrfToken = localStorage.getItem("csrf_token");
-    if (csrfToken && config.method !== "get") {
-        config.headers["X-CSRFToken"] = csrfToken;
-    }
-    return config;
-});
-
-const handleApiError = (error: AxiosError<ApiError>): never => {
-    if (error.response) {
-        throw new Error(error.response.data?.message || "Une erreur est survenue");
-    }
-    throw new Error("Erreur de connexion au serveur");
-};
 
 export default class FileService {
     public static formatFileSize = (bytes: number): string => {
@@ -78,7 +57,7 @@ export default class FileService {
         return "FILE";
     };
 
-    public static async uploadFile(file: File, onProgress?: (progress: number) => void): Promise<UploadResponse> {
+    public static async uploadFile(file: File, onProgress?: (progress: number) => void): Promise<UploadResponse | null> {
         try {
             const formData = new FormData();
             formData.append("file", file);
@@ -97,11 +76,11 @@ export default class FileService {
 
             return response.data;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
-    public static async listFiles(): Promise<Attachment[]> {
+    public static async listFiles(): Promise<Attachment[] | null> {
         try {
             // const response = await api.get<Attachment[]>("/attachments/");
             // return response.data;
@@ -132,19 +111,19 @@ export default class FileService {
 
 			return mockFiles;
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
     public static async downloadFile(fileId: string, filename: string): Promise<void> {
-        window.open(`${API_BASE_URL}/attachments/${fileId}/download`, "_blank");
+        window.open(`${process.env.API_URL}/attachments/${fileId}/download`, "_blank");
     }
 
     public static async deleteFile(fileId: string): Promise<void> {
         try {
             await api.delete(`/attachments/${fileId}`);
         } catch (error) {
-            handleApiError(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 }

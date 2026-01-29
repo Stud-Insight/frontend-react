@@ -1,156 +1,351 @@
-import React, { useState, useEffect } from "react";
-import { RxCross2 } from "react-icons/rx";
-import DashboardPage from "./DashboardPage.tsx";
-import UserService, {User} from "../../services/UserService.ts";
-import PermissionTag from "../../components/ui/PermissionTag.tsx";
-import ModalDialog from "../../components/input/ModalDialog.tsx";
-import InputField from "../../components/input/InputField.tsx";
-import InputDropdown from "../../components/input/InputDropdown.tsx";
-import SubmitButton from "../../components/input/SubmitButton.tsx";
-import InputCheckbox from "../../components/input/InputCheckbox.tsx";
-import InfoBox from "../../components/ui/InfoBox.tsx";
-import ConfirmationDialog from "../../components/input/ConfirmationDialog.tsx";
+import React, { useState, useEffect, useRef } from "react";
+import DashboardPage from "./DashboardPage";
+import SubmitButton from "../../components/input/SubmitButton";
+import InfoBox from "../../components/ui/InfoBox";
+import UserService, { User, UserRole } from "../../services/UserService";
+import InfoWidget from "../../components/ui/InfoWidget";
+import InputCheckbox from "../../components/input/InputCheckbox";
+import IconButton from "../../components/input/IconButton";
+import ConfirmationDialog from "../../components/input/ConfirmationDialog";
+import ModalDialog from "../../components/input/ModalDialog";
+import InputField from "../../components/input/InputField";
+import InputDropdown from "../../components/input/InputDropdown"
+import { LuMessageSquare } from "react-icons/lu";
+
+import { CgExport, CgImport } from "react-icons/cg";
+
+import { FaPlus } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
+import { IoBan } from "react-icons/io5";
+import { FiUser, FiMail } from "react-icons/fi";
+
+import { useAuth } from "../../context/AuthContext";
+
+import UserAvatar from "../../components/ui/UserAvatar";
+import TagWidget from "../../components/ui/TagWidget";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
 
 export default function UsersPage(){
-	const [users, setUsers] = useState<User[]>([]);
-	const [showModal, setShowModal] = useState(false);
-	const [checkAll, setCheckAll] = useState(false);
+	const { user } = useAuth();
+	const g = user;
 	const [error, setError] = useState<string | null>(null);
-	const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-	const [userDelete, setUserDelete] = useState<User | null>(null);
-	const [role, setRole] = useState("");
-	const [prenom, setPrenom] = useState("");
-	const [nom, setNom] = useState("");
-	const [email, setEmail] = useState("");
-	const [mdp, setMdp] = useState("");
+	const [success, setSuccess] = useState<string | null>(null);
+	const [users, setUsers] = useState<User[] | null>([]);
+	const [deleteUser, setDeleteUser] = useState<User | null>(null);
+	const [createUser, setCreateUser] = useState<boolean>(false);
+	const [editUser, setEditUser] = useState<User | null>(null);
+	const [blockUser, setBlockUser] = useState<User | null>(null);
+	const [selectedUsers, setSelectedUsers] = useState(new Set([]));
+	const [prenom, setPrenom] = useState<string>("");
+	const [nom, setNom] = useState<string>("");
+	const [mail, setMail] = useState<string>("");
+	const [role, setRole] = useState<string>("");
 
-	useEffect(() => {
-		const fetchUsers = async () => {
-			try {
-				const data = await UserService.getAllUsers();
-				setUsers(data);
-			} catch (err) {
-				setError(err instanceof Error ? err.message : "Erreur");
-			}
-		};
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-		fetchUsers();
-	}, []);
+	const roles: string[] = [
+		UserRole.ETUDIANT,
+		UserRole.RESPO_TER,
+		UserRole.RESPO_STAGE, 
+		UserRole.ENCADRANT, 
+		UserRole.EXTERNE,
+		UserRole.ADMIN, 
+	]
 
-	const role_list = ["Etudiant", "Enseignant(e)", "Administrateur", "Extern"];
+	const tagRoleMap = new Map<string, string>([
+		[UserRole.ETUDIANT, "--blue-col"],
+		[UserRole.RESPO_TER, "--purple-col"],
+		[UserRole.RESPO_STAGE, "--purple-col"],
+		[UserRole.ENCADRANT, "--purple-col"],
+		[UserRole.EXTERNE, "--orange-col"],
+		[UserRole.ADMIN, "--red-col"],
+	]);
 
-	const open_modal_handler = () => {
-		setShowModal(!showModal);
-	}
+	const modalWidth: number = 500;
 
-	const add_user_hanlder = async () => {
-		try {
-			await UserService.createUser(role, nom, prenom, email, mdp);
-			setRole("");
-			setPrenom("");
-			setNom("");
-			setEmail("");
-			setMdp("");
-			setShowModal(false);
-		} catch (err){
-			setError(err instanceof Error ? err.message : "Erreur");
-		}
-	}
+	const getCountData = () => {
+		let countMap: Map<string, number> = new Map<string, number>();
 
-	const user_selection_handler = (user_id: string) => {
-		setSelectedUsers(prev => {
-			const next = new Set(prev);
-
-			if (next.has(user_id)) {
-				next.delete(user_id);
-			} else {
-				next.add(user_id);
-			}
-
-			return next;
+		roles.forEach(role => {
+			countMap.set(role, 0);
 		});
 
-		setCheckAll(false);
-	}
+		{users && users.map((user, index) => (
+			user.groups.map((group, index1) => {
+				let t: number | undefined = countMap.get(group.name);
+				if (t != undefined){
+					countMap.set(group.name, t + 1);
+				}
+			})
+		))}
 
-	const user_checkall_handler = () => {
- 		if (checkAll) {
-			setSelectedUsers(new Set());
-		} else {
-			setSelectedUsers(new Set(users.map(user => user.id)));
-		}
+		return countMap;
+	};
 
-    	setCheckAll(!checkAll);
-	}
-
-	const open_delete_handler = (user_id: User) => {
-		setUserDelete(user_id);
-	}
-
-	const delete_user_handler = async () => {
+	const getAllUsers = async () => {
 		try {
-			UserService.deleteUser(userDelete?.id);
-			setUserDelete(null);
+			const data = await UserService.getAllUsers();
+			setUsers(data);
 		} catch (err){
-			setError(err instanceof Error ? err.message : "Erreur");
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
 		}
 	}
-    return (
-        <DashboardPage>
-            <label>Utilisateurs ({users.length})</label>
+
+	const userSelectionHandle = (id: string) => {
+		setSelectedUsers(prev => {
+			const newSet = new Set(prev);
+
+			if (newSet.has(id)) {
+				newSet.delete(id);
+			} else {
+				newSet.add(id);
+			}
+
+			return newSet;
+		});
+	};
+
+	const deleteHandle = async () => {
+		try {
+			await UserService.deleteUser(deleteUser?.id);
+			setSuccess(`Utilisateur "${deleteUser?.first_name} ${deleteUser?.last_name}" a été supprimé du système.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
+		} catch(err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		setDeleteUser(null);
+	}
+
+	const createHandle = async () => {
+		try {
+			await UserService.createUser([role], nom, prenom, mail);
+			setSuccess(`Utilisateur "${prenom} ${nom}" a été ajouté au système.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
+		} catch(err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setMail("");
+		setPrenom("");
+		setNom("");
+		setRole("");
+		setCreateUser(false);
+	}
+
+	const blockHandle = async () => {
+		try {
+
+		} catch(err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setBlockUser(null);
+	}
+
+	const editHandlePreload = (user: User) => {
+		setEditUser(user);
+		setMail(user.email);
+		setPrenom(user.first_name);
+		setNom(user.last_name);
+
+		if (user.groups.length > 0){
+			setRole(user.groups[0].name);
+		}
+	}
+
+	const editHandle = async () => {
+		try {
+			await UserService.updateUser(editUser?.id, prenom, nom, mail, [role]);
+			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllUsers();
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setMail("");
+		setPrenom("");
+		setNom("");
+		setRole("");
+		setEditUser(null);
+	}
+
+	const dateFormat = (dateString: string) => {
+		const date_t = new Date(dateString);
+
+        return date_t.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+	}
+	
+	const fileSelectionHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		if (!file.name.endsWith(".csv")) {
+			setError("Veuillez sélectionner un fichier CSV.");
+			return;
+		}
+
+		try {
+			await UserService.importUserCSV(file);
+			setSuccess(`Fichier ${file.name} importé avec succès.`);
+			getAllUsers();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	useEffect(() => {
+		getAllUsers();
+	}, []);
+	
+	return (
+		<DashboardPage>
+			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
+
+			{createUser && 
+				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)} width={modalWidth}>
+					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
+					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
+					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
+					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
+				</ModalDialog>
+			}
+
+			{editUser && 
+				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
+					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
+					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
+					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
+				</ModalDialog>
+			}
+
+			{blockUser &&
+				<ConfirmationDialog 
+					label="Bloquer cet utilisateur?" 
+					info={`L'utilisateur "${blockUser.first_name} ${blockUser.last_name}" sera bloqué et ne pourra plus se connecter au serveur. Êtes-vous sûr de vouloir poursuivre cette action ?`}
+					onCancel={() => setBlockUser(null)} 
+					onConfirm={blockHandle}
+				/>
+			}
+
+			{deleteUser &&
+				<ConfirmationDialog 
+					label="Supprimer cet utilisateur?" 
+					info={`L'utilisateur "${deleteUser.first_name} ${deleteUser.last_name}" sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
+					onCancel={() => setDeleteUser(null)} 
+					onConfirm={deleteHandle}
+				/>
+			}
+
+			<div className="dashboard-top-layout">
+				<div className="dashboard-top-title-layout">
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion Utilisateurs</label>
+				</div>
+
+				<div className="dashboard-top-button-layout">
+					<div style={{width: "auto"}}>
+						<SubmitButton icon={<CgImport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
+					</div>
+
+					<div style={{width: "auto"}}>
+						<SubmitButton icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => setCreateUser(true)}/>
+					</div>
+				</div>
+			</div>
+
+			<label style={{color: "var(--gray1-col)"}}>Gérez les comptes utilisateurs, leurs rôles et leurs accès à la plateforme.</label>
 
 			{error && <InfoBox label={error} type="error"/>}
-            <table className="users-table-style">
+			{success && <InfoBox label={success} type="success"/>}
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color={`var(--blue-col)`}/>
+				<InfoWidget label="Étudiants" icon={<FiUser/>} info={getCountData().get("Étudiant")} color="var(--blue-col)"/>
+				<InfoWidget label="Externes" icon={<FiUser/>} info={getCountData().get("Externe")} color="var(--orange-col)"/>
+			</div>
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Encadrants" icon={<FiUser/>} info={getCountData().get("Encadrant")} color="var(--purple-col)"/>
+				<InfoWidget label="Résponsables" icon={<FiUser/>} info={getCountData().get("Respo Stage") + getCountData().get("Respo TER")} color="var(--purple-col)"/>
+				<InfoWidget label="Administrateurs" icon={<FiUser/>} info={getCountData().get("Admin")} color="var(--red-col)"/>
+			</div>
+
+			<table className="users-table-style">
                 <thead>
                     <tr>
-                        <th><InputCheckbox value={checkAll} onChange={user_checkall_handler}/></th>
+                        <th><InputCheckbox/></th>
+						<th>Profile</th>
 						<th>Nom</th>
-                        <th>E-Mail</th>
-                        <th>Date Activation</th>
-                        <th>Dernière Connexion</th>
-                        <th>Rôle</th>
+						<th>E-Mail</th>
+                        <th>Dâte Activation</th>
+                        <th>Dâte Connexion</th>
+						<th>Rôle</th>
 						<th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map((user, index) => (
+		 			{users && users.map((user, index) => (
                         <tr key={index}>
-                            <td><InputCheckbox value={selectedUsers.has(user.id)} onChange={() => user_selection_handler(user.id)}/></td>
-                            <td>{user.first_name} {user.last_name}</td>
-                            <td>{user.email}</td>
-                            <td>{"test"}</td>
-                            <td>{"test"}</td>
-                            <td><PermissionTag perm={`${user.is_superuser ? "admin" : "etu"}`}/></td>
-							<td><RxCross2 size={20} onClick={() => open_delete_handler(user)}/></td>
+                            <td>
+								<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
+							</td>
+                            <td>
+								<div className="users-table-avatar-container">
+									<UserAvatar user={user}/>
+								</div>
+							</td>
+							<td>
+								<div className="users-table-user-info">
+									<label>{user.first_name} {user.last_name}</label>
+									<label style={{color: "var(--gray1-col)"}}>{user.id.slice(0, 8)}</label>
+								</div>
+							</td>
+							<td>{user.email}</td>
+                            <td>{dateFormat(user.date_joined)}</td>
+                            <td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
+							<td>
+								<div className="users-table-tag-layout">
+									{user.groups.map((role, index) => (
+										<TagWidget label={role.name} color={`var(${tagRoleMap.get(role.name)})`}/>
+									))}
+								</div>
+							</td>
+
+							<td>
+								<div className="users-table-options">
+									{/* <IconButton icon={<LuMessageSquare/>}/> */}
+									<IconButton icon={<MdOutlineEdit/>} onClick={() => editHandlePreload(user)}/>
+
+									{user.id != g?.id && 
+										<>
+											<IconButton icon={<IoBan/>} onClick={() => setBlockUser(user)}/>
+											<IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteUser(user)}/>
+										</>									
+									}
+								</div>
+							</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-			<SubmitButton label="Créer un utilisateur" onChange={open_modal_handler}/>
-
-			{userDelete &&
-				<ConfirmationDialog 
-				label="Supprimer cet utilisateur ?"
-				info={`L'utilisateur "${userDelete.first_name} ${userDelete.last_name}" sera surpprimé de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
-				onCancel={() => setUserDelete(null)}
-				onConfirm={delete_user_handler}
-				/>
-			}
-			
-			{showModal && 
-				<ModalDialog label="Utilisateur" onClose={open_modal_handler}>
-					<InputDropdown label={"Rôle"} options={role_list} onChange={setRole}/>
-					<InputField label={"Prenom"} value={prenom} onChange={setPrenom}/>
-					<InputField label={"Nom"} value={nom} onChange={setNom}/>
-					<InputField label={"E-Mail"} value={email} onChange={setEmail}/>
-					<InputField label={"Mot de passe"} value={mdp} onChange={setMdp}/>
-					<SubmitButton label="Créer Utilisateur" onChange={add_user_hanlder}/>
-				</ModalDialog>
-			}
-        </DashboardPage>
-    )
+		</DashboardPage>	
+	)
 }

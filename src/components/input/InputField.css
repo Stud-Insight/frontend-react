@@ -1,6 +1,6 @@
 .input-field {
-    background-color: var(--light_gray-col);
-    color: var(--gray-col);
+    background-color: var(--gray2-col);
+    color: var(--black-col);
     padding: 10px;
     border-radius: 5px;
     height: 35px;
@@ -21,7 +21,7 @@
     flex-direction: row;
     align-items: center;
     gap: 6px;
-    color: var(--gray-col);
+    color: var(--gray1-col);
     font-family: var(--main-font);
     font-weight: var(--big-bold);
     font-size: medium;

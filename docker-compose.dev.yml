@@ -71,7 +71,8 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.local
       - DATABASE_URL=postgres://studinsight:${POSTGRES_PASSWORD:-changeme}@postgres:5432/studinsight
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "
+      python manage.py migrate &&
       python manage.py shell -c 'from django.contrib.auth import get_user_model;
       User = get_user_model();
 
