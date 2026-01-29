@@ -17,7 +17,7 @@ import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineEdit } from "react-icons/md";
 import TERService, { TERPeriod  } from "../../../services/TERService";
-import { User, UserRole } from "../../../services/UserService";
+import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
 import UserAvatar from "../../../components/ui/UserAvatar";
 import "../../dashboard/UsersPage.css"
@@ -162,7 +162,7 @@ export default function TERAdminPage(){
 			{addingStudent && 
 				<UserSelectionDialog 
 					label="Ajout etudiants au TER"
-					role_filter={[UserRole.ETUDIANT]} 
+					role_filter={[UserRoles.ETUDIANT]} 
 					onClose={() => setAddingStudent(false)} 
 					onConfirm={(users) => addStudentHandle(users)}
 				/>
@@ -171,7 +171,7 @@ export default function TERAdminPage(){
 			{addingTeacher &&
 				<UserSelectionDialog 
 					label="Ajout encadrants au TER"
-					role_filter={[UserRole.ENCADRANT, UserRole.EXTERNE, UserRole.RESPO_TER]} 
+					role_filter={[UserRoles.ENCADRANT, UserRoles.EXTERNE, UserRoles.RESPO_TER]} 
 					onClose={() => setAddingTeacher(false)} 
 				/>
 			}

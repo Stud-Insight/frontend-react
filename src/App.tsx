@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
@@ -15,6 +14,7 @@ import TERAdminPage from "./pages/ter/admin/TERAdminPage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import StagePage from "./pages/dashboard/StagePage";
+
 import "./index.css";
 
 interface RouteProps {

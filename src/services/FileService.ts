@@ -1,12 +1,5 @@
-import axios, { AxiosError } from "axios";
-import { errorFormat, ApiError } from "../utils/ErrorHandler";
-
-const api = axios.create({
-    baseURL: process.env.API_URL,
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true,
-    timeout: 30000,
-});
+import { AxiosError } from "axios";
+import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
 export interface Attachment {
     id: string;

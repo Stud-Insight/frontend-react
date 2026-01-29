@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import DashboardPage from "./DashboardPage";
 import SubmitButton from "../../components/input/SubmitButton";
 import InfoBox from "../../components/ui/InfoBox";
-import UserService, { User, UserRole } from "../../services/UserService";
+import UserService, { User, UserRoles } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
 import IconButton from "../../components/input/IconButton";
@@ -47,21 +47,21 @@ export default function UsersPage(){
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 	const roles: string[] = [
-		UserRole.ETUDIANT,
-		UserRole.RESPO_TER,
-		UserRole.RESPO_STAGE, 
-		UserRole.ENCADRANT, 
-		UserRole.EXTERNE,
-		UserRole.ADMIN, 
+		UserRoles.ETUDIANT,
+		UserRoles.RESPO_TER,
+		UserRoles.RESPO_STAGE, 
+		UserRoles.ENCADRANT, 
+		UserRoles.EXTERNE,
+		UserRoles.ADMIN, 
 	]
 
 	const tagRoleMap = new Map<string, string>([
-		[UserRole.ETUDIANT, "--blue-col"],
-		[UserRole.RESPO_TER, "--purple-col"],
-		[UserRole.RESPO_STAGE, "--purple-col"],
-		[UserRole.ENCADRANT, "--purple-col"],
-		[UserRole.EXTERNE, "--orange-col"],
-		[UserRole.ADMIN, "--red-col"],
+		[UserRoles.ETUDIANT, "--blue-col"],
+		[UserRoles.RESPO_TER, "--purple-col"],
+		[UserRoles.RESPO_STAGE, "--purple-col"],
+		[UserRoles.ENCADRANT, "--purple-col"],
+		[UserRoles.EXTERNE, "--orange-col"],
+		[UserRoles.ADMIN, "--red-col"],
 	]);
 
 	const modalWidth: number = 500;

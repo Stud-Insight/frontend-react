@@ -1,13 +1,6 @@
-import axios from "axios";
+import { AxiosError } from "axios";
 import { User } from "./UserService"
-import { errorFormat, ApiError } from "../utils/ErrorHandler";
-
-const api = axios.create({
-    baseURL: process.env.API_URL,
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true,
-    timeout: 10000,
-});
+import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
 export enum ProjectStatus {
 	DRAFT,
