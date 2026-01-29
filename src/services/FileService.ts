@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -76,7 +76,7 @@ export default class FileService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -111,7 +111,7 @@ export default class FileService {
 
 			return mockFiles;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -123,7 +123,7 @@ export default class FileService {
         try {
             await api.delete(`/attachments/${fileId}`);
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 }

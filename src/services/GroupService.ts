@@ -1,6 +1,6 @@
 import axios from "axios";
 import { User } from "./UserService"
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,

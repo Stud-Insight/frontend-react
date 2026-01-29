@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -73,7 +73,7 @@ export default class ChatService {
             const response = await api.get<Conversation[]>("/chat/conversations");
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -86,7 +86,7 @@ export default class ChatService {
             });
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -95,7 +95,7 @@ export default class ChatService {
             const response = await api.get<ConversationDetail>(`/chat/conversations/${conversationId}`);
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -105,7 +105,7 @@ export default class ChatService {
             const response = await api.get<Message[]>(`/chat/conversations/${conversationId}/messages`, { params });
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -117,7 +117,7 @@ export default class ChatService {
             );
             return response.data.message;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -127,7 +127,7 @@ export default class ChatService {
             const response = await api.get<Participant[]>("/chat/users", { params });
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 }

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { User } from "./UserService";
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -43,7 +43,7 @@ export default class AuthService {
             localStorage.setItem("csrf_token", token);
             return token;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -54,7 +54,7 @@ export default class AuthService {
             );
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -76,7 +76,7 @@ export default class AuthService {
             return response.data;
         } catch (error) {
             console.log(error);
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -91,7 +91,7 @@ export default class AuthService {
             localStorage.removeItem("user");
             localStorage.removeItem("csrf_token");
 
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -108,7 +108,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -122,7 +122,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -138,7 +138,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -151,7 +151,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -165,7 +165,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }
 
@@ -179,7 +179,7 @@ export default class AuthService {
 
             return response.data;
         } catch (error) {
-            error_formatting(error as AxiosError<ApiError>);
+            errorFormat(error as AxiosError<ApiError>);
         }
     }	
 

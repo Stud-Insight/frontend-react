@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import AuthService from "./AuthService"
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -63,7 +63,7 @@ export default class UserService {
 				},
 			});
 		} catch (error) {
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -72,7 +72,7 @@ export default class UserService {
 			const response = await api.get<User[]>("/users/");
         	return response.data;
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -88,7 +88,7 @@ export default class UserService {
 
 			await api.put(`/users/${id}`, load);
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -97,7 +97,7 @@ export default class UserService {
 			await AuthService.getCSRFToken();
 			await api.delete(`/users/${id}`);
 		} catch (error) {
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -115,7 +115,7 @@ export default class UserService {
 			const response = await api.post<User>("/users/create", p);
 			return response.data;
 		} catch (error) {
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 };

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { User } from "./UserService"
 import { Project, ProjectStatus } from "./ProjectService";
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -115,7 +115,7 @@ export default class TERService {
 
 			return users;
 		} catch (error) {
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -129,7 +129,7 @@ export default class TERService {
 
 			return res.data;
 		} catch (error) {
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -138,7 +138,7 @@ export default class TERService {
 			const res = await api.get<TERPeriod[]>("/ter/periods/");
 			return res.data;
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -147,7 +147,7 @@ export default class TERService {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}/stats`);
 			return res.data;
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -156,7 +156,7 @@ export default class TERService {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}`);
 			return res.data;		
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
@@ -179,7 +179,7 @@ export default class TERService {
 			const res = await api.post<TERPeriod>("/ter/periods/", mock);
 			return res.data;
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 }

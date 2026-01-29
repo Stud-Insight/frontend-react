@@ -1,6 +1,6 @@
 import axios from "axios";
 import { User } from "./UserService"
-import { error_formatting, ApiError } from "../utils/ErrorHandler";
+import { errorFormat, ApiError } from "../utils/ErrorHandler";
 
 const api = axios.create({
     baseURL: process.env.API_URL,
@@ -91,7 +91,7 @@ export default class ProjectService {
 
 			return mock
 		} catch (error){
-			error_formatting(error as AxiosError<ApiError>);
+			errorFormat(error as AxiosError<ApiError>);
 		}	
 	}
 }
