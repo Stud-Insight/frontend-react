@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
-import LinkButton from "../../components/nav/LinkButton.tsx";
+import LinkButton from "../../components/button/LinkButton.tsx";
 import SubmitButton from "../../atoms/input/Button.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";

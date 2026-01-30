@@ -11,14 +11,14 @@ import ModalDialog from "../../components/dialog/ModalDialog";
 import InputTagSelection from "../../components/input/InputTagSelection";
 import InputArea from "../../components/input/InputArea";
 import InputNumberField from "../../components/input/InputNumberField";
-import InputAttachement from "../../components/input/InputAttachement";
+import InputAttachment from "../../components/input/InputAttachment";
 
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 
 import "./ProjectPage.css"
-import "./DashboardPage.css"
+
 import Button from "../../atoms/input/Button";
 
 export default function ProjectPage(){
@@ -28,9 +28,11 @@ export default function ProjectPage(){
 	const [deleteProject, setDeleteProject] = useState<Project | null>();
 	const [createProject, setCreateProject] = useState<boolean>(false);
 	const [title, setTitle] = useState("");
+	const [desc, setDesc] = useState("");
 	const [etuMin, setEtuMin] = useState<number>(0);
 	const [etuMax, setEtuMax] = useState<number>(0);
 	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set([]));
+	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
 	const draftCount = projects.filter(
 		p => p.status === ProjectStatus.DRAFT
@@ -74,14 +76,25 @@ export default function ProjectPage(){
 	const cancelCreationHandle = () => {
 		setCreateProject(false);
 		setTitle("");
+		setDesc("");
+		setEtuMin(0);
+		setEtuMax(0);
+		setSelectedTags(new Set());
+		setSelectedFiles([]);
 	};
 
-	const confirmCreationHandle = () => {
-		
+	const confirmCreationHandle = async () => {
+		try {
+
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
 		cancelCreationHandle();
 	};
 
-	const tagAddHandle = (tag: string) => {
+	const addTagHandle = (tag: string) => {
 		setSelectedTags(prev => {
 			const newSet = new Set(prev);
 			newSet.add(tag);
@@ -89,7 +102,7 @@ export default function ProjectPage(){
 		});
 	}
 
-	const tagDeleteHandle = (tag: string) => {
+	const deleteTagHandle = (tag: string) => {
 		setSelectedTags(prev => {
 			const newSet = new Set(prev);
 			newSet.delete(tag);
@@ -97,21 +110,55 @@ export default function ProjectPage(){
 		});
 	}
 
-	const tagOptions: string[] = ["JavaScript", "C", "C++", "C#", "Python", "lua"];
+	const addFileHandle = (files: File[]) => {
+		setSelectedFiles((prev) => [...prev, ...files]);
+	}
+
+	const deleteFileHandle = (fileDelete: File) => {
+		setSelectedFiles((prev) =>
+			prev.filter((file) => file !== fileDelete)
+		);
+	}
+
+	const tagOptions: string[] = [
+		"JavaScript",
+		"TypeScript",
+		"HTML",
+		"CSS",
+		"Python",
+		"Java",
+		"C",
+		"C++",
+		"C#",
+		"OCaml",
+		"PHP",
+		"Ruby",
+		"Perl",
+		"Lua",
+	];
 	
 	return (
 		<DashboardPage>
 			{createProject &&
-				<ModalDialog label="Créer Un Nouveau Projet" onClose={cancelCreationHandle} width={500}>
-					<InputField label="Titre *"/>
-					<InputArea label="Description *"/>
-					<InputTagSelection label="Tags" tags={selectedTags} options={tagOptions} onSelect={(t: string) => tagAddHandle(t)} onDelete={(t: string) => tagDeleteHandle(t)}/>
+				<ModalDialog label="Créer Un Nouveau Projet" onClose={cancelCreationHandle} width={"90%"}>
+					<InputField value={title} label="Titre *" onChange={setTitle}/>
+					<InputArea value={desc} label="Description *" onChange={setDesc}/>
 
-					<div className="project-page-number-layout">
-						<InputNumberField value={etuMin} label="Etudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
-						<InputNumberField value={etuMax} label="Etudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+					<div className="project-page-main-layout">
+						<div className="project-page-sub-layout">
+							<InputNumberField value={etuMin} label="Etudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
+							<InputNumberField value={etuMax} label="Etudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+						</div>
+
+						<div className="project-page-sub-layout">
+							<InputTagSelection label="Tags" tags={selectedTags} options={tagOptions} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+						</div>
+						
+						<div className="project-page-sub-layout">
+							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
+						</div>
 					</div>
-
+					
 					<Button label="Créer Projet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
 				</ModalDialog>
 			}

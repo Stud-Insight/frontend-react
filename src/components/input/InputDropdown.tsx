@@ -3,6 +3,7 @@ import Field from "../../atoms/input/Field";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
+import IconButton from "../button/IconButton";
 
 import "./InputDropdown.css"
 
@@ -14,15 +15,17 @@ interface InputDropdownProps {
 	options: string[];
 	closeAfterSelection?: boolean;
 	onChange?: (value: string) => void; 
+	onSelect?: (value: string) => void;
 };
 
-export default function InputDropdown({label, icon, defaultIndex = 0, value, closeAfterSelection = true, options, onChange}: InputDropdownProps){
+export default function InputDropdown({label, icon, defaultIndex = 0, value, closeAfterSelection = true, options, onChange, onSelect}: InputDropdownProps){
 	const [open, setOpen] = useState(false);
 	const [selected, setSelected] = useState<string>("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const selectionHandler = (opt: string) => {
 		setSelected(opt);
+		onSelect ? onSelect(opt) : undefined
 		onChange ? onChange(opt) : undefined;
 
 		if (closeAfterSelection){
@@ -54,8 +57,14 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 		<div className="dropdown-layout" ref={dropdownRef}>
 			<Field label={label} icon={icon}>
 				<div className="dropdown-style" onClick={() => setOpen(!open)}>
-					<input readOnly value={value} type="text" onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
-					{open ? <IoIosArrowDown/> : <IoIosArrowUp/>}
+					<input value={value} type="text" onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
+				
+					{open ? 
+						<IconButton icon={<IoIosArrowDown/>}/>
+					:
+						<IconButton icon={<IoIosArrowUp/>}/>
+					}
+
 				</div>
 			</Field>
 

@@ -5,7 +5,7 @@ import InfoBox from "../../components/ui/InfoBox";
 import UserService, { User, UserRoles } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
-import IconButton from "../../components/input/IconButton";
+import IconButton from "../../components/button/IconButton";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
 import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";

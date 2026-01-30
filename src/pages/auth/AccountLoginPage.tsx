@@ -5,7 +5,7 @@ import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
 import SubmitButton from "../../atoms/input/Button.tsx";
-import LinkButton from "../../components/nav/LinkButton.tsx";
+import LinkButton from "../../components/button/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
 import UserService from "../../services/UserService.ts";

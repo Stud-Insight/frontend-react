@@ -1,5 +1,5 @@
 import React from "react";
-import NavigationButton from "../../components/nav/NavigationButton.tsx";
+import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";

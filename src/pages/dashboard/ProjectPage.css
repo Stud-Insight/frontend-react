@@ -1,5 +1,12 @@
-.project-page-number-layout {
+.project-page-main-layout {
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
+	width: 100%;
+}
+
+.project-page-sub-layout {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 }

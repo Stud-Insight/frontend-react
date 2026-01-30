@@ -3,7 +3,7 @@ import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import SubmitButton from "../../../atoms/input/Button";
-import NavigationButton from "../../../components/nav/NavigationButton";
+import NavigationButton from "../../../components/button/NavigationButton";
 import InfoBox from "../../../components/ui/InfoBox";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";

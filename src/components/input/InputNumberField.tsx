@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
 import Field from "../../atoms/input/Field";
-import IconButton from "./IconButton";
+import IconButton from "../button/IconButton";
 
 import { FaPlus, FaMinus } from "react-icons/fa6";
 

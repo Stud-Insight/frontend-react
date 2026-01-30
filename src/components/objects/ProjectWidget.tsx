@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Project, ProjectStatus } from "../../services/ProjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
-import IconButton from "../input/IconButton";
+import IconButton from "../button/IconButton";
 import TagWidget from "../../atoms/ui/Tag";
 
 import { MdDeleteOutline } from "react-icons/md";
@@ -12,6 +12,7 @@ import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaRegFile, FaRegClock } from "react-icons/fa";
+import Icon from "../../atoms/ui/Icon";
 
 import "./ProjectWidget.css"
 
@@ -56,9 +57,8 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 				</div>
 
 				<div className="projet-widget-title-container">
-					<div className="info-widget-icon">
-						<FaRegFile/>
-					</div>
+					<Icon icon={<FaRegFile/>} color="var(--blue-col)"/>
+					
 					<div className="project-widget-title-right">
 						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{project.title}</label>
 						{project.author && project.author.map((user, index) => (

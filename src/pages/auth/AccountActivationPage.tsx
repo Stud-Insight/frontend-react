@@ -7,7 +7,7 @@ import InputField from "../../components/input/InputField.tsx";
 import SubmitButton from "../../atoms/input/Button.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
-import LinkButton from "../../components/nav/LinkButton.tsx";
+import LinkButton from "../../components/button/LinkButton.tsx";
 import LoginPage from "./LoginPage.tsx";
 
 import "./LoginPage.css"
