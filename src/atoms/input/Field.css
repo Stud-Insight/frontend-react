@@ -9,8 +9,8 @@
 	background: none;
 	outline: none;
 	border: none;
-	flex: 1;
 	font-size: 14px;
+	width: 100%;
 }
 
 .field-content {
@@ -31,7 +31,6 @@
 	border-color: var(--gray2-col);
 	transition: border-color 0.3s;
 	transition: background-color 0.3s;
-	z-index: 1;
 }
 
 .field-content:focus-within {

@@ -5,11 +5,13 @@ import InfoWidget from "../../components/ui/InfoWidget";
 import ProjectService, { Project, ProjectStatus } from "../../services/ProjectService";
 import InfoBox from "../../components/ui/InfoBox";
 import ProjectWidget from "../../components/objects/ProjectWidget";
-import ConfirmationDialog from "../../components/input/ConfirmationDialog";
+import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
 import InputField from "../../components/input/InputField";
-import ModalDialog from "../../components/input/ModalDialog";
+import ModalDialog from "../../components/dialog/ModalDialog";
 import InputTagSelection from "../../components/input/InputTagSelection";
 import InputArea from "../../components/input/InputArea";
+import InputNumberField from "../../components/input/InputNumberField";
+import InputAttachement from "../../components/input/InputAttachement";
 
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
@@ -17,6 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 
 import "./ProjectPage.css"
 import "./DashboardPage.css"
+import Button from "../../atoms/input/Button";
 
 export default function ProjectPage(){
 	const { user } = useAuth();
@@ -25,6 +28,9 @@ export default function ProjectPage(){
 	const [deleteProject, setDeleteProject] = useState<Project | null>();
 	const [createProject, setCreateProject] = useState<boolean>(false);
 	const [title, setTitle] = useState("");
+	const [etuMin, setEtuMin] = useState<number>(0);
+	const [etuMax, setEtuMax] = useState<number>(0);
+	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set([]));
 
 	const draftCount = projects.filter(
 		p => p.status === ProjectStatus.DRAFT
@@ -59,16 +65,39 @@ export default function ProjectPage(){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
-	}
+	};
 
 	const editHandle = (proj: Project) => {
 
-	}
+	};
 
 	const cancelCreationHandle = () => {
 		setCreateProject(false);
 		setTitle("");
+	};
+
+	const confirmCreationHandle = () => {
+		
+		cancelCreationHandle();
+	};
+
+	const tagAddHandle = (tag: string) => {
+		setSelectedTags(prev => {
+			const newSet = new Set(prev);
+			newSet.add(tag);
+			return newSet;
+		});
 	}
+
+	const tagDeleteHandle = (tag: string) => {
+		setSelectedTags(prev => {
+			const newSet = new Set(prev);
+			newSet.delete(tag);
+			return newSet;
+		});
+	}
+
+	const tagOptions: string[] = ["JavaScript", "C", "C++", "C#", "Python", "lua"];
 	
 	return (
 		<DashboardPage>
@@ -76,7 +105,14 @@ export default function ProjectPage(){
 				<ModalDialog label="Créer Un Nouveau Projet" onClose={cancelCreationHandle} width={500}>
 					<InputField label="Titre *"/>
 					<InputArea label="Description *"/>
-					<InputTagSelection label="Tags" options={["JavaScript", "C", "C++", "C#", "Python", "lua"]}/>
+					<InputTagSelection label="Tags" tags={selectedTags} options={tagOptions} onSelect={(t: string) => tagAddHandle(t)} onDelete={(t: string) => tagDeleteHandle(t)}/>
+
+					<div className="project-page-number-layout">
+						<InputNumberField value={etuMin} label="Etudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
+						<InputNumberField value={etuMax} label="Etudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+					</div>
+
+					<Button label="Créer Projet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
 				</ModalDialog>
 			}
 

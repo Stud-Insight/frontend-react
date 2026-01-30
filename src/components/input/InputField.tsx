@@ -11,18 +11,10 @@ interface InputFieldProps {
     onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, type = "text", icon, value, onChange, placeholder = ""}: InputFieldProps){
-	const inputRef = useRef<HTMLInputElement>(null);
-	
+export default function InputField({label, type = "text", icon, value, onChange, placeholder = ""}: InputFieldProps){	
     return (
 		<Field label={label} icon={icon}>
-			<input 
-				ref={inputRef}
-				value = {value}
-				placeholder = {placeholder}
-				type = {type}
-				onChange={onChange ? (e) => onChange(e.target.value) : undefined}
-			/>
+			<input value={value} placeholder={placeholder} type={type} onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
 		</Field>
     );
 }

@@ -6,7 +6,7 @@ import SubmitButton from "../../../atoms/input/Button";
 import NavigationButton from "../../../components/nav/NavigationButton";
 import InfoBox from "../../../components/ui/InfoBox";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
-import UserSelectionDialog from "../../../components/input/UserSelectionDialog";
+import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import TagWidget from "../../../atoms/ui/Tag";
 
 import { TbSchool } from "react-icons/tb";

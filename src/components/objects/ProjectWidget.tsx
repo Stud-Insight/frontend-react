@@ -85,7 +85,7 @@ export default function ProjectWidget({project, privateMode = true, onDelete, on
 					}
 					
 					{project.language?.map((lang, index) => (
-						<TagWidget label={lang} color="var(--blue-col)"/>
+						<TagWidget key={index} label={lang} color="var(--blue-col)"/>
 					))}
 				</div>
 				

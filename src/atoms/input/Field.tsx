@@ -9,7 +9,7 @@ interface FieldProps {
 	onClick?: () => void;
 };
 
-export default function Field({label, icon, children, onClick}: FieldProps){
+export default function Field({label, icon, children, onClick, className}: FieldProps){
 	return (
 		<div className="field-layout">
 			<div className="field-label">
@@ -17,7 +17,7 @@ export default function Field({label, icon, children, onClick}: FieldProps){
 				{label && <label>{label}</label>}
 			</div>
 
-			<div className="field-content" onClick={onClick}>
+			<div className={`field-content ${className}`} onClick={onClick}>
 				{children}
 			</div>
 		</div>

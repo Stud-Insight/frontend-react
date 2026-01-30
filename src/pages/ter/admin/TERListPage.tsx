@@ -3,7 +3,7 @@ import DashboardPage from "../../dashboard/DashboardPage";
 import InfoBox from "../../../components/ui/InfoBox";
 import SubmitButton from "../../../atoms/input/Button";
 import InfoWidget from "../../../components/ui/InfoWidget";
-import ModalDialog from "../../../components/input/ModalDialog"
+import ModalDialog from "../../../components/dialog/ModalDialog"
 import InputField from "../../../components/input/InputField"
 
 import TERService, { TERPeriod } from "../../../services/TERService";

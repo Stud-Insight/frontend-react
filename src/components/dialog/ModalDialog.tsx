@@ -1,6 +1,6 @@
 import React, { useState, ReactNode }from "react";
 import { RxCross2 } from "react-icons/rx";
-import IconButton from "./IconButton";
+import IconButton from "../input/IconButton";
 import HorizontalDivider from "../ui/HorizontalDivider";
 
 import "./ModalDialog.css";

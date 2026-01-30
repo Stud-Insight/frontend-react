@@ -6,8 +6,8 @@ import UserService, { User, UserRoles } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
 import IconButton from "../../components/input/IconButton";
-import ConfirmationDialog from "../../components/input/ConfirmationDialog";
-import ModalDialog from "../../components/input/ModalDialog";
+import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
+import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";
 import InputDropdown from "../../components/input/InputDropdown"
 import { LuMessageSquare } from "react-icons/lu";
