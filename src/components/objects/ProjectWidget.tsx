@@ -3,7 +3,7 @@ import { Project, ProjectStatus } from "../../services/ProjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../input/IconButton";
-import TagWidget from "../ui/TagWidget";
+import TagWidget from "../../atoms/ui/Tag";
 
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";

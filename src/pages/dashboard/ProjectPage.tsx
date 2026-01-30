@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
-import SubmitButton from "../../components/input/SubmitButton";
+import SubmitButton from "../../atoms/input/Button";
 import InfoWidget from "../../components/ui/InfoWidget";
 import ProjectService, { Project, ProjectStatus } from "../../services/ProjectService";
-import HorizontalDivider from "../../components/ui/HorizontalDivider";
 import InfoBox from "../../components/ui/InfoBox";
 import ProjectWidget from "../../components/objects/ProjectWidget";
-import { MdAdd } from "react-icons/md";
 import ConfirmationDialog from "../../components/input/ConfirmationDialog";
+import InputField from "../../components/input/InputField";
+import ModalDialog from "../../components/input/ModalDialog";
+import InputTagSelection from "../../components/input/InputTagSelection";
+import InputArea from "../../components/input/InputArea";
+
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 
 import "./ProjectPage.css"
 import "./DashboardPage.css"
 
 export default function ProjectPage(){
+	const { user } = useAuth();
 	const [error, setError] = useState<string | null>();
 	const [projects, setProjects] = useState<Project[]>([]);
 	const [deleteProject, setDeleteProject] = useState<Project | null>();
+	const [createProject, setCreateProject] = useState<boolean>(false);
+	const [title, setTitle] = useState("");
 
 	const draftCount = projects.filter(
 		p => p.status === ProjectStatus.DRAFT
@@ -34,7 +41,7 @@ export default function ProjectPage(){
 	useEffect(() => {
 		const getProjects = async () => {
 			try {
-				const data = await ProjectService.getUserProjects();
+				const data = await ProjectService.getUserProjects(user.id);
 				setProjects(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -57,9 +64,22 @@ export default function ProjectPage(){
 	const editHandle = (proj: Project) => {
 
 	}
+
+	const cancelCreationHandle = () => {
+		setCreateProject(false);
+		setTitle("");
+	}
 	
 	return (
 		<DashboardPage>
+			{createProject &&
+				<ModalDialog label="Créer Un Nouveau Projet" onClose={cancelCreationHandle} width={500}>
+					<InputField label="Titre *"/>
+					<InputArea label="Description *"/>
+					<InputTagSelection label="Tags" options={["JavaScript", "C", "C++", "C#", "Python", "lua"]}/>
+				</ModalDialog>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
 					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Projets</label>
@@ -67,7 +87,7 @@ export default function ProjectPage(){
 			
 				<div className="dashboard-top-button-layout">
 					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Un Projet"/>
+						<SubmitButton icon={<FaPlus/>} label="Créer Un Projet" onChange={() => setCreateProject(true)}/>
 					</div>
 				</div>
 			</div>

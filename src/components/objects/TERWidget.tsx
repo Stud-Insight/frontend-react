@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import TERService, { TERPeriod, TERPeriodStats } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
-import TagWidget from "../ui/TagWidget";
-import SubmitButton from "../input/SubmitButton";
+import TagWidget from "../../atoms/ui/Tag";
+import SubmitButton from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import ProgressWidget from "../ui/ProgressWidget";
 

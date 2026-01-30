@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ContainerWidget from "../ui/ContainerWidget";
 import { TERGroup } from "../../services/TERService";
 import { FiUsers } from "react-icons/fi";
-import SubmitButton from "../input/SubmitButton";
+import SubmitButton from "../../atoms/input/Button";
 
 import "./GroupProjectWidget.css"
 

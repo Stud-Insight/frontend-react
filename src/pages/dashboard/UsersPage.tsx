@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import DashboardPage from "./DashboardPage";
-import SubmitButton from "../../components/input/SubmitButton";
+import SubmitButton from "../../atoms/input/Button";
 import InfoBox from "../../components/ui/InfoBox";
 import UserService, { User, UserRoles } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
@@ -23,7 +23,7 @@ import { FiUser, FiMail } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 
 import UserAvatar from "../../components/ui/UserAvatar";
-import TagWidget from "../../components/ui/TagWidget";
+import TagWidget from "../../atoms/ui/Tag";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"

@@ -4,7 +4,7 @@ import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
-import SubmitButton from "../../components/input/SubmitButton.tsx";
+import SubmitButton from "../../atoms/input/Button.tsx";
 import LinkButton from "../../components/nav/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
@@ -41,9 +41,9 @@ export default function AccountLoginPage() {
         <LoginPage>
             <form method="POST" className="content-style-div" onSubmit={loginHandle}>
                 {error ? <InfoBox label={error} type="error"/> : undefined}
-                <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail />}/>
-                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock />} offset={-1.8}/>
-                <LinkButton label="Mot de passe oublie ?" redirection="/auth/recovery" push_right={true}/>
+                <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail/>}/>
+                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock/>} offset={-1.8}/>
+                <LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery" push_right={true}/>
                 <SubmitButton label={isSubmitting ? "Connexion..." : "Se connecter"} type="submit"/>
             </form>
         </LoginPage>

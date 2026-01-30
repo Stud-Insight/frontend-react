@@ -3,7 +3,7 @@ import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
 import LinkButton from "../../components/nav/LinkButton.tsx";
-import SubmitButton from "../../components/input/SubmitButton.tsx";
+import SubmitButton from "../../atoms/input/Button.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";

@@ -1,65 +1,24 @@
-.dropdown-main-super-layout {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+.dropdown-layout {
+	position: relative;
 	width: 100%;
 }
 
-.dropdown-label {
-	display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-    color: var(--gray1-col);
-    font-family: var(--main-font);
-    font-weight: var(--big-bold);
-}
-
-.dropdown-layout-style {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-}
-
-.dropdown-main-style {
+.dropdown-style {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	font-size: 2px;
-	padding: 10px;
-	box-sizing: border-box;
-	background-color: var(--gray2-col);
-    color: var(--black-col);
-    border-radius: 5px;
-    height: 35px;
-	width: 100%;
-    font-size: medium;
 	cursor: pointer;
+	width: 100%;
 }
 
-.dropdown-content-options {
+.dropdown-content-layout {
 	position: absolute;
 	top: 120%;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	box-sizing: border-box;
-	border-radius: 5px;
-	background-color: var(--gray2-col);
-	padding: 4px;
-	z-index: 100;
-}
-
-.dropdown-option-style:hover {
-	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
-	transition: background-color 0.3s;
-}
-
-.dropdown-option-style.selected {
-	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
-	transition: background-color 0.3s;
+	gap: 0px;
 }
 
 .dropdown-option-style {
@@ -67,22 +26,19 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	padding: 15px;
+	padding: 8px;
 	box-sizing: border-box;
     color: var(--black-col);
     border-radius: 5px;
-    height: 35px;
 	width: 100%;
-    font-size: 14px;
-    font-family: var(--main-font);
-    font-size: medium;
 	cursor: pointer;
+	transition: background-color 0.3s;
 }
 
-.dropdown-main-style.active {
-	box-sizing: border-box;
-    border-style: solid;
-    border-width: 2px;
-    border-color: var(--blue-col);
-    transition: border 0.3s ease;
+.dropdown-option-style:hover {
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+}
+
+.dropdown-option-style.selected {
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
 }

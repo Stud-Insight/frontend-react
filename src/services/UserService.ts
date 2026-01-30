@@ -2,6 +2,15 @@ import { AxiosError } from "axios";
 import AuthService from "./AuthService"
 import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
+export enum UserRoles {
+	ETUDIANT = "Étudiant",
+	RESPO_TER = "Respo TER",
+	RESPO_STAGE = "Respo Stage",
+	ENCADRANT = "Encadrant",
+	EXTERNE = "Externe",
+	ADMIN = "Admin",
+}
+
 export interface Group {
     name: string;
     permissions: string[];

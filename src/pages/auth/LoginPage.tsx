@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../../components/ui/Logo.tsx";
+import Logo from "../../atoms/ui/Logo.tsx";
 
 import "./LoginPage.css"
 

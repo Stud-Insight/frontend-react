@@ -1,6 +1,6 @@
 import React from "react";
 import NavigationButton from "../../components/nav/NavigationButton.tsx";
-import Logo from "../../components/ui/Logo.tsx";
+import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";

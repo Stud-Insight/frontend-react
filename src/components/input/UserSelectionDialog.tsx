@@ -4,7 +4,7 @@ import UserService,{ User } from "../../services/UserService"
 import UserWidget from "../objects/UserWidget";
 
 import "./UserSelectionDialog.css"
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../../atoms/input/Button";
 import { FaPlus } from "react-icons/fa6";
 
 interface UserSelectionDialogProps {

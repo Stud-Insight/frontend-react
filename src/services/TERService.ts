@@ -146,30 +146,44 @@ export default class TERService {
 
 	public static async getPeriod(id: string): Promise<TERPeriod | null>{
 		try {
-			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}`);
+			const res = await api.get<TERPeriod>(`/ter/periods/${id}`);
 			return res.data;		
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
+	public static async createPeriod(title: string, academic_year: number, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
 		try {
-			const mock: TERPeriodCreatePayload = {
-				name: "TER Informatique",
-				academic_year: "2026-2027",
-				group_formation_start: "2026-09-01",
-				group_formation_end: "2026-09-10",
+			// const mock: TERPeriodCreatePayload = {
+			// 	name: "TER Informatique",
+			// 	academic_year: "2026-2027",
+			// 	group_formation_start: "2026-09-01",
+			// 	group_formation_end: "2026-09-10",
+			// 	subject_selection_start: "2026-09-11",
+			// 	subject_selection_end: "2026-09-25",
+			// 	assignment_date: "2026-09-30",
+			// 	project_start: "2026-10-01",
+			// 	project_end: "2027-01-31",
+			// 	min_group_size: 2,
+			// 	max_group_size: 4,
+			// };
+
+			const load: TERPeriodCreatePayload = {
+				name: title,
+				academic_year: `${academic_year - 1}-${academic_year}`,
+				group_formation_start: groupStartDate ,
+				group_formation_end: groupEndDate,
 				subject_selection_start: "2026-09-11",
 				subject_selection_end: "2026-09-25",
-				assignment_date: "2026-09-30",
-				project_start: "2026-10-01",
-				project_end: "2027-01-31",
+				assignment_date: assignmentDate,
+				project_start: start_date,
+				project_end: end_date,
 				min_group_size: 2,
 				max_group_size: 4,
 			};
 
-			const res = await api.post<TERPeriod>("/ter/periods/", mock);
+			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
 			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

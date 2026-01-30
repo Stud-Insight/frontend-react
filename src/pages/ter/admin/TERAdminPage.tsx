@@ -2,12 +2,12 @@ import React, {useState, useEffect, ReactNode}from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
-import SubmitButton from "../../../components/input/SubmitButton";
+import SubmitButton from "../../../atoms/input/Button";
 import NavigationButton from "../../../components/nav/NavigationButton";
 import InfoBox from "../../../components/ui/InfoBox";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import UserSelectionDialog from "../../../components/input/UserSelectionDialog";
-import TagWidget from "../../../components/ui/TagWidget";
+import TagWidget from "../../../atoms/ui/Tag";
 
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";

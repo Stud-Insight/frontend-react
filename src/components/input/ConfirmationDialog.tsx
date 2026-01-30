@@ -1,6 +1,6 @@
 import React from "react";
 import ModalDialog from "./ModalDialog";
-import SubmitButton from "./SubmitButton";
+import SubmitButton from "../../atoms/input/Button";
 
 import "./ConfirmationDialog.css";
 

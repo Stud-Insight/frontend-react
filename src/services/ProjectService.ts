@@ -27,7 +27,7 @@ export interface Project {
 };
 
 export default class ProjectService {
-	public static async getUserProjects(user_id: string): Promise<Project[] | null> {
+	public static async getUserProjects(user_id: string): Promise<Project[]> {
 		try {
 			const mock_project: Project = {
 				id: "1",

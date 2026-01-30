@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoBox from "../../../components/ui/InfoBox";
-import SubmitButton from "../../../components/input/SubmitButton";
+import SubmitButton from "../../../atoms/input/Button";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import ModalDialog from "../../../components/input/ModalDialog"
 import InputField from "../../../components/input/InputField"
