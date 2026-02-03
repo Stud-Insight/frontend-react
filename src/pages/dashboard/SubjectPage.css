@@ -1,12 +1,13 @@
-.project-page-main-layout {
+.subject-page-main-layout {
 	display: flex;
 	flex-direction: row;
 	gap: 10px;
 	width: 100%;
 }
 
-.project-page-sub-layout {
+.subject-page-sub-layout {
 	display: flex;
 	flex-direction: column;
 	flex: 1;
+	gap: 10px;
 }

@@ -59,7 +59,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<HorizontalDivider/>
 					
 					<>
-						<NavigationButton label="Mes Projets" active={pathname.startsWith("/dashboard/projets")} icon={<FaRegFolder/>} id="projets" onClick={(id) => pageHandle(id)}/>
+						<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
 						<NavigationButton label="Gestion TERs" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
 						<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
 						<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>

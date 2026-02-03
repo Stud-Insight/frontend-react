@@ -8,7 +8,7 @@
 	height: 100px;
 }
 
-.input-attachement-style:hover {
+.input-attachement-style:hover, .input-attachement-style.active {
 	border-color: var(--blue-col);
 	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
 }

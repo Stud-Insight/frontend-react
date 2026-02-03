@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
 import SubmitButton from "../../atoms/input/Button";
 import InfoWidget from "../../components/ui/InfoWidget";
-import ProjectService, { Project, ProjectStatus } from "../../services/ProjectService";
+import SubjectService, { Project, SubjectStatus } from "../../services/SubjectService";
 import InfoBox from "../../components/ui/InfoBox";
-import ProjectWidget from "../../components/objects/ProjectWidget";
+import SubjectWidget from "../../components/objects/SubjectWidget";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
 import InputField from "../../components/input/InputField";
 import ModalDialog from "../../components/dialog/ModalDialog";
@@ -17,39 +17,39 @@ import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 
-import "./ProjectPage.css"
+import "./SubjectPage.css"
 
 import Button from "../../atoms/input/Button";
 
-export default function ProjectPage(){
+export default function SubjectPage(){
 	const { user } = useAuth();
 	const [error, setError] = useState<string | null>();
-	const [projects, setProjects] = useState<Project[]>([]);
-	const [deleteProject, setDeleteProject] = useState<Project | null>();
-	const [createProject, setCreateProject] = useState<boolean>(false);
-	const [title, setTitle] = useState("");
-	const [desc, setDesc] = useState("");
+	const [subjects, setProjects] = useState<Project[]>([]);
+	const [deletrSubject, setDeleteProject] = useState<Project | null>();
+	const [createSubject, setCreateProject] = useState<boolean>(false);
+	const [title, setTitle] = useState<string>("");
+	const [desc, setDesc] = useState<string>("");
 	const [etuMin, setEtuMin] = useState<number>(0);
 	const [etuMax, setEtuMax] = useState<number>(0);
 	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set([]));
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-	const draftCount = projects.filter(
-		p => p.status === ProjectStatus.DRAFT
+	const draftCount = subjects.filter(
+		p => p.status === SubjectStatus.DRAFT
 	).length;
 
-	const submitCount = projects.filter(
-		p => p.status === ProjectStatus.SUBMITTED
+	const submitCount = subjects.filter(
+		p => p.status === SubjectStatus.SUBMITTED
 	).length;
 
-	const approveCount = projects.filter(
-		p => p.status === ProjectStatus.APPROVED
+	const approveCount = subjects.filter(
+		p => p.status === SubjectStatus.VALIDATED
 	).length;
 
 	useEffect(() => {
-		const getProjects = async () => {
+		const getSubjects = async () => {
 			try {
-				const data = await ProjectService.getUserProjects(user.id);
+				const data = await SubjectService.getUserSubjects(user.id);
 				setProjects(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -57,7 +57,7 @@ export default function ProjectPage(){
 			}
 		};
 
-		getProjects();
+		getSubjects();
 	}, []);
 
 	const deleteHandle = async (proj: Project) => {
@@ -139,57 +139,57 @@ export default function ProjectPage(){
 	
 	return (
 		<DashboardPage>
-			{createProject &&
-				<ModalDialog label="Créer Un Nouveau Projet" onClose={cancelCreationHandle} width={"90%"}>
+			{createSubject &&
+				<ModalDialog label="Créer Un Nouveau Sujet" onClose={cancelCreationHandle} width={"90%"}>
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
 
-					<div className="project-page-main-layout">
-						<div className="project-page-sub-layout">
-							<InputNumberField value={etuMin} label="Etudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
-							<InputNumberField value={etuMax} label="Etudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+					<div className="subject-page-main-layout">
+						<div className="subject-page-sub-layout">
+							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
+							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
 						</div>
 
-						<div className="project-page-sub-layout">
+						<div className="subject-page-sub-layout">
 							<InputTagSelection label="Tags" tags={selectedTags} options={tagOptions} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
 						</div>
 						
-						<div className="project-page-sub-layout">
+						<div className="subject-page-sub-layout">
 							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
 						</div>
 					</div>
 					
-					<Button label="Créer Projet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
+					<Button label="Créer Sujet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
 				</ModalDialog>
 			}
 
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Projets</label>
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets</label>
 				</div>
 			
 				<div className="dashboard-top-button-layout">
 					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Un Projet" onChange={() => setCreateProject(true)}/>
+						<SubmitButton icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => setCreateProject(true)}/>
 					</div>
 				</div>
 			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de projets TER.</label>
+			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
 
 			{error && <InfoBox label={error} type="error"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Projets Créés" icon={<FaRegFile/>} info={projects.length.toString()} color="var(--blue-col)"/>
-				<InfoWidget label="Projets Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color="var(--gray1-col)"/>
-				<InfoWidget label="Projets Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color="var(--gray1-col)"/>
-				<InfoWidget label="Projets Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color="var(--green-col)"/>
+				<InfoWidget label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)"/>
+				<InfoWidget label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color="var(--gray1-col)"/>
+				<InfoWidget label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color="var(--gray1-col)"/>
+				<InfoWidget label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color="var(--green-col)"/>
 			</div>
 
-			{projects.map((proj, index) => (
-				<ProjectWidget key={index} project={proj} onDelete={() => setDeleteProject(proj)} onEdit={() => editHandle(proj)}/>
+			{subjects.map((sub, index) => (
+				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteProject(sub)} onEdit={() => editHandle(sub)}/>
 			))}
 
-			{deleteProject &&
+			{deletrSubject &&
 				<ConfirmationDialog 
 					label="Supprimer ce projet?" 
 					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."

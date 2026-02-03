@@ -9,7 +9,7 @@ import TERSelectionPage from "./pages/ter/user/TERSelectionPage";
 import TERInfoPage from "./pages/ter/user/TERInfoPage";
 import TERListPage from "./pages/ter/admin/TERListPage";
 import ChatPage from "./pages/dashboard/ChatPage";
-import ProjectPage from "./pages/dashboard/ProjectPage";
+import SubjectPage from "./pages/dashboard/SubjectPage";
 import TERAdminPage from "./pages/ter/admin/TERAdminPage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
@@ -82,7 +82,7 @@ function AppRoutes() {
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
 				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
-				<Route path="projets" element={<ProtectedRoute><ProjectPage/></ProtectedRoute>}/>
+				<Route path="subjects" element={<ProtectedRoute><SubjectPage/></ProtectedRoute>}/>
             </Route>
 
 			<Route path="/dashboard/ter">

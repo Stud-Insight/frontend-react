@@ -10,3 +10,7 @@
 	flex-direction: column;
 	width: 100%;
 }
+
+.tag-selection-container input {
+	width: auto;
+}

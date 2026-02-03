@@ -4,7 +4,7 @@ import ContainerWidget from "../../../components/ui/ContainerWidget";
 import UserWidget from "../../../components/objects/UserWidget";
 import ScheduleEventWidget from "../../../components/ui/ScheduleEventWidget";
 import InfoBox from "../../../components/ui/InfoBox";
-import ProjectWidget from "../../../components/objects/ProjectWidget";
+import ProjectWidget from "../../../components/objects/SubjectWidget";
 
 import { FaRegClock, FaRegCheckCircle } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
@@ -12,7 +12,7 @@ import { FiUsers } from "react-icons/fi";
 import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { User } from "../../../services/UserService";
-import { Project, ProjectStatus } from "../../../services/ProjectService";
+import { Project, SubjectStatus } from "../../../services/SubjectService";
 import InfoWidget from "../../../components/ui/InfoWidget";
 
 import "./TERInfoPage.css"
@@ -73,7 +73,7 @@ export default function TERInfoPage(){
 						"Développement backend",
 						"Tests et documentation",
 					],
-					status: ProjectStatus.DRAFT,
+					status: SubjectStatus.DRAFT,
 					created_date: "Septembre 10, 2025",
 					language: ["JavaScript", "TypeScript", "React", "Node.js"],
 					min_person: 2,

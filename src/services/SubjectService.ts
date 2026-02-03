@@ -2,15 +2,14 @@ import { AxiosError } from "axios";
 import { User } from "./UserService"
 import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
-export enum ProjectStatus {
-	DRAFT,
-	SUBMITTED,
-	APPROVED,
-	PUBLISHED,
-	REJECTED
-};
+export enum SubjectStatus {
+	DRAFT = "Draft",
+	SUBMITTED = "Soumis",
+	VALIDATED = "Approuvé",
+	REJECTED = "Rejeté",
+}
 
-export interface Project {
+export interface Subject {
 	id: string;
 	title: string;
 	ter_id?: string;
@@ -21,15 +20,15 @@ export interface Project {
 	language?: string[];
 	created_date?: string;
 	modified_date?: string;
-	status: ProjectStatus;
+	status: SubjectStatus;
 	min_person?: number;
 	max_person?: number;
 };
 
-export default class ProjectService {
-	public static async getUserProjects(user_id: string): Promise<Project[]> {
+export default class SubjectService {
+	public static async getUserSubjects(user_id: string): Promise<Subject[]> {
 		try {
-			const mock_project: Project = {
+			const mock_project: Subject = {
 				id: "1",
 				ter_id: "TER-2025",
 				author: [
@@ -70,14 +69,14 @@ export default class ProjectService {
 					"Développement backend",
 					"Tests et documentation",
 				],
-				status: ProjectStatus.DRAFT,
+				status: SubjectStatus.DRAFT,
 				created_date: "Septembre 10, 2025",
 				language: ["JavaScript", "TypeScript", "React", "Node.js"],
 				min_person: 2,
 				max_person: 4	
 			};
 
-			const mock: Project[] = [
+			const mock: Subject[] = [
 				mock_project,
 				mock_project
 			];

@@ -5,7 +5,7 @@ import InfoWidget from "../../../components/ui/InfoWidget";
 import TERService, { TERPeriod } from "../../../services/TERService";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
-import ProjectWidget from "../../../components/objects/ProjectWidget";
+import ProjectWidget from "../../../components/objects/SubjectWidget";
 
 import "./TERSelectionPage.css"
 import "../../dashboard/DashboardPage.css"

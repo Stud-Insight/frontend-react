@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, ChangeEvent } from "react";
+import React, { ReactNode, useState, useRef, ChangeEvent, useEffect } from "react";
 import Field from "../../atoms/input/Field";
 import LinkButton from "../button/LinkButton";
 import FileService from "../../services/FileService"
@@ -55,33 +55,51 @@ function FileWidget({file, onDelete}: FileWidgetProps){
 				</div>
 			</div>
 
-			<IconButton icon={<RxCross2/>} onClick={() => onDelete(file)}/>
+			<IconButton icon={<RxCross2/>} onClick={onDelete ?() => onDelete(file) : undefined}/>
 		</div>
 	)
 };
 
 export default function InputAttachment({label, icon, files, accept="", onChange, onDelete}: InputAttachmentProps){
 	const inputRef = useRef<HTMLInputElement | null>(null);
-	
-	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (!e.target.files){
-			return;
-		}
+	const [isOverDrag, setIsOverDrag] = useState<boolean>(true);
 
-		const filesArray = Array.from(e.target.files);
+	const handleFileChange = (fileList: FileList) => {
+		const filesArray = Array.from(fileList);
 		onChange ? onChange(filesArray): undefined;
 	};
 
 	return (
-		<div className="input-attachement-main-layout">
-			<Field label={label} icon={icon} className="input-attachement-style">
+		<div className="input-attachement-main-layout"
+			onDragEnter={(e) => {
+				e.preventDefault();
+			}}
+
+			onDragOver={(e) => {
+				e.preventDefault();
+				setIsOverDrag(true);
+			}}
+
+			onDragLeave={(e) => {
+				e.preventDefault();
+				setIsOverDrag(false);
+			}}
+
+			onDrop={(e) => {
+				e.preventDefault();
+				setIsOverDrag(false);
+				handleFileChange(e.dataTransfer.files);
+			}}
+		>
+			<Field label={label} icon={icon} className={`input-attachement-style ${isOverDrag ? "active" : undefined}`}>
 				<div>
 					<label>Drag & drop ou  </label>
 					<LinkButton label="Fichiers" onClick={() => inputRef.current?.click()}/>
 				</div>
 
-				<input ref={inputRef} type="file" style={{display: "none"}} onChange={handleFileChange} accept={accept}/>
+				<input ref={inputRef} type="file" style={{display: "none"}} onChange={(e) => handleFileChange(e.target.files)} accept={accept}/>
 			</Field>
+			
 
 			{files && files.length > 0 && 
 				<Field className="input-file-list-layout">

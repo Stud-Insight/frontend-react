@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { User } from "./UserService"
-import { Project, ProjectStatus } from "./ProjectService";
+import { Project, SubjectStatus } from "./SubjectService";
 import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
 export enum TERStatus {
