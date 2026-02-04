@@ -11,16 +11,15 @@ import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";
 import InputDropdown from "../../components/input/InputDropdown"
 import { LuMessageSquare } from "react-icons/lu";
-
 import { CgExport, CgImport } from "react-icons/cg";
-
+import { FaEllipsis } from "react-icons/fa6";
+import { IoPricetagOutline } from "react-icons/io5";
+import { useAuth } from "../../context/AuthContext";
 import { FaPlus } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoBan } from "react-icons/io5";
 import { FiUser, FiMail } from "react-icons/fi";
-
-import { useAuth } from "../../context/AuthContext";
 
 import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
@@ -29,8 +28,9 @@ import "./UsersPage.css"
 import "./DashboardPage.css"
 
 export default function UsersPage(){
-	const { user } = useAuth();
+	const { user, refreshUser } = useAuth();
 	const g = user;
+	const [page, setPage] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 	const [users, setUsers] = useState<User[] | null>([]);
@@ -66,6 +66,10 @@ export default function UsersPage(){
 
 	const modalWidth: number = 500;
 
+	let filteredUsers: User[] = page != null ? (users?.filter((user) => {
+		return user.groups.some(role => role.name == page);
+	})) : users;
+
 	const getCountData = () => {
 		let countMap: Map<string, number> = new Map<string, number>();
 
@@ -87,7 +91,7 @@ export default function UsersPage(){
 
 	const getAllUsers = async () => {
 		try {
-			const data = await UserService.getAllUsers();
+			let data = await UserService.getAllUsers();
 			setUsers(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -166,6 +170,12 @@ export default function UsersPage(){
 		try {
 			await UserService.updateUser(editUser?.id, prenom, nom, mail, [role]);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
+		
+			if (editUser?.id == g?.id) {
+				console.log("elelel");
+				await refreshUser();
+			}
+
 			setTimeout(() => setSuccess(null), 5000);
 			getAllUsers();
 		} catch (err){
@@ -212,7 +222,7 @@ export default function UsersPage(){
 
 	useEffect(() => {
 		getAllUsers();
-	}, []);
+	}, [page]);
 	
 	return (
 		<DashboardPage>
@@ -223,7 +233,7 @@ export default function UsersPage(){
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
+					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={role} options={roles} onChange={setRole}/>
 					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
@@ -232,7 +242,7 @@ export default function UsersPage(){
 				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputDropdown label="Rôle" value={role} options={roles} onChange={setRole}/>
+					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={role} options={roles} onChange={setRole}/>
 					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
@@ -277,15 +287,15 @@ export default function UsersPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={users ? users?.length : 0} color={`var(--blue-col)`}/>
-				<InfoWidget label="Étudiants" icon={<FiUser/>} info={getCountData().get("Étudiant")} color="var(--blue-col)"/>
-				<InfoWidget label="Externes" icon={<FiUser/>} info={getCountData().get("Externe")} color="var(--orange-col)"/>
+				<InfoWidget label="Utilisateurs" icon={<FiUser/>} active={page == null} info={users ? users?.length : 0} color={`var(--blue-col)`} onClick={() => setPage(null)}/>
+				<InfoWidget label="Étudiants" icon={<FiUser/>} active={page == UserRoles.ETUDIANT} info={getCountData().get(UserRoles.ETUDIANT)} color="var(--blue-col)" onClick={() => setPage(UserRoles.ETUDIANT)}/>
+				<InfoWidget label="Externes" icon={<FiUser/>} active={page == UserRoles.EXTERNE} info={getCountData().get(UserRoles.EXTERNE)} color="var(--orange-col)" onClick={() => setPage(UserRoles.EXTERNE)}/>
 			</div>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Encadrants" icon={<FiUser/>} info={getCountData().get("Encadrant")} color="var(--purple-col)"/>
-				<InfoWidget label="Résponsables" icon={<FiUser/>} info={getCountData().get("Respo Stage") + getCountData().get("Respo TER")} color="var(--purple-col)"/>
-				<InfoWidget label="Administrateurs" icon={<FiUser/>} info={getCountData().get("Admin")} color="var(--red-col)"/>
+				<InfoWidget label="Encadrants" icon={<FiUser/>} active={page == UserRoles.ENCADRANT} info={getCountData().get(UserRoles.ENCADRANT)} color="var(--purple-col)" onClick={() => setPage(UserRoles.ENCADRANT)}/>
+				<InfoWidget label="Résponsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
+				<InfoWidget label="Administrateurs" icon={<FiUser/>} active={page == UserRoles.ADMIN} info={getCountData().get(UserRoles.ADMIN)} color="var(--red-col)" onClick={() => setPage(UserRoles.ADMIN)}/>
 			</div>
 
 			<table className="users-table-style">
@@ -302,7 +312,7 @@ export default function UsersPage(){
                     </tr>
                 </thead>
                 <tbody>
-		 			{users && users.map((user, index) => (
+		 			{filteredUsers && filteredUsers.map((user, index) => (
                         <tr key={index}>
                             <td>
 								<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
@@ -330,17 +340,7 @@ export default function UsersPage(){
 							</td>
 
 							<td>
-								<div className="users-table-options">
-									{/* <IconButton icon={<LuMessageSquare/>}/> */}
-									<IconButton icon={<MdOutlineEdit/>} onClick={() => editHandlePreload(user)}/>
-
-									{user.id != g?.id && 
-										<>
-											<IconButton icon={<IoBan/>} onClick={() => setBlockUser(user)}/>
-											<IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteUser(user)}/>
-										</>									
-									}
-								</div>
+								<IconButton icon={<FaEllipsis/>}/>
 							</td>
                         </tr>
                     ))}

@@ -16,7 +16,6 @@ export interface Subject {
 	author?: User[];
 	externes?: User[];  
 	description: string;
-	tasks?: string[];
 	language?: string[];
 	created_date?: string;
 	modified_date?: string;
@@ -26,6 +25,14 @@ export interface Subject {
 };
 
 export default class SubjectService {
+	public static async createSubject(author: User, title: string, desc: string, min_group: number, max_group: number, tags: string[], files: FileList): Promise<void> {
+		try {
+			
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	};
+
 	public static async getUserSubjects(user_id: string): Promise<Subject[]> {
 		try {
 			const mock_project: Subject = {

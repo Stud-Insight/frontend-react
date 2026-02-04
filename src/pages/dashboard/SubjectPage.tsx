@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
 import SubmitButton from "../../atoms/input/Button";
 import InfoWidget from "../../components/ui/InfoWidget";
-import SubjectService, { Project, SubjectStatus } from "../../services/SubjectService";
+import SubjectService, { Subject, SubjectStatus } from "../../services/SubjectService";
 import InfoBox from "../../components/ui/InfoBox";
 import SubjectWidget from "../../components/objects/SubjectWidget";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
@@ -24,8 +24,9 @@ import Button from "../../atoms/input/Button";
 export default function SubjectPage(){
 	const { user } = useAuth();
 	const [error, setError] = useState<string | null>();
-	const [subjects, setProjects] = useState<Project[]>([]);
-	const [deletrSubject, setDeleteProject] = useState<Project | null>();
+	const [success, setSuccess] = useState<string | null>();
+	const [subjects, setProjects] = useState<Subject[]>([]);
+	const [deleteSubject, setDeleteProject] = useState<Subject | null>();
 	const [createSubject, setCreateProject] = useState<boolean>(false);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
@@ -56,11 +57,10 @@ export default function SubjectPage(){
 				setError(message);
 			}
 		};
-
 		getSubjects();
 	}, []);
 
-	const deleteHandle = async (proj: Project) => {
+	const deleteHandle = async () => {
 		try {
 
 		} catch(err){
@@ -69,7 +69,7 @@ export default function SubjectPage(){
 		}
 	};
 
-	const editHandle = (proj: Project) => {
+	const editHandle = (proj: Subject) => {
 
 	};
 
@@ -85,7 +85,14 @@ export default function SubjectPage(){
 
 	const confirmCreationHandle = async () => {
 		try {
+			console.log(title);
+			console.log(desc);
+			console.log(etuMin);
+			console.log(etuMax);
+			console.log(selectedFiles);
+			console.log(selectedFiles);
 
+			setSuccess(`Projet "${title}" à été créée!`);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -177,6 +184,7 @@ export default function SubjectPage(){
 			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
 
 			{error && <InfoBox label={error} type="error"/>}
+			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)"/>
@@ -189,7 +197,7 @@ export default function SubjectPage(){
 				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteProject(sub)} onEdit={() => editHandle(sub)}/>
 			))}
 
-			{deletrSubject &&
+			{deleteSubject &&
 				<ConfirmationDialog 
 					label="Supprimer ce projet?" 
 					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."

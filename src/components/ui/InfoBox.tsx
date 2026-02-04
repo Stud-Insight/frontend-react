@@ -7,7 +7,7 @@ interface InfoBoxProps {
     type?: "info" | "error" | "success";
 }
 
-export default function InfoBox({ label, type = "info" }: InfoBoxProps) {
+export default function InfoBox({label, type = "info"}: InfoBoxProps) {
     const getIcon = () => {
         switch (type) {
             case "error":
