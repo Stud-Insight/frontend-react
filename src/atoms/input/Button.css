@@ -25,7 +25,14 @@
 .button-style:active {
     transform: scale(0.97);
 }
-
 .button-style:hover {
 	background-color: color-mix(in srgb, var(--blue-col) 85%, transparent);
+}
+
+.button-style.cancel:hover {
+	background-color: color-mix(in srgb, var(--gray1-col) 85%, transparent);
+}
+
+.button-style.danger:hover {
+	background-color: color-mix(in srgb, var(--red-col) 85%, transparent);
 }

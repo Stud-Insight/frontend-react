@@ -9,7 +9,7 @@ interface TagProps {
 	onSelect?: () => void;
 };
 
-export default function Tag({label, color = "var(--blue-col)", onDelete, onSelect}: TagProps){
+export default function Tag({label, color = "var(--gray1-col)", onDelete, onSelect}: TagProps){
 	return (
 		<div className="tag-widget-style" style={{color: `${color}`, backgroundColor: `color-mix(in srgb, ${color} 20%, transparent)`}} onClick={onSelect}>
 			{label}

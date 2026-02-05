@@ -8,7 +8,6 @@ import InputCheckbox from "../../components/input/InputCheckbox";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
 import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";
-import InputDropdown from "../../components/input/InputDropdown"
 import OverflowMenu from "../../components/input/OverflowMenu";
 import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
@@ -23,8 +22,8 @@ import { MdOutlineEdit } from "react-icons/md";
 import { IoBan } from "react-icons/io5";
 import { FiUser, FiMail } from "react-icons/fi";
 
-import "./UsersPage.css"
-import "./DashboardPage.css"
+import "./UsersPage.css";
+import "./DashboardPage.css";
 
 export default function UsersPage(){
 	const { user, refreshUser } = useAuth();
@@ -37,7 +36,7 @@ export default function UsersPage(){
 	const [createUser, setCreateUser] = useState<boolean>(false);
 	const [editUser, setEditUser] = useState<User | null>(null);
 	const [blockUser, setBlockUser] = useState<User | null>(null);
-	const [selectedUsers, setSelectedUsers] = useState(new Set([]));
+	const [selectedUsers, setSelectedUsers] = useState<Set<number>>(new Set());
 	const [prenom, setPrenom] = useState<string>("");
 	const [nom, setNom] = useState<string>("");
 	const [mail, setMail] = useState<string>("");
@@ -45,15 +44,15 @@ export default function UsersPage(){
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-	const userRoles: string[] = [
+	const userRoles: Set<UserRoles> = new Set([
 		UserRoles.ETUDIANT,
 		UserRoles.RESPO_TER,
 		UserRoles.RESPO_STAGE, 
 		UserRoles.ENCADRANT, 
 		UserRoles.EXTERNE,
 		UserRoles.ADMIN, 
-	]
-
+	]);
+	
 	const tagRoleMap = new Map<string, string>([
 		[UserRoles.ETUDIANT, "--blue-col"],
 		[UserRoles.RESPO_TER, "--purple-col"],
@@ -72,7 +71,7 @@ export default function UsersPage(){
 	const getCountData = () => {
 		let countMap: Map<string, number> = new Map<string, number>();
 
-		roles.forEach(roles => {
+		userRoles.forEach(roles => {
 			countMap.set(roles, 0);
 		});
 
@@ -127,7 +126,7 @@ export default function UsersPage(){
 
 	const createHandle = async () => {
 		try {
-			await UserService.createUser([roles], nom, prenom, mail);
+			await UserService.createUser(nom, prenom, mail, roles);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été ajouté au système.`);
 			setTimeout(() => setSuccess(null), 5000);
 			getAllUsers();
@@ -139,7 +138,7 @@ export default function UsersPage(){
 		setMail("");
 		setPrenom("");
 		setNom("");
-		setRoles("");
+		setRoles(new Set());
 		setCreateUser(false);
 	}
 
@@ -160,14 +159,14 @@ export default function UsersPage(){
 		setPrenom(user.first_name);
 		setNom(user.last_name);
 
-		if (user.groups.length > 0){
-			setRoles(user.groups[0].name);
-		}
+		setRoles(new Set(
+			user.groups.map(group => group.name)
+		));
 	}
 
 	const editHandle = async () => {
 		try {
-			await UserService.updateUser(editUser?.id, prenom, nom, mail, [roles]);
+			await UserService.updateUser(editUser?.id, prenom, nom, mail, roles);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
 		
 			if (editUser?.id == g?.id) {
@@ -184,7 +183,7 @@ export default function UsersPage(){
 		setMail("");
 		setPrenom("");
 		setNom("");
-		setRoles("");
+		setRoles(new Set());
 		setEditUser(null);
 	}
 
@@ -218,6 +217,18 @@ export default function UsersPage(){
 		}
 	}
 
+	const addRole = (role: string) => {
+		setRoles(prev => new Set(prev).add(role));
+	};
+
+	const removeRole = (role: string) => {
+		setRoles(prev => {
+			const next = new Set(prev);
+			next.delete(role);
+			return next;
+		});
+	};
+
 	useEffect(() => {
 		getAllUsers();
 	}, [page]);
@@ -231,7 +242,7 @@ export default function UsersPage(){
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={roles} options={roles} onChange={setRoles}/>
+					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
 					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
@@ -240,7 +251,7 @@ export default function UsersPage(){
 				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={roles} options={roles} onChange={setRoles}/>
+					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
 					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
@@ -274,7 +285,12 @@ export default function UsersPage(){
 					</div>
 
 					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => setCreateUser(true)}/>
+						<SubmitButton icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => {
+							if (page != null) {
+								setRoles(new Set([page]));
+							}
+							setCreateUser(true);
+						}}/>
 					</div>
 				</div>
 			</div>

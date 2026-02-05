@@ -8,13 +8,14 @@ import "./InputTagSelection.css"
 interface InputTagSelectionProps {
 	label?: string;
 	icon?: ReactNode;
-	options: string[];
+	options?: Set<string>;
 	tags: Set<string>;
+	alwaysShow?: boolean;
 	onSelect?: (tag: string) => void;
 	onDelete?: (tag: string) => void;
 };
 
-export default function InputTagSelection({label, icon, options, tags, onDelete, onSelect}: InputTagSelectionProps){
+export default function InputTagSelection({label, icon, options, tags, alwaysShow = false, onDelete, onSelect}: InputTagSelectionProps){
 	const [input, setInput] = useState("");
 	const [filteredTags, setFilteredTags] = useState<Set<string>>(new Set());
 	const inputRef = useRef<HTMLInputElement | null>(null);
@@ -26,15 +27,13 @@ export default function InputTagSelection({label, icon, options, tags, onDelete,
 	const filterTags = (s: string) => {
 		let newTags: Set<string> = new Set();
 
-		if (s != ""){
-			{Array.from(options).map((tag, index) => {
-				let g = tag.toUpperCase();
+		Array.from(options).map((tag, index) => {
+			let g = tag.toUpperCase();
 
-				if (g.includes(s.toUpperCase()) && !tags.has(tag)){
-					newTags.add(tag);
-				}
-			})}
-		}
+			if (g.includes(s.toUpperCase()) && !tags.has(tag)){
+				newTags.add(tag);
+			}
+		});
 		
 		return newTags;
 	}
@@ -42,13 +41,17 @@ export default function InputTagSelection({label, icon, options, tags, onDelete,
 	const tagSelectionHandle = (tag: string) => {
 		onSelect ? onSelect(tag) : undefined;
 		setInput("");
-		setFilteredTags(filterTags(""));
+		setFilteredTags(alwaysShow ? options : filterTags(""))
 	};
 
 	const inputHandle = (s: string) => {
 		setInput(s);
-		setFilteredTags(filterTags(s));
+		setFilteredTags(alwaysShow ? options : filterTags(""))
 	}
+
+	useEffect(() => {
+		inputHandle("");
+	}, []);
 	
 	return (
 		<div className="tag-selection-layout">
@@ -63,7 +66,7 @@ export default function InputTagSelection({label, icon, options, tags, onDelete,
 			{filteredTags.size > 0 && 
 				<Field className="tag-selection-container">
 					{Array.from(filteredTags).map((tag, index) => (
-						<Tag key={tag} label={tag} onSelect={() => tagSelectionHandle(tag)}/>
+						<Tag key={tag} label={tag} onSelect={() => tagSelectionHandle(tag)} color="var(--gray1-col)"/>
 					))}
 				</Field>
 			}

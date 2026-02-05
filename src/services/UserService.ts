@@ -69,14 +69,14 @@ export default class UserService {
 		}
 	}
 
-	public static async updateUser(id: string, first_name: string, last_name: string, email: string, roles: string[]): Promise<void> {
+	public static async updateUser(id: string, first_name: string, last_name: string, email: string, roles: Set<string>): Promise<void> {
 		try {
 			const load: UpdateUserPayload = {
 				first_name: first_name,
 				last_name: last_name,
 				is_active: true,
 				company_name: null,
-				groups: roles,
+				groups: Array.from(roles),
 			};
 
 			await api.put(`/users/${id}`, load);
@@ -94,7 +94,7 @@ export default class UserService {
 		}
 	}
 
-	public static async createUser(roles: string[], nom: string, prenom: string, email: string): Promise<User | null> {
+	public static async createUser(nom: string, prenom: string, email: string, roles: Set<string>): Promise<User | null> {
 		try {
 			await AuthService.getCSRFToken();
 
@@ -102,7 +102,7 @@ export default class UserService {
 				email: email,
 				first_name: prenom,
 				last_name: nom,
-				groups: roles,
+				groups: Array.from(roles),
         	};
 
 			const response = await api.post<User>("/users/create", p);

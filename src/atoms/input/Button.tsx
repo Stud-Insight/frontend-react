@@ -11,7 +11,7 @@ interface ButtonProps {
     onChange?: () => void;
 };
 
-export default function Button({icon, label = "button", style, onChange, width}: ButtonProps){
+export default function Button({icon, label, style, onChange, width}: ButtonProps){
 	const getApproIcon = () => {
 		if (style == "cancel"){
 			return undefined
@@ -23,7 +23,7 @@ export default function Button({icon, label = "button", style, onChange, width}:
 	};
 
 	return (
-		<button className={`button-style ${style}`} onClick={onChange} style={{width: width ? width : undefined}}>
+		<button className={`button-style ${label ? style : ""}`} onClick={onChange} style={{width: width ? width : undefined}}>
 			{getApproIcon()}
 			<span className="button-label">{label}</span>
 		</button>
