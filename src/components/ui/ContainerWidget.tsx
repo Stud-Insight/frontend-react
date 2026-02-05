@@ -8,12 +8,13 @@ interface ContainerWidgetProps {
 	label?: string;
 	children?: ReactNode;
 	active?: boolean;
+	className?: string;
 	onClick?: () => void;
 }
 
-export default function ContainerWidget({icon, label, active = false, children, onClick}: ContainerWidgetProps){
+export default function ContainerWidget({icon, label, active = false, children, className, onClick}: ContainerWidgetProps){
 	return (
-		<div className={`container-widget-layout ${active ? "active" : undefined}`} onClick={onClick}>
+		<div className={`container-widget-layout ${active ? "active" : undefined} ${className}`} onClick={onClick}>
 			{label != null && icon != null && 
 				<div className="container-widget-title">
 					{icon}

@@ -1,4 +1,7 @@
 .icon-button-close {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	padding: 7px;
 	border-radius: 10px;
 	cursor: pointer;

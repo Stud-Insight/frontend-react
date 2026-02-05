@@ -5,14 +5,16 @@ import InfoBox from "../../components/ui/InfoBox";
 import UserService, { User, UserRoles } from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
-import IconButton from "../../components/button/IconButton";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
 import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";
 import InputDropdown from "../../components/input/InputDropdown"
-import { LuMessageSquare } from "react-icons/lu";
-import { CgExport, CgImport } from "react-icons/cg";
-import { FaEllipsis } from "react-icons/fa6";
+import OverflowMenu from "../../components/input/OverflowMenu";
+import UserAvatar from "../../components/ui/UserAvatar";
+import TagWidget from "../../atoms/ui/Tag";
+import InputTagSelection from "../../components/input/InputTagSelection";
+
+import { CgImport } from "react-icons/cg";
 import { IoPricetagOutline } from "react-icons/io5";
 import { useAuth } from "../../context/AuthContext";
 import { FaPlus } from "react-icons/fa6";
@@ -20,9 +22,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoBan } from "react-icons/io5";
 import { FiUser, FiMail } from "react-icons/fi";
-
-import UserAvatar from "../../components/ui/UserAvatar";
-import TagWidget from "../../atoms/ui/Tag";
 
 import "./UsersPage.css"
 import "./DashboardPage.css"
@@ -42,11 +41,11 @@ export default function UsersPage(){
 	const [prenom, setPrenom] = useState<string>("");
 	const [nom, setNom] = useState<string>("");
 	const [mail, setMail] = useState<string>("");
-	const [role, setRole] = useState<string>("");
+	const [roles, setRoles] = useState<Set<string>>(new Set());
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-	const roles: string[] = [
+	const userRoles: string[] = [
 		UserRoles.ETUDIANT,
 		UserRoles.RESPO_TER,
 		UserRoles.RESPO_STAGE, 
@@ -67,14 +66,14 @@ export default function UsersPage(){
 	const modalWidth: number = 500;
 
 	let filteredUsers: User[] = page != null ? (users?.filter((user) => {
-		return user.groups.some(role => role.name == page);
+		return user.groups.some(roles => roles.name == page);
 	})) : users;
 
 	const getCountData = () => {
 		let countMap: Map<string, number> = new Map<string, number>();
 
-		roles.forEach(role => {
-			countMap.set(role, 0);
+		roles.forEach(roles => {
+			countMap.set(roles, 0);
 		});
 
 		{users && users.map((user, index) => (
@@ -128,7 +127,7 @@ export default function UsersPage(){
 
 	const createHandle = async () => {
 		try {
-			await UserService.createUser([role], nom, prenom, mail);
+			await UserService.createUser([roles], nom, prenom, mail);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été ajouté au système.`);
 			setTimeout(() => setSuccess(null), 5000);
 			getAllUsers();
@@ -140,7 +139,7 @@ export default function UsersPage(){
 		setMail("");
 		setPrenom("");
 		setNom("");
-		setRole("");
+		setRoles("");
 		setCreateUser(false);
 	}
 
@@ -162,17 +161,16 @@ export default function UsersPage(){
 		setNom(user.last_name);
 
 		if (user.groups.length > 0){
-			setRole(user.groups[0].name);
+			setRoles(user.groups[0].name);
 		}
 	}
 
 	const editHandle = async () => {
 		try {
-			await UserService.updateUser(editUser?.id, prenom, nom, mail, [role]);
+			await UserService.updateUser(editUser?.id, prenom, nom, mail, [roles]);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
 		
 			if (editUser?.id == g?.id) {
-				console.log("elelel");
 				await refreshUser();
 			}
 
@@ -186,7 +184,7 @@ export default function UsersPage(){
 		setMail("");
 		setPrenom("");
 		setNom("");
-		setRole("");
+		setRoles("");
 		setEditUser(null);
 	}
 
@@ -233,7 +231,7 @@ export default function UsersPage(){
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={role} options={roles} onChange={setRole}/>
+					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={roles} options={roles} onChange={setRoles}/>
 					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
@@ -242,7 +240,7 @@ export default function UsersPage(){
 				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={role} options={roles} onChange={setRole}/>
+					<InputDropdown label="Rôle" icon={<IoPricetagOutline/>} value={roles} options={roles} onChange={setRoles}/>
 					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
@@ -333,14 +331,25 @@ export default function UsersPage(){
                             <td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
 							<td>
 								<div className="users-table-tag-layout">
-									{user.groups.map((role, index) => (
-										<TagWidget label={role.name} color={`var(${tagRoleMap.get(role.name)})`}/>
+									{user.groups.map((roles, index) => (
+										<TagWidget label={roles.name} color={`var(${tagRoleMap.get(roles.name)})`}/>
 									))}
 								</div>
 							</td>
 
 							<td>
-								<IconButton icon={<FaEllipsis/>}/>
+								<OverflowMenu options={[
+									{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {
+										editHandlePreload(user);
+										setEditUser(user);
+									}},
+									{label: "Bloquer", icon: <IoBan/>, onClick: () => {
+										setBlockUser(user);
+									}},
+									{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {
+										setDeleteUser(user);
+									}}
+								]}/>
 							</td>
                         </tr>
                     ))}

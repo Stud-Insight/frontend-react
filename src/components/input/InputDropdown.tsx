@@ -43,6 +43,7 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 		if (defaultIndex != -1){
 			selectionHandler(selected);
 		}
+		value ? selectionHandler(value) : undefined;
 
 		value && setSelected(value);
 
