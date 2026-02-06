@@ -22,7 +22,7 @@
 	padding: 5px;
 	width: 100%;
 	height: 40px;
-	cursor: pointer;
+	cursor: text;
 	font-family: var(--main-font);
 	background-color: var(--gray3-col);
 	color: var(--gray1-col);

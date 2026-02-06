@@ -23,10 +23,11 @@ import Button from "../../atoms/input/Button";
 
 export default function SubjectPage(){
 	const { user } = useAuth();
-	const [error, setError] = useState<string | null>();
-	const [success, setSuccess] = useState<string | null>();
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
 	const [subjects, setProjects] = useState<Subject[]>([]);
-	const [deleteSubject, setDeleteProject] = useState<Subject | null>();
+	const [page, setPage] = useState<string | null>(null);
+	const [deleteSubject, setDeleteProject] = useState<Subject | null>(null);
 	const [createSubject, setCreateProject] = useState<boolean>(false);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
@@ -35,23 +36,15 @@ export default function SubjectPage(){
 	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set([]));
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-	const draftCount = subjects.filter(
-		p => p.status === SubjectStatus.DRAFT
-	).length;
-
-	const submitCount = subjects.filter(
-		p => p.status === SubjectStatus.SUBMITTED
-	).length;
-
-	const approveCount = subjects.filter(
-		p => p.status === SubjectStatus.VALIDATED
-	).length;
+	const draftCount = subjects.filter(p => p.status == SubjectStatus.DRAFT).length;
+	const submitCount = subjects.filter(p => p.status == SubjectStatus.SUBMITTED).length;
+	const approveCount = subjects.filter(p => p.status == SubjectStatus.VALIDATED).length;
 
 	useEffect(() => {
 		const getSubjects = async () => {
 			try {
-				const data = await SubjectService.getUserSubjects(user.id);
-				setProjects(data);
+				const data = await SubjectService.getUserSubjects();
+				setProjects([]);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
@@ -85,13 +78,7 @@ export default function SubjectPage(){
 
 	const confirmCreationHandle = async () => {
 		try {
-			console.log(title);
-			console.log(desc);
-			console.log(etuMin);
-			console.log(etuMax);
-			console.log(selectedFiles);
-			console.log(selectedFiles);
-
+			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
 			setSuccess(`Projet "${title}" à été créée!`);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -187,10 +174,10 @@ export default function SubjectPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)"/>
-				<InfoWidget label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color="var(--gray1-col)"/>
-				<InfoWidget label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color="var(--gray1-col)"/>
-				<InfoWidget label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color="var(--green-col)"/>
+				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
+				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color="var(--gray1-col)" onClick={() => setPage(SubjectStatus.DRAFT)}/>
+				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color="var(--gray1-col)" onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
+				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color="var(--green-col)" onClick={() => setPage(SubjectStatus.VALIDATED)}/>
 			</div>
 
 			{subjects.map((sub, index) => (

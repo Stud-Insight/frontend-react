@@ -78,7 +78,7 @@ export default class UserService {
 				company_name: null,
 				groups: Array.from(roles),
 			};
-
+			
 			await api.put(`/users/${id}`, load);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

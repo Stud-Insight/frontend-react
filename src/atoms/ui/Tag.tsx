@@ -13,7 +13,11 @@ export default function Tag({label, color = "var(--gray1-col)", onDelete, onSele
 	return (
 		<div className="tag-widget-style" style={{color: `${color}`, backgroundColor: `color-mix(in srgb, ${color} 20%, transparent)`}} onClick={onSelect}>
 			{label}
-			{onDelete && <RxCross2 onClick={onDelete}/>}
+			{onDelete && 
+				<div className="icon-widget-style">
+					{<RxCross2 onClick={onDelete}/>}
+				</div>
+			}
 		</div>
 	)
 }

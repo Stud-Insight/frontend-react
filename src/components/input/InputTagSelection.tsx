@@ -40,13 +40,13 @@ export default function InputTagSelection({label, icon, options, tags, alwaysSho
 
 	const tagSelectionHandle = (tag: string) => {
 		onSelect ? onSelect(tag) : undefined;
-		setInput("");
 		setFilteredTags(alwaysShow ? options : filterTags(""))
+		setInput("");
 	};
 
 	const inputHandle = (s: string) => {
 		setInput(s);
-		setFilteredTags(alwaysShow ? options : filterTags(""))
+		setFilteredTags(filterTags(s))
 	}
 
 	useEffect(() => {

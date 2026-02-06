@@ -153,17 +153,6 @@ export default function UsersPage(){
 		setBlockUser(null);
 	}
 
-	const editHandlePreload = (user: User) => {
-		setEditUser(user);
-		setMail(user.email);
-		setPrenom(user.first_name);
-		setNom(user.last_name);
-
-		setRoles(new Set(
-			user.groups.map(group => group.name)
-		));
-	}
-
 	const editHandle = async () => {
 		try {
 			await UserService.updateUser(editUser?.id, prenom, nom, mail, roles);
@@ -286,6 +275,9 @@ export default function UsersPage(){
 
 					<div style={{width: "auto"}}>
 						<SubmitButton icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => {
+							setMail("");
+							setPrenom("");
+							setNom("");
 							if (page != null) {
 								setRoles(new Set([page]));
 							}
@@ -333,14 +325,14 @@ export default function UsersPage(){
 							</td>
                             <td>
 								<div className="users-table-avatar-container">
-									<UserAvatar user={user}/>
+									<UserAvatar user={user} />
 								</div>
 							</td>
 							<td>
-								<div className="users-table-user-info">
-									<label>{user.first_name} {user.last_name}</label>
-									<label style={{color: "var(--gray1-col)"}}>{user.id.slice(0, 8)}</label>
-								</div>
+								<label>{user.id.slice(0, 8)}</label>
+							</td>
+							<td>
+								<label>{user.first_name} {user.last_name}</label>
 							</td>
 							<td>{user.email}</td>
                             <td>{dateFormat(user.date_joined)}</td>
@@ -356,15 +348,28 @@ export default function UsersPage(){
 							<td>
 								<OverflowMenu options={[
 									{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {
-										editHandlePreload(user);
+										setEditUser(user);
+										setMail(user.email);
+										setPrenom(user.first_name);
+										setNom(user.last_name);
+
+										setRoles(new Set(
+											user.groups.map(group => group.name)
+										));
+
 										setEditUser(user);
 									}},
-									{label: "Bloquer", icon: <IoBan/>, onClick: () => {
-										setBlockUser(user);
-									}},
-									{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {
-										setDeleteUser(user);
-									}}
+
+									...((g.id != user.id) ? 
+										[{label: "Bloquer", icon: <IoBan/>, onClick: () => {
+												setBlockUser(user);
+											}},
+											
+											{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {
+												setDeleteUser(user);
+											}}]
+										:
+										[])
 								]}/>
 							</td>
                         </tr>

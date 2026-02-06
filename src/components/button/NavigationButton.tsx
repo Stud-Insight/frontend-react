@@ -6,14 +6,14 @@ interface NavigationButtonProps {
     icon: React.ReactNode;
     id?: string;
     offset?: number;
-    size?: number;
+    size?: string;
     active?: boolean;
 	showBackground?: boolean;
     onClick?: (id: string) => void;
 };
 
 
-export default function NavigationButton({label, icon, offset = 0, size, onClick, active = false, id = "", showBackground = false}: NavigationButtonProps){
+export default function NavigationButton({label, icon, offset = 0, size = "20px", onClick, active = false, id = "", showBackground = false}: NavigationButtonProps){
     const className = `navigation-button-style${active ? " active" : ""}`;
 
     const clickHandle = () => {
@@ -22,9 +22,9 @@ export default function NavigationButton({label, icon, offset = 0, size, onClick
 
     return (
         <button className={className} onClick={clickHandle} style={{backgroundColor: showBackground && !active ? "var(--gray3-col)" : undefined}}>
-            <span style={{transform: `translateY(${offset}px)`, fontSize: `${size ? size : 20}`}}>
+            <div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
 				{icon}
-			</span>
+			</div>
 			<label>{label}</label>
         </button>
     )

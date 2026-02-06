@@ -188,8 +188,8 @@ export default function TERAdminPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Étudiants" active={currentPage == 0} icon={<FiUser/>} info={enrolledStudents.length} color={`var(--blue-col)`} onClick={() => setCurrentPage(0)}/>
-				<InfoWidget label="Enseignants" active={currentPage == 1} icon={<TbSchool/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(1)}/>
 				<InfoWidget label="Groupes" active={currentPage == 2} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
+				<InfoWidget label="Enseignants" active={currentPage == 1} icon={<TbSchool/>} info={0} color="var(--purple-col)" onClick={() => setCurrentPage(1)}/>
 				<InfoWidget label="Sujets" active={currentPage == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(3)}/>
 				<InfoWidget label="Modalité" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
 			</div>

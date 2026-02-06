@@ -4,6 +4,7 @@ import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../button/IconButton";
 import TagWidget from "../../atoms/ui/Tag";
+import Icon from "../../atoms/ui/Icon";
 
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
@@ -12,9 +13,8 @@ import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { FaRegFile, FaRegClock } from "react-icons/fa";
-import Icon from "../../atoms/ui/Icon";
 
-import "./SubjectWidget.css"
+import "./SubjectWidget.css";
 
 interface SubjectWidgetProps {
 	subject: Subject;

@@ -3,92 +3,68 @@ import { User } from "./UserService"
 import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
 export enum SubjectStatus {
-	DRAFT = "Draft",
+	DRAFT = "Brouillon",
 	SUBMITTED = "Soumis",
 	VALIDATED = "Approuvé",
 	REJECTED = "Rejeté",
 }
 
+export interface SubjectCreateSchema {
+	title: string;
+	description: string;
+	domain: string;
+	prerequisites: string;
+	max_groups: number;
+	min_group_size: number;
+	max_group_size: number;
+	tags: string[];
+};
+
 export interface Subject {
 	id: string;
 	title: string;
-	ter_id?: string;
-	author?: User[];
-	externes?: User[];  
 	description: string;
-	language?: string[];
-	created_date?: string;
-	modified_date?: string;
+	domain: string;
+	prerequisites: string;
+	professor: User | null;
+	supervisor: User | null;
+	max_groups: number;
+	min_group_size: number | null;
+	max_group_size: number | null;	
 	status: SubjectStatus;
-	min_person?: number;
-	max_person?: number;
-};
+	rejection_reason: string | null;
+	ter_period_id: string;
+	created: string;
+	modified: string;
+	is_favorite: boolean;
+}
 
 export default class SubjectService {
-	public static async createSubject(author: User, title: string, desc: string, min_group: number, max_group: number, tags: string[], files: FileList): Promise<void> {
+	public static async createSubject(title: string, desc: string, min_group: number, max_group: number, tags: Set<string>, files: File[]): Promise<void> {
 		try {
-			
+			const load: SubjectCreateSchema = {
+				title: title, 
+				description: desc,
+				domain: "elelelel",
+				prerequisites: "",
+				max_groups: 1,
+				min_group_size: min_group,
+				max_group_size: max_group,
+				tags: Array.from(tags),
+			};
+
+			console.log(load);
+
+			await api.post<SubjectCreateSchema>(`/ter/subjects/`, load);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	};
 
-	public static async getUserSubjects(user_id: string): Promise<Subject[]> {
+	public static async getUserSubjects(): Promise<Subject[]> {
 		try {
-			const mock_project: Subject = {
-				id: "1",
-				ter_id: "TER-2025",
-				author: [
-					{
-						id: "1",
-						first_name: "Sébastien",
-						last_name: "Da Silva",
-						email: "sebastien.dasilva@lirmm.fr",
-						groups: [],
-						is_staff: true,
-						is_superuser: true,
-					}
-				],
-				title: "Développement d’une application pour l’évaluation des étudiants lors des expériences professionnelles.",
-				description: `Dans le cadre de sa formation, un étudiant peut être amené à effectuer de nombreux
-					stages d’immersion dans le monde professionnel. Ces expériences doivent faire l’objet
-					d’une évaluation de la part de l’encadrant en entreprise, ce qui entraîne de nombreux
-					échanges de courriels et de documents.
-
-					Afin de faciliter cela et, surtout, d’automatiser les interactions, le développement
-					d’une application web a été démarré l’année dernière et doit se poursuivre cette année.
-
-					Cette application devra permettre de gérer la totalité des étudiants du département
-					d’informatique, leurs encadrants industriels, voire académiques, ainsi que l’ensemble
-					des organismes qui accueillent les stagiaires.
-
-					La solution devra être facilement utilisable par des non-informaticiens et permettre
-					l’importation et l’exportation de la totalité des données. De plus, une fonction de
-					recherche sera mise en place sur l’ensemble des informations de l’application.
-
-					Un ensemble de documents est disponible pour la prise en main du projet, dont des
-					cahiers techniques et les rapports écrits l’année dernière.
-				`,
-				tasks: [
-					"Analyse des besoins",
-					"Conception de l’architecture",
-					"Développement frontend",
-					"Développement backend",
-					"Tests et documentation",
-				],
-				status: SubjectStatus.DRAFT,
-				created_date: "Septembre 10, 2025",
-				language: ["JavaScript", "TypeScript", "React", "Node.js"],
-				min_person: 2,
-				max_person: 4	
-			};
-
-			const mock: Subject[] = [
-				mock_project,
-				mock_project
-			];
-
-			return mock
+			const res = await api.get<Subject[]>(`/ter/subjects/me`);
+			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}	

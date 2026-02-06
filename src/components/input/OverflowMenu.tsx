@@ -2,6 +2,7 @@ import React, {useState, ReactNode, useRef ,useEffect} from "react";
 import IconButton from "../button/IconButton";
 import { FaEllipsis } from "react-icons/fa6";
 import ContainerWidget from "../ui/ContainerWidget.tsx";
+import NavigationButton from "../button/NavigationButton.tsx";
 
 import "./OverflowMenu.css";
 
@@ -19,7 +20,7 @@ interface OverflowMenuProps {
 export default function OverflowMenu({options, onClick}: OverflowMenuProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 	const menuRef = useRef<HTMLDivElement | null>(null);
-	
+
 	const clickHandle = (func?: () => void) => {
 		func?.();
 		setExpanded(false);
@@ -49,10 +50,7 @@ export default function OverflowMenu({options, onClick}: OverflowMenuProps){
 				<ContainerWidget className={`expanded-overflow-menu ${expanded ? "expanded" : undefined}`}>
 					<div style={{gap: "0px;"}}>
 						{options.map((option) => (
-							<div className="overflow-menu-option" onClick={() => clickHandle(option.onClick)}>
-								{option.icon}
-								<label>{option.label}</label>
-							</div>
+							<NavigationButton size="10px" icon={option.icon} label={option.label} onClick={() => clickHandle(option.onClick)}/>
 						))}
 					</div>
 				</ContainerWidget>

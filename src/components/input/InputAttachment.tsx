@@ -62,7 +62,7 @@ function FileWidget({file, onDelete}: FileWidgetProps){
 
 export default function InputAttachment({label, icon, files, accept="", onChange, onDelete}: InputAttachmentProps){
 	const inputRef = useRef<HTMLInputElement | null>(null);
-	const [isOverDrag, setIsOverDrag] = useState<boolean>(true);
+	const [isOverDrag, setIsOverDrag] = useState<boolean>(false);
 
 	const handleFileChange = (fileList: FileList) => {
 		const filesArray = Array.from(fileList);
