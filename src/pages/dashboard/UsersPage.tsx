@@ -12,6 +12,7 @@ import OverflowMenu from "../../components/input/OverflowMenu";
 import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
 import InputTagSelection from "../../components/input/InputTagSelection";
+import InputSearch from "../../components/input/InputSearch";
 
 import { CgImport } from "react-icons/cg";
 import { IoPricetagOutline } from "react-icons/io5";
@@ -24,6 +25,7 @@ import { FiUser, FiMail } from "react-icons/fi";
 
 import "./UsersPage.css";
 import "./DashboardPage.css";
+import ContainerWidget from "../../components/ui/ContainerWidget";
 
 export default function UsersPage(){
 	const { user, refreshUser } = useAuth();
@@ -287,7 +289,7 @@ export default function UsersPage(){
 				<InfoWidget label="Résponsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
 				<InfoWidget label="Administrateurs" icon={<FiUser/>} active={page == UserRoles.ADMIN} info={getCountData().get(UserRoles.ADMIN)} color="var(--red-col)" onClick={() => setPage(UserRoles.ADMIN)}/>
 			</div>
-
+				
 			<table className="users-table-style">
                 <thead>
                     <tr>
@@ -314,7 +316,7 @@ export default function UsersPage(){
 								</div>
 							</td>
 							<td>
-								<label>{user.id.slice(0, 8)}</label>
+								<label>{`#${user.id.slice(0, 8)}`}</label>
 							</td>
 							<td>
 								<label>{user.first_name} {user.last_name}</label>
