@@ -7,24 +7,24 @@ import ContainerWidget from "../../../components/ui/ContainerWidget";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import ProjectWidget from "../../../components/objects/SubjectWidget";
 
-import "./TERSelectionPage.css"
-import "../../dashboard/DashboardPage.css"
-
 import { FaRegFile, FaRegClock } from "react-icons/fa";
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
 
-export default function TERSelectionPage(){
+import "./TERSelectionPage.css"
+import "../../dashboard/DashboardPage.css"
+
+export default function PeriodSelectionPage(){
 	const [error, setError] = useState<string | null>(null);
-	const [selectedTER, setSelectedTER] = useState<TERPeriod | null>();
+	const [selectedPeriod, setSelectedPeriod] = useState<TERPeriod | null>();
 	
 	useEffect(() => {
 		const getTer = async () => {
 			try {
-				// const data = await TERService.getTER();
-				setSelectedTER(data);
+				// const data = await TERService.getPeriod();
+				setSelectedPeriod(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
@@ -37,7 +37,7 @@ export default function TERSelectionPage(){
 	return (
 		<DashboardPage>
 			<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>TER & Groupes Selection</label>
-			<label style={{color: "var(--gray1-col)"}}>Join a group and vote for your preferred TER project.</label>
+			<label style={{color: "var(--gray1-col)"}}>Join a group and vote for your preferred Period project.</label>
 
 			{error && <InfoBox label={error} type="error"/>}
 
@@ -52,13 +52,13 @@ export default function TERSelectionPage(){
 			
 			<div className="ter-list-page-layout">
 				<div className="ter-list-group-layout">
-					{/* {selectedTER && selectedTER.groups.map((group, index) => (
+					{/* {selectedPeriod && selectedPeriod.groups.map((group, index) => (
 						<GroupProjectWidget group={group}/>
 					))} */}
 				</div>
 
 				<div className="ter-list-project-layout">
-					{/* {selectedTER && selectedTER.projects.map((project, index) => (
+					{/* {selectedPeriod && selectedPeriod.projects.map((project, index) => (
 						<ProjectWidget project={project} privateMode={false}/>
 					))} */}
 				</div>

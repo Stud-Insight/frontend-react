@@ -11,8 +11,26 @@ export enum UserRoles {
 	ADMIN = "Admin",
 }
 
+export const UserRolesLabels: Map<UserRoles, string> = new Map([
+	[UserRoles.ETUDIANT, "Étudiant"],
+	[UserRoles.RESPO_TER, "Responsable TER"],
+	[UserRoles.RESPO_STAGE, "Responsable Stage"],
+	[UserRoles.ENCADRANT, "Encadrant"],
+	[UserRoles.EXTERNE, "Externe"],
+	[UserRoles.ADMIN, "Administrateur"],
+]);
+
+export const UserRolesColors = new Map<UserRoles, string>([
+	[UserRoles.ETUDIANT, "var(--blue-col)"],
+	[UserRoles.RESPO_TER, "var(--purple-col)"],
+	[UserRoles.RESPO_STAGE, "var(--purple-col)"],
+	[UserRoles.ENCADRANT, "var(--purple-col)"],
+	[UserRoles.EXTERNE, "var(--orange-col)"],
+	[UserRoles.ADMIN, "var(--red-col)"],
+]);
+
 export interface Group {
-    name: string;
+    name: UserRoles;
     permissions: string[];
 };
 

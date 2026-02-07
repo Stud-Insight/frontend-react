@@ -18,3 +18,9 @@
 	width: 100%;
 	gap: 30px;
 }
+
+.ter-list-buttons {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}

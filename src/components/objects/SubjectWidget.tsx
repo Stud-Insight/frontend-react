@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Subject, SubjectStatus } from "../../services/SubjectService";
+import { Subject, SubjectStatus, SubjectStatusLabel, SubjectStatusColor } from "../../services/SubjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../button/IconButton";
 import TagWidget from "../../atoms/ui/Tag";
 import Icon from "../../atoms/ui/Icon";
+import OverflowMenu from "../../components/input/OverflowMenu";
 
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
@@ -28,43 +29,54 @@ interface SubjectWidgetProps {
 
 export default function SubjectWidget({subject, privateMode = true, onDelete, onEdit, onDownload, onPublish, onExport}: SubjectWidgetProps){
 	const [expand, setExpand] = useState<boolean>(false);
+
+	const dateFormat = (dateString: string) => {
+		const date_t = new Date(dateString);
+
+        return date_t.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+			second: "2-digit",
+        });
+	}
+
 	return (
 		<ContainerWidget>
 			<div className="subject-widget-layout">
-				<div className="subject-widget-expand-button">
-					<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
-				</div>
-
+				{subject.description &&
+					<div className="subject-widget-expand-button">
+						<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
+					</div>
+				}
+				
 				<div className="subject-widget-title-container">
 					<Icon icon={<FaRegFile/>} color="var(--blue-col)"/>
 					
 					<div className="subject-widget-title-right">
 						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</label>
-						{subject.author && subject.author.map((user, index) => (
-							<label key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}>{user.first_name} {user.last_name.toUpperCase()}</label>
-						))}
+						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.professor?.first_name} {subject.professor?.last_name.toUpperCase()}</label>
 					</div>
 				</div>
-				
-				<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
-					<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
 
-					<div className="subject-widget-task-list">
-						{subject.tasks && subject.tasks.map((task, index) => (
-							<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
-						))}
-					</div>		
-				</div>
+				{subject.description &&
+					<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
+						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
+
+						{/* <div className="subject-widget-task-list">
+							{subject.tasks && subject.tasks.map((task, index) => (
+								<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
+							))}
+						</div>		 */}
+					</div>
+				}
 				
 				<div className="subject-widget-tag-layout">
-					{subject.min_person && subject.max_person ? 
-						<TagWidget label={`${subject.min_person} - ${subject.max_person} Etudiants`} color="var(--blue-col)"/>
-					:
-						<TagWidget label={`${subject.max_person} Etudiants`} color="var(--blue-col)"/>
-					}
-					
-					{subject.language?.map((lang, index) => (
-						<TagWidget key={index} label={lang} color="var(--blue-col)"/>
+					<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`} color="var(--blue-col)"/>
+					{subject.tags?.map((tag, index) => (
+						<TagWidget key={index} label={tag} color="var(--blue-col)"/>
 					))}
 				</div>
 				
@@ -74,17 +86,17 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 
 						<div className="subject-widget-footer-layout">
 							<div className="subject-widget-footer-content">
-								<TagWidget label={SubjectStatus.DRAFT} color="var(--blue-col)"/>
+								<TagWidget label={SubjectStatusLabel.get(subject.status)} color={SubjectStatusColor.get(subject.status)}/>
 								-
-								<label style={{fontSize: "14px"}}>{subject.created_date}</label>
+								<label style={{fontSize: "14px"}}>{dateFormat(subject.created)}</label>
 							</div>
 
-							<div className="subject-widget-footer-content">
-								<IconButton icon={<CgExport/>} onClick={onExport}/>
-								<IconButton icon={<MdOutlineEdit/>} onClick={onEdit}/>
-								<IconButton icon={<LuSend/>} onClick={onPublish}/>
-								<IconButton icon={<MdDeleteOutline/>} onClick={onDelete}/>
-							</div>
+							<OverflowMenu options={[
+								{label: "Exporter", icon: <CgExport/>, onClick: () => {onExport?.()}},
+								{label: "Publier", icon: <LuSend/>, onClick: () => {onPublish?.()}},
+								{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {onEdit?.()}},
+								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {onDelete?.()}},
+							]}/>
 						</div>
 					</>
 				}

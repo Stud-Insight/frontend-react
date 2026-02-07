@@ -10,4 +10,5 @@
 	flex-direction: column;
 	flex: 1;
 	gap: 10px;
+	height: 100%;
 }

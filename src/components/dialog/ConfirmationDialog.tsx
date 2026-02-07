@@ -1,6 +1,6 @@
 import React from "react";
 import ModalDialog from "./ModalDialog";
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 
 import "./ConfirmationDialog.css";
 
@@ -17,8 +17,8 @@ export default function ConfirmationDialog({label, info, onCancel, onConfirm}: C
 			<div className="confirmation-dialog-layout">
 				<label className="confirmation-dialog-info">{info}</label>
 				<div className="confirmation-dialog-buttons-layout">
-					<SubmitButton label="Annuler" style="cancel" width={`${100}%`} onChange={onCancel}/>
-					<SubmitButton label="Confirmer" style="danger" width={`${100}%`} onChange={onConfirm}/>
+					<Button label="Annuler" style="cancel" width={`${100}%`} onChange={onCancel}/>
+					<Button label="Confirmer" style="danger" width={`${100}%`} onChange={onConfirm}/>
 				</div>
 			</div>
 		</ModalDialog>

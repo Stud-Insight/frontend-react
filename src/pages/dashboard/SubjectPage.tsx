@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 import InfoWidget from "../../components/ui/InfoWidget";
-import SubjectService, { Subject, SubjectStatus } from "../../services/SubjectService";
+import SubjectService, { Subject, SubjectStatus, SubjectTags, SubjectStatusColor } from "../../services/SubjectService";
 import InfoBox from "../../components/ui/InfoBox";
 import SubjectWidget from "../../components/objects/SubjectWidget";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
@@ -15,20 +15,17 @@ import InputAttachment from "../../components/input/InputAttachment";
 
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext";
 
-import "./SubjectPage.css"
-
-import Button from "../../atoms/input/Button";
+import "./SubjectPage.css";
 
 export default function SubjectPage(){
-	const { user } = useAuth();
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 	const [subjects, setProjects] = useState<Subject[]>([]);
 	const [page, setPage] = useState<string | null>(null);
-	const [deleteSubject, setDeleteProject] = useState<Subject | null>(null);
-	const [createSubject, setCreateProject] = useState<boolean>(false);
+	const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
+	const [modifySubject, setModifySubject] = useState<Subject | null>(null);
+	const [createSubject, setCreateSubject] = useState<boolean>(false);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
 	const [etuMin, setEtuMin] = useState<number>(0);
@@ -40,34 +37,27 @@ export default function SubjectPage(){
 	const submitCount = subjects.filter(p => p.status == SubjectStatus.SUBMITTED).length;
 	const approveCount = subjects.filter(p => p.status == SubjectStatus.VALIDATED).length;
 
-	useEffect(() => {
-		const getSubjects = async () => {
-			try {
-				const data = await SubjectService.getUserSubjects();
-				setProjects([]);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		};
-		getSubjects();
-	}, []);
+	const filteredSubjects: Subject[] = (page == null) ? subjects : subjects.filter((subject) => {
+		return subject.status == page;
+	});
 
-	const deleteHandle = async () => {
+	const maxGroupEtu: number = 5;
+
+	const getSubjects = async () => {
 		try {
-
-		} catch(err){
+			const data = await SubjectService.getUserSubjects();
+			setProjects(data);
+			console.log(data);
+		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
 	};
 
-	const editHandle = (proj: Subject) => {
-
-	};
-
-	const cancelCreationHandle = () => {
-		setCreateProject(false);
+	const resetFieldHandle = () => {
+		setCreateSubject(false);
+		setModifySubject(null);
+		setDeleteSubject(null);
 		setTitle("");
 		setDesc("");
 		setEtuMin(0);
@@ -76,16 +66,48 @@ export default function SubjectPage(){
 		setSelectedFiles([]);
 	};
 
+	const deleteHandle = async () => {
+		try {
+
+		} catch(err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		resetFieldHandle();
+	};
+
+	const editHandle = (proj: Subject) => {
+		setModifySubject(proj);
+		setTitle(proj.title);
+		setDesc(proj.description);
+		setEtuMin(proj.min_group_size ? proj.min_group_size : 0);
+		setEtuMax(proj.max_group_size ? proj.max_group_size : 0);
+		setSelectedTags(new Set(proj.tags));
+		setSelectedFiles([]);
+	};
+
+	const editConfirmHandle = async () => {
+		try {
+
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		};
+
+		resetFieldHandle();
+	}
+
 	const confirmCreationHandle = async () => {
 		try {
 			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
 			setSuccess(`Projet "${title}" à été créée!`);
+			getSubjects();
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
 
-		cancelCreationHandle();
+		resetFieldHandle();
 	};
 
 	const addTagHandle = (tag: string) => {
@@ -114,38 +136,25 @@ export default function SubjectPage(){
 		);
 	}
 
-	const tagOptions: string[] = [
-		"JavaScript",
-		"TypeScript",
-		"HTML",
-		"CSS",
-		"Python",
-		"Java",
-		"C",
-		"C++",
-		"C#",
-		"OCaml",
-		"PHP",
-		"Ruby",
-		"Perl",
-		"Lua",
-	];
-	
+	useEffect(() => {
+		getSubjects();
+	}, []);
+
 	return (
 		<DashboardPage>
 			{createSubject &&
-				<ModalDialog label="Créer Un Nouveau Sujet" onClose={cancelCreationHandle} width={"90%"}>
+				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} width={"90%"}>
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
 
 					<div className="subject-page-main-layout">
 						<div className="subject-page-sub-layout">
-							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
-							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
 						</div>
 
 						<div className="subject-page-sub-layout">
-							<InputTagSelection label="Tags" tags={selectedTags} options={tagOptions} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
 						</div>
 						
 						<div className="subject-page-sub-layout">
@@ -157,15 +166,40 @@ export default function SubjectPage(){
 				</ModalDialog>
 			}
 
+			{modifySubject &&
+				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} width={"90%"}>
+					<InputField value={title} label="Titre *" onChange={setTitle}/>
+					<InputArea value={desc} label="Description *" onChange={setDesc}/>
+
+					<div className="subject-page-main-layout">
+						<div className="subject-page-sub-layout">
+							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
+							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+						</div>
+
+						<div className="subject-page-sub-layout">
+							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+						</div>
+						
+						<div className="subject-page-sub-layout">
+							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
+						</div>
+					</div>
+					
+					<Button label="Modifier" icon={<FaPlus/>} onChange={editConfirmHandle}/>
+				</ModalDialog>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
 					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets</label>
 				</div>
 			
 				<div className="dashboard-top-button-layout">
-					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => setCreateProject(true)}/>
-					</div>
+					<Button icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => {
+						setEtuMax(maxGroupEtu);
+						setCreateSubject(true);
+					}}/>
 				</div>
 			</div>
 			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
@@ -175,20 +209,20 @@ export default function SubjectPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
-				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color="var(--gray1-col)" onClick={() => setPage(SubjectStatus.DRAFT)}/>
-				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color="var(--gray1-col)" onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
-				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color="var(--green-col)" onClick={() => setPage(SubjectStatus.VALIDATED)}/>
+				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
+				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
+				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
 			</div>
 
-			{subjects.map((sub, index) => (
-				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteProject(sub)} onEdit={() => editHandle(sub)}/>
+			{filteredSubjects.map((sub, index) => (
+				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteSubject(sub)} onEdit={() => editHandle(sub)}/>
 			))}
 
 			{deleteSubject &&
 				<ConfirmationDialog 
 					label="Supprimer ce projet?" 
 					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
-					onCancel={() => setDeleteProject(null)} 
+					onCancel={() => setDeleteSubject(null)} 
 					onConfirm={deleteHandle}
 				/>
 			}

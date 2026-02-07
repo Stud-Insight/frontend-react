@@ -12,29 +12,22 @@ import { FiUsers } from "react-icons/fi";
 import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { User } from "../../../services/UserService";
-import { Project, SubjectStatus } from "../../../services/SubjectService";
+import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import InfoWidget from "../../../components/ui/InfoWidget";
 
 import "./TERInfoPage.css"
 import "../../dashboard/DashboardPage.css"
 
-export default function TERInfoPage(){
+export default function PeriodInfoPage(){
 	const [error, setError] = useState<string | null>();
-	const [project, setProject] = useState<Project | null>();
+	const [project, setProject] = useState<Subject | null>();
 	
-	const mock_user: User = {
-		id: "1",
-		email: "vincent.hannah@etu.umontpellier.fr",
-		first_name: "Vincent",
-		last_name: "Hannah"
-	};
-
 	useEffect(() => {
 		const getProject = async () => {
 			try {
-				const mock_project: Project = {
+				const mock_project: Subject = {
 					id: "1",
-					ter_id: "TER-2025",
+					ter_id: "Period-2025",
 					author: [
 						{
 							id: "1",
@@ -94,8 +87,8 @@ export default function TERInfoPage(){
 
 	return (
 		<DashboardPage>
-			<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>TER Information</label>
-			<label>Détaile et information sur votre TER, équipe et emploi du temps.</label>
+			<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Period Information</label>
+			<label>Détaile et information sur votre Period, équipe et emploi du temps.</label>
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Avancement" icon={<FaArrowTrendUp/>} info={`${0.5 * 100}%`} color="var(--blue-col)"/>
@@ -123,8 +116,8 @@ export default function TERInfoPage(){
 				</div>
 				
 				<ContainerWidget icon={<HiOutlineMenu/>} label="Objectifs">
-					<ScheduleEventWidget label="Project Proposal Submission" date="Oct 15, 2025" completed={true}/>
-					<ScheduleEventWidget label="Project Proposal Submission" date="Oct 15, 2025" completed={false}/>
+					<ScheduleEventWidget label="Subject Proposal Submission" date="Oct 15, 2025" completed={true}/>
+					<ScheduleEventWidget label="Subject Proposal Submission" date="Oct 15, 2025" completed={false}/>
 				</ContainerWidget>
 			</div>
 		</DashboardPage>

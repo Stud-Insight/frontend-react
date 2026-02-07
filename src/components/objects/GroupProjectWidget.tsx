@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ContainerWidget from "../ui/ContainerWidget";
-import { TERGroup } from "../../services/TERService";
+import { PeriodGroup } from "../../services/TERService";
 import { FiUsers } from "react-icons/fi";
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 
 import "./GroupProjectWidget.css"
 
 interface GroupProjectWidgetProps {
-	group: TERGroup;
+	group: PeriodGroup;
 };
 
 export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
@@ -31,9 +31,9 @@ export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
 				</div>
 				
 				{group.members.length > 0 ?
-					<SubmitButton label={"Demande Rejoindre"}/>
+					<Button label={"Demande Rejoindre"}/>
 				:
-					<SubmitButton label={"Rejoindre"}/>
+					<Button label={"Rejoindre"}/>
 				}
 			</div>
 			

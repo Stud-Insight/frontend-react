@@ -4,7 +4,7 @@ import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
-import SubmitButton from "../../atoms/input/Button.tsx";
+import Button from "../../atoms/input/Button.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LinkButton from "../../components/button/LinkButton.tsx";
@@ -36,9 +36,9 @@ export default function AccountActivationPage(){
                 </div>
 
                 <HorizontalDivider/>
-                <SubmitButton label="Valider"/>
+                <Button label="Valider"/>
 
-                {/*TODO CREER UN CAPTCHA POUR EVITER BOT */}
+                {/*TODO CREER UN CAPTCHA POUR EVIPeriod BOT */}
 
                 <LinkButton label="Retour à la page de connection" redirection="/auth/login" push_right={true}  push_left={true}/>
             </form>

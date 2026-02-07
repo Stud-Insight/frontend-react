@@ -14,9 +14,10 @@
 }
 
 .input-attachement-main-layout {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	flex: 1;
 }
 
 .input-file-widget-super-layout {

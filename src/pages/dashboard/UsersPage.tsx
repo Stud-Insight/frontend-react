@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import DashboardPage from "./DashboardPage";
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 import InfoBox from "../../components/ui/InfoBox";
-import UserService, { User, UserRoles } from "../../services/UserService";
+import UserService, { User, UserRoles, UserRolesColors, UserRolesLabels} from "../../services/UserService";
 import InfoWidget from "../../components/ui/InfoWidget";
 import InputCheckbox from "../../components/input/InputCheckbox";
 import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
@@ -42,37 +42,26 @@ export default function UsersPage(){
 	const [mail, setMail] = useState<string>("");
 	const [roles, setRoles] = useState<Set<string>>(new Set());
 
-	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-	const userRoles: Set<UserRoles> = new Set([
-		UserRoles.ETUDIANT,
-		UserRoles.RESPO_TER,
-		UserRoles.RESPO_STAGE, 
-		UserRoles.ENCADRANT, 
-		UserRoles.EXTERNE,
-		UserRoles.ADMIN, 
-	]);
-	
-	const tagRoleMap = new Map<string, string>([
-		[UserRoles.ETUDIANT, "--blue-col"],
-		[UserRoles.RESPO_TER, "--purple-col"],
-		[UserRoles.RESPO_STAGE, "--purple-col"],
-		[UserRoles.ENCADRANT, "--purple-col"],
-		[UserRoles.EXTERNE, "--orange-col"],
-		[UserRoles.ADMIN, "--red-col"],
-	]);
-
+	const fileInputRef = useRef<HTMLInputElement | null>(null);	
 	const modalWidth: number = 500;
 
 	let filteredUsers: User[] = page != null ? (users?.filter((user) => {
 		return user.groups.some(roles => roles.name == page);
 	})) : users;
 
+	const userRoles: UserRoles[] = [
+		UserRoles.ETUDIANT,
+		UserRoles.EXTERNE,
+		UserRoles.ENCADRANT,
+		UserRoles.RESPO_STAGE,
+		UserRoles.RESPO_TER,
+		UserRoles.ADMIN
+	]
 	const getCountData = () => {
 		let countMap: Map<string, number> = new Map<string, number>();
 
-		userRoles.forEach(roles => {
-			countMap.set(roles, 0);
+		userRoles.map((role) => {
+			countMap.set(role, 0);
 		});
 
 		{users && users.map((user, index) => (
@@ -197,7 +186,7 @@ export default function UsersPage(){
 
 		try {
 			await UserService.importUserCSV(file);
-			setSuccess(`Fichier ${file.name} importé avec succès.`);
+			setSuccess(`Fichier "${file.name}" importé avec succès.`);
 			getAllUsers();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -232,7 +221,7 @@ export default function UsersPage(){
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
-					<SubmitButton icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
+					<Button icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
 				</ModalDialog>
 			}
 
@@ -241,7 +230,7 @@ export default function UsersPage(){
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
-					<SubmitButton icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
+					<Button icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
 				</ModalDialog>
 			}
 
@@ -269,21 +258,16 @@ export default function UsersPage(){
 				</div>
 
 				<div className="dashboard-top-button-layout">
-					<div style={{width: "auto"}}>
-						<SubmitButton icon={<CgImport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
-					</div>
-
-					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => {
-							setMail("");
-							setPrenom("");
-							setNom("");
-							if (page != null) {
-								setRoles(new Set([page]));
-							}
-							setCreateUser(true);
-						}}/>
-					</div>
+					<Button icon={<CgImport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
+					<Button icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => {
+						setMail("");
+						setPrenom("");
+						setNom("");
+						if (page != null) {
+							setRoles(new Set([page]));
+						}
+						setCreateUser(true);
+					}}/>
 				</div>
 			</div>
 
@@ -309,6 +293,7 @@ export default function UsersPage(){
                     <tr>
                         <th><InputCheckbox/></th>
 						<th>Profile</th>
+						<th>ID</th>
 						<th>Nom</th>
 						<th>E-Mail</th>
                         <th>Dâte Activation</th>
@@ -340,8 +325,9 @@ export default function UsersPage(){
 							<td>
 								<div className="users-table-tag-layout">
 									{user.groups.map((roles, index) => (
-										<TagWidget label={roles.name} color={`var(${tagRoleMap.get(roles.name)})`}/>
+										<TagWidget label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
 									))}
+									
 								</div>
 							</td>
 

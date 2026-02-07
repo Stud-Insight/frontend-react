@@ -1,12 +1,21 @@
 import { AxiosError } from "axios";
 import { User } from "./UserService"
-import { Project, SubjectStatus } from "./SubjectService";
+import { Subject, SubjectStatus } from "./SubjectService";
 import api, { errorFormat, ApiError } from "../api/ApiHandle";
 
 export enum TERStatus {
-	EN_COURS,
-	ARCHIVED
+	DRAFT = "draft", 
+	OPEN = "open",
+	CLOSED = "closed",
+	ARCHIVED = "archived"
 };
+
+export const TERStatusLabel: Map<TERStatus, string> = new Map([
+	[TERStatus.DRAFT, "Brouillon"],
+	[TERStatus.OPEN, "En Cours"],
+	[TERStatus.CLOSED, "Terminé"],
+	[TERStatus.ARCHIVED, "Archivé"],
+]);
 
 export interface TERNotation {
 	titre: string;
@@ -25,7 +34,7 @@ export interface TERGroup {
 	titre: string;
 	members: User[];
 	objectives?: GroupObjective[];
-  	project?: Project;
+  	project?: Subject;
 	correcteur?: User;	
 };
 
@@ -34,7 +43,7 @@ export interface TERSubject {
 	title: string;
 	description: string;
 	domain: string;
-	status: "draft" | "submitted" | "validated" | "rejected";
+	status: TERStatus;
 	max_groups: number;
 	ter_period_id: string;
 	professor?: User;
@@ -60,7 +69,7 @@ export interface TERPeriod {
 	id: string;
 	name: string;
 	academic_year: string;
-	status: "draft" | "open" | "closed" | "archived";
+	status: TERStatus;
 	group_formation_start: string;
 	group_formation_end: string;
 	subject_selection_start?: string;

@@ -1,29 +1,24 @@
 import React, {useState, useEffect} from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoBox from "../../../components/ui/InfoBox";
-import SubmitButton from "../../../atoms/input/Button";
+import Button from "../../../atoms/input/Button";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import ModalDialog from "../../../components/dialog/ModalDialog"
 import InputField from "../../../components/input/InputField"
+import HorizontalDivider from "../../../components/ui/HorizontalDivider";
 
 import TERService, { TERPeriod } from "../../../services/TERService";
 import TERWidget from "../../../components/objects/TERWidget";
 import { TbSchool } from "react-icons/tb";
-import { FaRegFile, FaRegClock } from "react-icons/fa";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { FiUsers } from "react-icons/fi";
-import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
-
 import { useNavigate, useLocation } from "react-router-dom";
 
 import "./TERListPage.css"
-import HorizontalDivider from "../../../components/ui/HorizontalDivider";
 
-export default function TERListPage(){
+export default function PeriodListPage(){
 	const [error, setError] = useState<string | null>(null);
 	const [terList, setTerList] = useState<TERPeriod[] | null>(null);
-	const [createTER, setCreateTER] = useState<boolean>(false);
+	const [createPeriod, setCreatePeriod] = useState<boolean>(false);
 	const [title, setTitle] = useState<string>("");
 	const [year, setYear] = useState<number>(2000);
 	const [startDate, setStartDate] = useState<string>("");
@@ -39,7 +34,7 @@ export default function TERListPage(){
 		navigate(`/dashboard/ter/list/${id}`);
 	}
 
-	const createTERHandle = async () => {
+	const createPeriodHandle = async () => {
 		try {
 			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, assignmentDate);		
 		} catch(err){
@@ -51,7 +46,7 @@ export default function TERListPage(){
 		setYear(2000);
 		setStartDate("");
 		setEndDate("");
-		setCreateTER(false);
+		setCreatePeriod(false);
 	}
 
 	useEffect(() => {
@@ -70,8 +65,8 @@ export default function TERListPage(){
 
 	return (
 		<DashboardPage>
-			{createTER && 
-				<ModalDialog onClose={() => setCreateTER(false)}>
+			{createPeriod && 
+				<ModalDialog label="Creation TER" onClose={() => setCreatePeriod(false)}>
 					<div className="ter-list-addter-layout">
 						<InputField label="Titre" value={title} onChange={setTitle}/>
 
@@ -98,28 +93,28 @@ export default function TERListPage(){
 						</div>
 						<HorizontalDivider/>
 					</div>
-
-					<SubmitButton label="Abandonner" onChange={() => setCreateTER(false)}/>
-					<SubmitButton label="Confirmer" onChange={createTERHandle}/>
+					
+					<div className="ter-list-buttons">
+						<Button label="Abandonner" onChange={() => setCreatePeriod(false)}/>
+						<Button label="Confirmer" onChange={createPeriodHandle}/>
+					</div>
 				</ModalDialog>
 			}
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion TERs</label>
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion TER</label>
 				</div>
 			
 				<div className="dashboard-top-button-layout">
-					<div style={{width: "auto"}}>
-						<SubmitButton icon={<FaPlus/>} label="Créer Un TER" onChange={() => setCreateTER(true)}/>
-					</div>
+					<Button icon={<FaPlus/>} label="Créer Un TER" onChange={() => setCreatePeriod(true)}/>
 				</div>
 			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les TERs.</label>
+			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les Periods.</label>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={terList ? terList.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="TER Active" icon={<TbSchool/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={0} color="var(--purple-col)"/>
+				<InfoWidget label="Period Brouillon" icon={<TbSchool/>} info={terList ? terList.length : 0} color="var(--blue-col)"/>
+				<InfoWidget label="Period Active" icon={<TbSchool/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="Period Terminé" icon={<TbSchool/>} info={0} color="var(--purple-col)"/>
 			</div>
 
 			{error && <InfoBox label={error} type="error"/>}

@@ -3,7 +3,7 @@ import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
 import LinkButton from "../../components/button/LinkButton.tsx";
-import SubmitButton from "../../atoms/input/Button.tsx";
+import Button from "../../atoms/input/Button.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";
@@ -44,7 +44,7 @@ export default function AccountRecoveryPage() {
 
                 <InputField label="E-Mail" type="email" icon={<IoMail />} value={email} onChange={setEmail}/>
                 <HorizontalDivider />
-                <SubmitButton label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"} type="submit"/>
+                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"} type="submit"/>
                 <LinkButton label="Retour a la page de connexion" redirection="/auth/login" push_right={true} push_left={true}/>
             </form>
         </LoginPage>

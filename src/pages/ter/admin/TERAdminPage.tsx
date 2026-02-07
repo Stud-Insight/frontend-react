@@ -1,25 +1,20 @@
 import React, {useState, useEffect, ReactNode}from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
-import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
-import SubmitButton from "../../../atoms/input/Button";
-import NavigationButton from "../../../components/button/NavigationButton";
+import Button from "../../../atoms/input/Button";
 import InfoBox from "../../../components/ui/InfoBox";
-import ContainerWidget from "../../../components/ui/ContainerWidget";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import TagWidget from "../../../atoms/ui/Tag";
-
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
-import { FaArrowTrendUp } from "react-icons/fa6";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
-import { MdOutlineEdit } from "react-icons/md";
-import TERService, { TERPeriod  } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
 import UserAvatar from "../../../components/ui/UserAvatar";
+
 import "../../dashboard/UsersPage.css"
 import "../../dashboard/DashboardPage.css"
 import "./TERAdminPage.css"
@@ -62,7 +57,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<SubmitButton icon={<FaPlus/>} label="Ajoute Etudiant" onChange={() => setAddingStudent(true)}/>
+				<Button icon={<FaPlus/>} label="Ajoute Etudiant" onChange={() => setAddingStudent(true)}/>
 			</div>
 				
 			<table className="users-table-style">
@@ -98,7 +93,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<SubmitButton icon={<FaPlus/>} label="Créer Groupe"/>
+				<Button icon={<FaPlus/>} label="Créer Groupe"/>
 			</div>
 		</>
 	}
@@ -107,7 +102,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<SubmitButton icon={<FaPlus/>} label="Invite Enseignant" onChange={() => setAddingTeacher(true)}/>
+				<Button icon={<FaPlus/>} label="Invite Enseignant" onChange={() => setAddingTeacher(true)}/>
 			</div>
 
 			<table className="users-table-style">
@@ -179,7 +174,7 @@ export default function TERAdminPage(){
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
 					<label style={{fontWeight: 800, fontSize: "25px"}}>{selectedTER?.name}</label>
-					<TagWidget label={selectedTER?.status.toUpperCase()} color="var(--blue-col)"/>
+					<TagWidget label={TERStatusLabel.get(selectedTER?.status)}/>
 				</div>
 				<div></div>
 			</div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import TERService, { TERPeriod, TERPeriodStats } from "../../services/TERService";
+import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
 import TagWidget from "../../atoms/ui/Tag";
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import ProgressWidget from "../ui/ProgressWidget";
 
@@ -14,7 +14,7 @@ import "./TERWidget.css";
 interface TERWidgetProps {
   data: TERPeriod;
   onClick?: () => void;
-}
+};
 
 export default function TERWidget({ data, onClick }: TERWidgetProps){
 	const [stats, setStats] = useState<TERPeriodStats | null>(null);
@@ -26,20 +26,13 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 		year: "numeric",
 	});
 
-  	const statusColor = {
-		draft: "var(--gray1-col)",
-		open: "var(--green-col)",
-		closed: "var(--orange-col)",
-		archived: "var(--gray2-col)",
-  	}[data.status];
-
 	useEffect(() => {
 		const getTerData = async () => {
 			try {
 				const g = await TERService.getPeriodStats(data.id);
 				setStats(g);
 			} catch (err){
-				console.log("Erreur TER Widget");
+				console.log("Erreur Period Widget");
 			}
 		}
 		
@@ -49,17 +42,12 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 	return (
 		<ContainerWidget>
 			<div className="ter-widget-title-layout">
-				{/* <div className="ter-widget-tag-pos">
-					<TagWidget label={data.status.toUpperCase()} color={statusColor}/>
-				</div> */}
-
-	
 				<div className="ter-widget-title-right-layout">
 					<div className="ter-widget-title-container ">
 						<label style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
 							{data.name}
 						</label>
-						<TagWidget label={data.status.toUpperCase()} color={statusColor}/>
+						<TagWidget label={TERStatusLabel.get(data.status)}/>
 					</div>
 					
 					<div className="ter-widget-date-container">
@@ -104,7 +92,7 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 				<ProgressWidget progress={0.5}/>
 				<div className="ter-widget-button-pos">
 					<div>
-						<SubmitButton icon={<FaArrowLeftLong/>} label="Voir Détailes" onChange={onClick}/>
+						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onChange={onClick}/>
 					</div>
 				</div>
 			</div>

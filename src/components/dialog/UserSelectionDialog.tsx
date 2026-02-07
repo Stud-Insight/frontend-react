@@ -4,7 +4,7 @@ import UserService,{ User } from "../../services/UserService"
 import UserWidget from "../objects/UserWidget";
 
 import "./UserSelectionDialog.css"
-import SubmitButton from "../../atoms/input/Button";
+import Button from "../../atoms/input/Button";
 import { FaPlus } from "react-icons/fa6";
 
 interface UserSelectionDialogProps {
@@ -72,8 +72,8 @@ export default function UserSelectionDialog({label, role_filter, onClose, onConf
 			</div>
 
 			<div className="user-list-buttons">
-				<SubmitButton label="Annuler" style="cancel" width={`${100}%`} onChange={onClose}/>
-				<SubmitButton icon={<FaPlus/>} label={`Ajouter ${selectionString()}`} width={`${100}%`} onChange={confirmHandle}/>
+				<Button label="Annuler" style="cancel" width={`${100}%`} onChange={onClose}/>
+				<Button icon={<FaPlus/>} label={`Ajouter ${selectionString()}`} width={`${100}%`} onChange={confirmHandle}/>
 			</div>
 		</ModalDialog>
 	);

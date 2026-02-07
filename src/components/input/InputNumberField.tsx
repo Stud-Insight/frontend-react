@@ -9,14 +9,13 @@ interface InputNumberFieldProps {
 	label?: string,
 	icon?: ReactNode,
 	placeholder?: string,
-	defaultNum?: number;
 	min?: number;
 	max?: number;
 	step?: number;
 	onChange?: (n: number) => void;
 };
 
-export default function InputNumberField({label, icon, value, defaultNum = 0, placeholder, min = -20, max = 20, step = 1, onChange}: InputNumberFieldProps){
+export default function InputNumberField({label, icon, value, placeholder, min = -20, max = 20, step = 1, onChange}: InputNumberFieldProps){
 	const incrementHandle = () => {
 		if (value < max){
 			onChange ? onChange(value + step) : undefined;	
@@ -30,7 +29,7 @@ export default function InputNumberField({label, icon, value, defaultNum = 0, pl
 	}
 
 	useEffect(() => {
-		defaultNum && (onChange ? onChange(defaultNum) : undefined);
+		value && onChange?.(value);
 	}, []);
 
 	return (

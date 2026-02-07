@@ -50,7 +50,7 @@ export default function OverflowMenu({options, onClick}: OverflowMenuProps){
 				<ContainerWidget className={`expanded-overflow-menu ${expanded ? "expanded" : undefined}`}>
 					<div style={{gap: "0px;"}}>
 						{options.map((option) => (
-							<NavigationButton size="10px" icon={option.icon} label={option.label} onClick={() => clickHandle(option.onClick)}/>
+							<NavigationButton icon={option.icon} label={option.label} onClick={() => clickHandle(option.onClick)}/>
 						))}
 					</div>
 				</ContainerWidget>
