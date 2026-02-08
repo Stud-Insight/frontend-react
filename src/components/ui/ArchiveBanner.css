@@ -1,0 +1,20 @@
+.archive-banner {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid #ffeeba;
+    display: flex;
+    align-items: center; 
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.archive-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.archive-message {
+    font-size: 0.95rem;
+}

@@ -1,0 +1,5 @@
+.horizontal-divider-style {
+    width: 1.5px;
+    height: 100%;
+    background-color: var(--light_gray-col);
+}

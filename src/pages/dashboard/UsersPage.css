@@ -1,0 +1,184 @@
+/* Conteneur principal de la page */
+.users-page-container {
+    padding: 20px;
+    animation: fadeIn 0.4s ease-out;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Animation d'entrée fluide */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header : Titre à gauche, Bouton à droite */
+.users-page-header {
+    margin-bottom: 20px;
+}
+
+.users-page-header h2 {
+    color: var(--dark_gray-col);
+    font-size: 24px;
+    margin: 0;
+}
+
+/* Style du bouton d'ajout */
+.add-user-btn {
+    background-color: var(--blue-col);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-btn:hover {
+    background-color: var(--dark_gray-col);
+    transform: translateY(-2px);
+}
+
+/* Encadré blanc du tableau */
+.users-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--light_gray-col);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden; 
+    margin-bottom: 20px;
+}
+
+/* Structure du tableau */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th {
+    background-color: #f8f9fa;
+    padding: 18px 15px;
+    text-align: left;
+    color: var(--gray-col);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--light_gray-col);
+}
+
+.users-table td {
+    padding: 15px;
+    border-top: 1px solid var(--light_gray-col);
+    font-size: 14px;
+    color: var(--dark_gray-col);
+}
+
+/* Alternance de couleur pour les lignes */
+.users-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Badges de Rôle */
+.role-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.role-badge.étudiant { 
+    background: #e3f2fd; 
+    color: #1976d2; 
+}
+
+.role-badge.professeur { 
+    background: #f3e5f5; 
+    color: #7b1fa2; 
+}
+
+.role-badge.admin {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+/* Indicateurs de Statut */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.status-indicator.active { 
+    color: var(--green-col); 
+}
+
+.status-indicator.pending { 
+    color: var(--orange-col); 
+}
+
+/* Boutons d'action "Gérer" */
+.edit-btn {
+    background: white;
+    border: 1px solid var(--light_gray-col);
+    padding: 6px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.edit-btn:hover {
+    background-color: var(--blue-col);
+    color: white;
+    border-color: var(--blue-col);
+}
+
+.users-page-footer {
+    display: flex;
+    justify-content: flex-end; /* Pousse le bouton à droite */
+    width: 100%;
+}
+
+.add-user-btn {
+    background-color: var(--blue-col);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-btn:hover {
+    background-color: var(--dark_gray-col);
+    transform: translateY(-2px);
+}
+
+.search-container {
+    flex: 1;
+    max-width: 400px;
+    margin-left: 20px;
+    margin-bottom: 25px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--light_gray-col);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--blue-col);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}

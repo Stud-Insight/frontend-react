@@ -1,0 +1,111 @@
+.respo-dashboard-fixed {
+    padding: 1.5rem;
+    max-width: 100%;
+    overflow-x: hidden; /* Empêche le scroll horizontal */
+}
+
+.compact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.compact-header h1 {
+    font-size: 1.5rem; /* Réduit la taille du titre */
+    margin: 0;
+}
+
+.compact-header p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.compact-export-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    background: #2d3748;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Conteneur vertical des deux sections */
+.dashboard-layout-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.compact-phase-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Grille de statistiques qui s'adapte à la largeur */
+.compact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+/* Badge de statut discret en haut à droite */
+.status-badge-active {
+    background: #e6fffa;
+    color: #285e61;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid #b2f5ea;
+}
+
+/* Bordure spéciale pour attirer l'attention de l'étudiant sur sa deadline */
+.student-alert-border {
+    border-left: 4px solid var(--blue-col) !important;
+}
+
+/* Cartes horizontales ultra-compactes */
+.mini-info-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mini-info-card .icon-blue { color: #3182ce; font-size: 1.2rem; }
+.mini-info-card .icon-green { color: #38a169; font-size: 1.2rem; }
+.mini-info-card .icon-orange { color: #dd6b20; font-size: 1.2rem; }
+
+.mini-info-card div {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-info-card .label {
+    font-size: 0.75rem;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mini-info-card .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.clickable-card:hover {
+    border-color: var(--blue-col);
+    cursor: pointer;
+    background: #f7fafc;
+}
