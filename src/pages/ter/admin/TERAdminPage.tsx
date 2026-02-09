@@ -57,7 +57,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<Button icon={<FaPlus/>} label="Ajoute Etudiant" onChange={() => setAddingStudent(true)}/>
+				<Button icon={<FaPlus/>} label="Ajoute Etudiant" onClick={() => setAddingStudent(true)}/>
 			</div>
 				
 			<table className="users-table-style">
@@ -102,7 +102,7 @@ export default function TERAdminPage(){
 		return <>
 			<div className="dashboard-top-layout">
 				<div></div>
-				<Button icon={<FaPlus/>} label="Invite Enseignant" onChange={() => setAddingTeacher(true)}/>
+				<Button icon={<FaPlus/>} label="Invite Enseignant" onClick={() => setAddingTeacher(true)}/>
 			</div>
 
 			<table className="users-table-style">
@@ -186,7 +186,7 @@ export default function TERAdminPage(){
 				<InfoWidget label="Groupes" active={currentPage == 2} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
 				<InfoWidget label="Enseignants" active={currentPage == 1} icon={<TbSchool/>} info={0} color="var(--purple-col)" onClick={() => setCurrentPage(1)}/>
 				<InfoWidget label="Sujets" active={currentPage == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(3)}/>
-				<InfoWidget label="Modalité" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
+				<InfoWidget label="Notations" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
 			</div>
 
 			{success && <InfoBox label={success} type="success"/> }

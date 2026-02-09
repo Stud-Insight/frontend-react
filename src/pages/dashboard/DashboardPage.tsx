@@ -56,7 +56,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/>
+					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
 					<HorizontalDivider/>
 					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Gestion TER" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>

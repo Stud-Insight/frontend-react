@@ -89,10 +89,10 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 				
 				<HorizontalDivider/>
 
-				<ProgressWidget progress={0.5}/>
+				{/* <ProgressWidget progress={0.5}/> */}
 				<div className="ter-widget-button-pos">
 					<div>
-						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onChange={onClick}/>
+						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
 					</div>
 				</div>
 			</div>

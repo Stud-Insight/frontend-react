@@ -143,50 +143,26 @@ export default function SubjectPage(){
 	return (
 		<DashboardPage>
 			{createSubject &&
-				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} width={"90%"}>
+				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} className="project-modal-style">
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
-
-					<div className="subject-page-main-layout">
-						<div className="subject-page-sub-layout">
-							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
-							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
-						</div>
-
-						<div className="subject-page-sub-layout">
-							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
-						</div>
-						
-						<div className="subject-page-sub-layout">
-							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
-						</div>
-					</div>
-					
-					<Button label="Créer Sujet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
+					<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+					<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
+					<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+					<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>	
+					<Button label="Créer Sujet" icon={<FaPlus/>} onClick={confirmCreationHandle}/>
 				</ModalDialog>
 			}
 
 			{modifySubject &&
-				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} width={"90%"}>
+				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} className="project-modal-style">
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
-
-					<div className="subject-page-main-layout">
-						<div className="subject-page-sub-layout">
-							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
-							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
-						</div>
-
-						<div className="subject-page-sub-layout">
-							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
-						</div>
-						
-						<div className="subject-page-sub-layout">
-							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
-						</div>
-					</div>
-					
-					<Button label="Modifier" icon={<FaPlus/>} onChange={editConfirmHandle}/>
+					<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+					<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
+					<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+					<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>	
+					<Button label="Modifier" icon={<FaPlus/>} onClick={editConfirmHandle}/>
 				</ModalDialog>
 			}
 
@@ -196,7 +172,7 @@ export default function SubjectPage(){
 				</div>
 			
 				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => {
+					<Button icon={<FaPlus/>} label="Créer Un Sujet" onClick={() => {
 						setEtuMax(maxGroupEtu);
 						setCreateSubject(true);
 					}}/>

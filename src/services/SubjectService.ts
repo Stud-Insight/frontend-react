@@ -46,6 +46,7 @@ export interface SubjectCreateSchema {
 	description: string;
 	domain: string;
 	tags: string[];
+	taches: string[];
 	prerequisites: string;
 	max_groups: number;
 	min_group_size: number;
@@ -58,6 +59,7 @@ export interface Subject {
 	description: string;
 	domain: string;
 	tags: string[];
+	taches: string[];
 	prerequisites: string;
 	professor: User | null;
 	supervisor: User | null;
@@ -84,7 +86,8 @@ export default class SubjectService {
 				max_groups: 1,
 				min_group_size: min_group,
 				max_group_size: max_group,
-				tags: Array.from(tags)
+				tags: Array.from(tags),
+				taches: [],
 			};
 
 			await api.post<SubjectCreateSchema>(`/ter/subjects/`, load);

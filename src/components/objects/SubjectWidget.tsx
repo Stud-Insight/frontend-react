@@ -61,23 +61,21 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 					</div>
 				</div>
 
-				{subject.description &&
-					<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
-						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
+				<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
+					<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
 
-						{/* <div className="subject-widget-task-list">
-							{subject.tasks && subject.tasks.map((task, index) => (
-								<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
-							))}
-						</div>		 */}
+					<div className="subject-widget-task-list">
+						{subject.taches && subject.taches.map((task, index) => (
+							<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
+						))}
 					</div>
-				}
-				
-				<div className="subject-widget-tag-layout">
-					<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`} color="var(--blue-col)"/>
-					{subject.tags?.map((tag, index) => (
-						<TagWidget key={index} label={tag} color="var(--blue-col)"/>
-					))}
+
+					<div className="subject-widget-tag-layout">
+						<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
+						{subject.tags?.map((tag, index) => (
+							<TagWidget key={index} label={tag}/>
+						))}
+					</div>
 				</div>
 				
 				{privateMode &&
