@@ -162,36 +162,24 @@ export default class TERService {
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: number, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
 		try {
-			// const mock: TERPeriodCreatePayload = {
-			// 	name: "TER Informatique",
-			// 	academic_year: "2026-2027",
-			// 	group_formation_start: "2026-09-01",
-			// 	group_formation_end: "2026-09-10",
-			// 	subject_selection_start: "2026-09-11",
-			// 	subject_selection_end: "2026-09-25",
-			// 	assignment_date: "2026-09-30",
-			// 	project_start: "2026-10-01",
-			// 	project_end: "2027-01-31",
-			// 	min_group_size: 2,
-			// 	max_group_size: 4,
-			// };
-
 			const load: TERPeriodCreatePayload = {
 				name: title,
-				academic_year: `${academic_year - 1}-${academic_year}`,
-				group_formation_start: groupStartDate ,
+				academic_year: academic_year,
+				group_formation_start: groupStartDate,
 				group_formation_end: groupEndDate,
-				subject_selection_start: "2026-09-11",
-				subject_selection_end: "2026-09-25",
-				assignment_date: assignmentDate,
+				subject_selection_start: projectStartDate,
+				subject_selection_end: projectEndDate,
+				assignment_date: projectEndDate,
 				project_start: start_date,
 				project_end: end_date,
 				min_group_size: 2,
 				max_group_size: 4,
 			};
 
+			console.log(load);
+			
 			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
 			return res.data;
 		} catch (error){

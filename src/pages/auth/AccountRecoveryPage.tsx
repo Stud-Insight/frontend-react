@@ -44,8 +44,8 @@ export default function AccountRecoveryPage() {
 
                 <InputField label="E-Mail" type="email" icon={<IoMail />} value={email} onChange={setEmail}/>
                 <HorizontalDivider />
-                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"} type="submit"/>
-                <LinkButton label="Retour a la page de connexion" redirection="/auth/login" push_right={true} push_left={true}/>
+                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}/>
+                <LinkButton label="Retour a la page de connexion" redirection="/auth/login"/>
             </form>
         </LoginPage>
     );

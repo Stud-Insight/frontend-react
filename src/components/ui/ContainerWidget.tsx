@@ -26,7 +26,7 @@ export default function ContainerWidget({icon, label, active = false, children, 
 				<HorizontalDivider/>
 			}
 		
-			<div className="container-widget-content">
+			<div id="content" className="container-widget-content">
 				{children}
 			</div>
 		</div>

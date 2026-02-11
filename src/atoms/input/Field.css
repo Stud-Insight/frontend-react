@@ -5,7 +5,7 @@
     gap: 4px;
 }
 
-.field-layout input {
+.field-layout input, textarea {
 	background: none;
 	outline: none;
 	border: none;

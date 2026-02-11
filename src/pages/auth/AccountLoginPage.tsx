@@ -43,8 +43,8 @@ export default function AccountLoginPage() {
                 {error ? <InfoBox label={error} type="error"/> : undefined}
                 <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail/>}/>
                 <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock/>} offset={-1.8}/>
-                <LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery" push_right={true}/>
-                <Button label={isSubmitting ? "Connexion..." : "Se connecter"} type="submit"/>
+                <LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery"/>
+                <Button label={isSubmitting ? "Connexion..." : "Se connecter"}/>
             </form>
         </LoginPage>
     );

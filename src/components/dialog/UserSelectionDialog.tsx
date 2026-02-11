@@ -72,8 +72,8 @@ export default function UserSelectionDialog({label, role_filter, onClose, onConf
 			</div>
 
 			<div className="user-list-buttons">
-				<Button label="Annuler" style="cancel" width={`${100}%`} onChange={onClose}/>
-				<Button icon={<FaPlus/>} label={`Ajouter ${selectionString()}`} width={`${100}%`} onChange={confirmHandle}/>
+				<Button label="Annuler" style="cancel" width={`${100}%`} onClick={onClose}/>
+				<Button icon={<FaPlus/>} label={`Ajouter ${selectionString()}`} width={`${100}%`} onClick={confirmHandle}/>
 			</div>
 		</ModalDialog>
 	);

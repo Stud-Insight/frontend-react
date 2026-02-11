@@ -12,7 +12,7 @@ import OverflowMenu from "../../components/input/OverflowMenu";
 import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
 import InputTagSelection from "../../components/input/InputTagSelection";
-import InputSearch from "../../components/input/InputSearch";
+import HorizontalDivider from "../../components/ui/HorizontalDivider";
 
 import { CgImport } from "react-icons/cg";
 import { IoPricetagOutline } from "react-icons/io5";
@@ -220,21 +220,21 @@ export default function UsersPage(){
 			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
 
 			{createUser && 
-				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)} width={modalWidth}>
+				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
-					<Button icon={<FaPlus/>} label="Créer" onChange={createHandle}/>
+					<Button icon={<FaPlus/>} label="Créer" onClick={createHandle}/>
 				</ModalDialog>
 			}
 
 			{editUser && 
-				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} width={modalWidth}>
+				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} >
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
-					<Button icon={<MdOutlineEdit/>} label="Modifier" onChange={editHandle}/>
+					<Button icon={<MdOutlineEdit/>} label="Modifier" onClick={editHandle}/>
 				</ModalDialog>
 			}
 
@@ -262,8 +262,8 @@ export default function UsersPage(){
 				</div>
 
 				<div className="dashboard-top-button-layout">
-					<Button icon={<CgImport/>} label="Importer CSV" onChange={() => fileInputRef.current?.click()}/>
-					<Button icon={<FaPlus/>} label="Créer Utilisateur" onChange={() => {
+					<Button icon={<CgImport/>} label="Importer CSV" onClick={() => fileInputRef.current?.click()}/>
+					<Button icon={<FaPlus/>} label="Créer Utilisateur" onClick={() => {
 						setMail("");
 						setPrenom("");
 						setNom("");
