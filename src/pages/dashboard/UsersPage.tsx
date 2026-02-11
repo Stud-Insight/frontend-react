@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import DashboardPage from "./DashboardPage";
 import Button from "../../atoms/input/Button";
 import InfoBox from "../../components/ui/InfoBox";
@@ -12,6 +12,7 @@ import OverflowMenu from "../../components/input/OverflowMenu";
 import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
 import InputTagSelection from "../../components/input/InputTagSelection";
+import ImportCSVButton from "../../components/button/ImportCSVButton";
 import HorizontalDivider from "../../components/ui/HorizontalDivider";
 
 import { CgImport } from "react-icons/cg";
@@ -50,7 +51,13 @@ export default function UsersPage(){
 	const modalWidth: number = 500;
 
 	let filteredUsers: User[] = page != null ? (users?.filter((user) => {
-		return user.groups.some(roles => roles.name == page);
+		if (page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER){
+			return user.groups.some(roles => {
+				return roles.name == UserRoles.RESPO_STAGE || roles.name == UserRoles.RESPO_TER;
+			});
+		} else {
+			return user.groups.some(roles => roles.name == page);
+		}
 	})) : users;
 
 	const userRoles: UserRoles[] = [
@@ -179,7 +186,7 @@ export default function UsersPage(){
         });
 	}
 	
-	const fileSelectionHandle = async (e: React.ChangeEvent<HTMLInputElement>) => {
+	const fileSelectionHandle = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
@@ -217,8 +224,6 @@ export default function UsersPage(){
 	
 	return (
 		<DashboardPage>
-			<input ref={fileInputRef} type="file" accept=".csv" style={{ display: "none" }} onChange={(e) => fileSelectionHandle(e)}/>
-
 			{createUser && 
 				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)}>
 					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
@@ -262,7 +267,7 @@ export default function UsersPage(){
 				</div>
 
 				<div className="dashboard-top-button-layout">
-					<Button icon={<CgImport/>} label="Importer CSV" onClick={() => fileInputRef.current?.click()}/>
+					<ImportCSVButton onSelect={(e) => fileSelectionHandle(e)}/>
 					<Button icon={<FaPlus/>} label="Créer Utilisateur" onClick={() => {
 						setMail("");
 						setPrenom("");

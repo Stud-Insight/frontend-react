@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "./TERPage.css";
 
 interface TERPageProps {
-	children: ReactNode;
+	children?: ReactNode;
 };
 
 enum TERPhase {
@@ -23,6 +23,8 @@ export default function TERPage({children}: TERPageProps){
 	const [error, setError] = useState<string | null>();
 	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	const [phase, setPhase] = useState<TERPhase>(TERPhase.FINISHED);
+	const [start, setStart] = useState<Date>(new Date());
+	const [deadline, setDeadline] = useState<Date>(new Date());
 	const navigate = useNavigate();
 
 	const phaseLabel: Map<TERPhase, string> = new Map([
@@ -42,20 +44,39 @@ export default function TERPage({children}: TERPageProps){
 		const m_end_date = new Date(period.project_end);
 
 		if (current >= gp_start_date && current <= gp_end_date){
+			setStart(gp_start_date);
+			setDeadline(gp_end_date);
 			return TERPhase.GROUP_FORMATION;
 		}
 
 		if (current >= pj_start_date && current <= pj_end_date){
+			setStart(pj_start_date);
+			setDeadline(pj_end_date);
 			return TERPhase.PROJECT_ASSIGNMENT;
 		}
 
-		if (current >= m_start_date && m_end_date <= m_end_date){
+		if (current >= m_start_date && current <= m_end_date){
+			setStart(m_start_date);
+			setDeadline(m_end_date);
 			return TERPhase.WORK;
 		}
 
 		return TERPhase.FINISHED;
 	};
 
+	const formatDate = (date: Date) =>
+		date.toLocaleDateString("en-GB", {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+	});
+
+	function getDaysBetween(start: Date, end: Date): number {
+		const p = 1000 * 60 * 60 * 24;
+		return 10;
+		return Math.floor((end.getTime() - start.getTime()) / p);
+	}
+	
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
@@ -68,7 +89,7 @@ export default function TERPage({children}: TERPageProps){
 						navigate(`/dashboard/ter/${period.id}/vote`);
 					} else if (phase == TERPhase.WORK){
 						navigate(`/dashboard/ter/${period.id}/info`);
-					}
+					}	
 
 					setPeriod(period);
 				}
@@ -91,10 +112,8 @@ export default function TERPage({children}: TERPageProps){
 				<label className="ter-title-style">TER</label>
 			}
 	
-			<ProgressBar label={`Phase: ${phaseLabel.get(phase)}`} current={0.3} tag={`${3} / ${10} jours`}/>
+			<ProgressBar label={`Phase: ${phaseLabel.get(phase)}`} current={0.3} tag={`${3} / ${getDaysBetween(start, deadline)} jours`} subtext={`Deadline: ${formatDate(deadline)}`}/>
 			{error && <InfoBox label={error} type="error"/>}
-	
-		
 			{children}
 		</DashboardPage>
 	)

@@ -1,9 +1,13 @@
 import React from "react";
 import { User } from "../../services/UserService.ts"
+import "./UserAvatar.css";
 
-import "./UserAvatar.css"
+interface UserAvatarProps {
+	user: User;
+	size: number;
+};
 
-export default function UserAvatar({user}: User | null){
+export default function UserAvatar({user, size}: UserAvatarProps){
 	const getInitials = () => {
 		const t = user.first_name[0].toUpperCase();
 		const g = user.last_name[0].toUpperCase();
@@ -12,7 +16,9 @@ export default function UserAvatar({user}: User | null){
 	
 	if (user.avatar == null) {
 		return (
-			<div className="avatar-style-container">{getInitials()}</div>
+			<div className="avatar-style-container" style={{width: `${size}px`, height: `${size}px`}}>
+				{getInitials()}
+			</div>
 		)
 	}
 

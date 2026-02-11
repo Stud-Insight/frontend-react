@@ -16,6 +16,7 @@ import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import StagePage from "./pages/dashboard/StagePage";
 import NotificationPage from "./pages/dashboard/NotificationPage";
+import ProfilePage from "./pages/dashboard/ProfilePage";
 
 import "./index.css";
 
@@ -86,18 +87,23 @@ function AppRoutes() {
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
 				<Route path="subjects" element={<ProtectedRoute><SubjectPage/></ProtectedRoute>}/>
 				<Route path="notification" element={<ProtectedRoute><NotificationPage/></ProtectedRoute>}/>
+
+				<Route path="profile">
+					<Route path="me" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
+					<Route path=":id" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
+				</Route>
             </Route>
 
 			<Route path="/dashboard/ter">
 				<Route path="" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
 
 				<Route path=":id">
-					<Route path="vote" element={<ProtectedRoute><TERVotePage/></ProtectedRoute>} />
-					<Route path="info" element={<ProtectedRoute><TERInfoPage/></ProtectedRoute>} />
+					<Route path="vote" element={<ProtectedRoute><TERVotePage/></ProtectedRoute>}/>
+					<Route path="info" element={<ProtectedRoute><TERInfoPage/></ProtectedRoute>}/>
+					<Route path="admin" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
 				</Route>
 
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
-				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
 			</Route>
 
             <Route path="/" element={<RootRedirect/>} />

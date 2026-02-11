@@ -102,6 +102,7 @@ export default function SubjectPage(){
 			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
 			setSuccess(`Projet "${title}" à été créée!`);
 			getSubjects();
+			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);

@@ -67,7 +67,7 @@ export default function UserSelectionDialog({label, role_filter, onClose, onConf
 		<ModalDialog label={label} onClose={onClose} width={500}>
 			<div className="user-list-layout">
 				{users.map(user => (
-					<UserWidget key={user.id} user={user} selected={selectedUsers.has(user.id)}onClick={() => userSelectionHandle(user.id)}/>
+					<UserWidget key={user.id} user={user} selected={selectedUsers.has(user.id)} onClick={() => userSelectionHandle(user.id)}/>
 				))}
 			</div>
 

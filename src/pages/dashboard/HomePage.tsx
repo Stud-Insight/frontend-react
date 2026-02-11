@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import RespoDashboard from "./RespoDashboard";
 import StudentDashboard from "./StudentDashboard";
 import DashboardPage from "./DashboardPage";
 
@@ -18,9 +17,10 @@ export default function HomePage() {
 
     return (
 		<DashboardPage>
-			<div className="dashboard-container">
-				{role === "RESPO_TER" ? <RespoDashboard /> : <StudentDashboard />}
-			</div>
+			<label>Accueil</label>
+			{/* <div className="dashboard-container">
+				<StudentDashboard/>
+			</div> */}
 		</DashboardPage>
     );
 }

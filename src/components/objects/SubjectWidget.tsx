@@ -90,7 +90,7 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 							</div>
 
 							<OverflowMenu options={[
-								{label: "Exporter", icon: <CgExport/>, onClick: () => {onExport?.()}},
+								{label: "Télécharger", icon: <CgExport/>, onClick: () => {onExport?.()}},
 								{label: "Publier", icon: <LuSend/>, onClick: () => {onPublish?.()}},
 								{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {onEdit?.()}},
 								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {onDelete?.()}},

@@ -16,8 +16,9 @@ import { TbSchool } from "react-icons/tb";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
+import { FiUser } from "react-icons/fi";
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./DashboardPage.css"
@@ -46,27 +47,39 @@ export default function DashboardPage({children} : DashboardPageProps){
         navigate("/dashboard/" + id);
     }
 
+	const isActive = (pattern: string) => {
+		return matchPath({ path: pattern, end: false }, pathname) !== null;
+	};
+
     return (
         <div className="dashboard-content">
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
 					<Logo width="auto" large={true}/>
 					<HorizontalDivider/>
-					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Notifications" notification={3} active={pathname.startsWith("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="TER" active={isActive("/dashboard/ter/:id/vote") || isActive("/dashboard/ter/:id/info")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Notifications" notification={3} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
 					<HorizontalDivider/>
-					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Gestion TER" active={pathname.endsWith("list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Mes Sujets" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
 					<HorizontalDivider/>
 				</div>
 
 				<div className="dashboard-sidebar-content">
+					<HorizontalDivider/>
+					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={(id) => pageHandle(id)}>
+						<UserAvatar user={user} size={50}/>
+						<div className="dashboard-profile-text">
+							<label style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</label>
+							<label style={{color: "var(--gray1-col)"}}>{user?.email}</label>
+						</div>
+					</NavigationButton>
 					<HorizontalDivider/>
 					<NavigationButton icon={<MdLogout/>} label="Déconnexion" onClick={logoutHandle}/>
 				</div>
@@ -76,14 +89,14 @@ export default function DashboardPage({children} : DashboardPageProps){
 
             <div className="dashboard-rightside-main">
 				<div className="dashboard-header-container">
-					{/* <MdNotificationsNone size={20}/> */}
+					{/* <MdNotificationsNone size={20}/>
 
 					<div className="dashboard-user-container">
 						<label>{user?.first_name} {user?.last_name}</label>
 						<div className="dashboard-avatar-container">
 							<UserAvatar user={user}/>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<HorizontalDivider/>

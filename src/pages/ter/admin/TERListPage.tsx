@@ -39,14 +39,26 @@ export default function PeriodListPage(){
 
     const navigate = useNavigate();
 
-	const detailHandle = (id: string) => {
-		navigate(`/dashboard/ter/list/${id}`);
+	const getAllTer = async () => {
+		try {
+			const data = await TERService.getAllPeriods();
+			setTerList(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const clickHandle = (id: string) => {
+		navigate(`/dashboard/ter/${id}/admin`);
 	}
 
 	const createPeriodHandle = async () => {
 		try {
 			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate);
 			setSuccess(`TER "${title}" ajouté au systéme.`);
+			getAllTer();
+			
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -60,16 +72,6 @@ export default function PeriodListPage(){
 	}
 
 	useEffect(() => {
-		const getAllTer = async () => {
-			try {
-				const data = await TERService.getAllPeriods();
-				setTerList(data);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		}
-		
 		getAllTer();
 	}, []);
 
@@ -121,7 +123,7 @@ export default function PeriodListPage(){
 			</div>
 
 			{terList && terList.map((ter, index) => (
-				<TERWidget key={index} data={ter} onClick={() => detailHandle(ter.id)}/>
+				<TERWidget key={index} data={ter} onClick={() => clickHandle(ter.id)}/>
 			))}
 		</DashboardPage>
 	)

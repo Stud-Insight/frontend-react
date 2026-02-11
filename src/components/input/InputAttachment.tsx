@@ -33,7 +33,7 @@ function FileWidget({file, onDelete}: FileWidgetProps){
 			return <FaRegFileAudio/>
 		}
 
-		if (file.name.endsWith(".zip")){
+		if (file.name.endsWith(".zip") || file.name.endsWith(".tgz")){
 			return <FaRegFileArchive/>
 		}
 

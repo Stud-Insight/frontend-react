@@ -23,14 +23,6 @@ export default function TERInfoPage(){
 	const [subject, setSubject] = useState<Subject | null>();
 	const { id } = useParams<{ id: string }>();
 
-	const projectMembers: User[] = async () => {
-		return [];
-	};
-	
-	const getEncadrant = () => {
-
-	};
-
 	useEffect(() => {
 		const getSubject = async () => {
 			try {
@@ -61,14 +53,7 @@ export default function TERInfoPage(){
 						{/* <UserWidget user={mock_user}/> */}
 					</ContainerWidget>
 
-					<ContainerWidget icon={<FiUsers/>} label={`Members (${projectMembers.length})`}>
-						{/* <UserWidget user={mock_user} role="Frontend"/>
-						<UserWidget user={mock_user} role="Frontend"/>
-						<UserWidget user={mock_user} role="Frontend"/>
-						<UserWidget user={mock_user} role="Frontend"/>
-						<UserWidget user={mock_user} role="Frontend"/>
-						<UserWidget user={mock_user} role="Frontend"/> */}
-					</ContainerWidget>
+					
 				</div>
 				
 				<ContainerWidget icon={<HiOutlineMenu/>} label="Objectifs">
