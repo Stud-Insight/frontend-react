@@ -162,13 +162,8 @@ export default class TERService {
 
 	public static async getUserPeriod(): Promise<TERPeriod | null>{
 		try {
-			const periods = await api.get<TERPeriod[]>("/ter/periods/");
-
-			if (periods && periods.data.length > 0){
-				return periods.data[0];
-			}
-			
-			return null;
+			const period = await api.get<TERPeriod>("/ter/my");
+			return period.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

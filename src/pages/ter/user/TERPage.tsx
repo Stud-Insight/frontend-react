@@ -5,7 +5,6 @@ import InfoBox from "../../../components/ui/InfoBox";
 import ProgressBar from "../../../components/ui/ProgressBar";
 
 import { useNavigate } from "react-router-dom";
-
 import "./TERPage.css";
 
 interface TERPageProps {
@@ -25,6 +24,7 @@ export default function TERPage({children}: TERPageProps){
 	const [phase, setPhase] = useState<TERPhase>(TERPhase.FINISHED);
 	const [start, setStart] = useState<Date>(new Date());
 	const [deadline, setDeadline] = useState<Date>(new Date());
+
 	const navigate = useNavigate();
 
 	const phaseLabel: Map<TERPhase, string> = new Map([
@@ -71,12 +71,32 @@ export default function TERPage({children}: TERPageProps){
 		year: "numeric",
 	});
 
-	function getDaysBetween(start: Date, end: Date): number {
+	const getDaysBetween = (start: Date, end: Date): number => {
 		const p = 1000 * 60 * 60 * 24;
 		return 10;
 		return Math.floor((end.getTime() - start.getTime()) / p);
 	}
-	
+
+	const loadPage = () => {
+		if (period){
+			return (
+				<>
+					<label className="ter-title-style">{period.academic_year} / {period.name}</label>
+					<ProgressBar label={`Phase: ${phaseLabel.get(phase)}`} current={0.3} tag={`${3} / ${getDaysBetween(start, deadline)} jours`} subtext={`Deadline: ${formatDate(deadline)}`}/>
+					{error && <InfoBox label={error} type="error"/>}
+					{children}
+				</>
+			)
+		}
+
+		return (
+			<>
+			<label className="ter-title-style">TER</label>
+			<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>
+
+			</>
+		)
+	}
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
@@ -85,7 +105,7 @@ export default function TERPage({children}: TERPageProps){
 				if (period){
 					setPhase(getPeriodPhase(period));
 					
-					if (phase == TERPhase.GROUP_FORMATION || true){
+					if (phase == TERPhase.GROUP_FORMATION){
 						navigate(`/dashboard/ter/${period.id}/vote`);
 					} else if (phase == TERPhase.WORK){
 						navigate(`/dashboard/ter/${period.id}/info`);
@@ -94,7 +114,7 @@ export default function TERPage({children}: TERPageProps){
 					setPeriod(period);
 				}
 
-				return null;
+				setPeriod(null);
 			} catch(err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
@@ -106,15 +126,7 @@ export default function TERPage({children}: TERPageProps){
 
 	return (
 		<DashboardPage>
-			{period ?
-				<label className="ter-title-style">{period.academic_year} / {period.name}</label>
-			: 
-				<label className="ter-title-style">TER</label>
-			}
-	
-			<ProgressBar label={`Phase: ${phaseLabel.get(phase)}`} current={0.3} tag={`${3} / ${getDaysBetween(start, deadline)} jours`} subtext={`Deadline: ${formatDate(deadline)}`}/>
-			{error && <InfoBox label={error} type="error"/>}
-			{children}
+			{loadPage()}
 		</DashboardPage>
 	)
 }

@@ -47,7 +47,6 @@ export default function SubjectPage(){
 		try {
 			const data = await SubjectService.getUserSubjects();
 			setProjects(data);
-			console.log(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -169,7 +168,7 @@ export default function SubjectPage(){
 
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets</label>
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets TER</label>
 				</div>
 			
 				<div className="dashboard-top-button-layout">

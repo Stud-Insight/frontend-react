@@ -336,7 +336,6 @@ export default function UsersPage(){
 									{user.groups.map((roles, index) => (
 										<TagWidget label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
 									))}
-									
 								</div>
 							</td>
 

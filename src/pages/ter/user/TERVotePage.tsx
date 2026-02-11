@@ -1,24 +1,16 @@
 import React, {useState, useEffect} from "react";
-import InfoBox from "../../../components/ui/InfoBox";
 import InfoWidget from "../../../components/ui/InfoWidget";
-import TERService, { TERPeriod } from "../../../services/TERService";
-import ContainerWidget from "../../../components/ui/ContainerWidget";
-import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
-import SubjectWidget from "../../../components/objects/SubjectWidget";
 import TERPage from "./TERPage";
-import { Group } from "../../../services/GroupService";
-import { FaRegFile, FaRegClock } from "react-icons/fa";
-import { FaArrowTrendUp } from "react-icons/fa6";
+import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-import { FaPlus } from "react-icons/fa6";
 
 import "./TERVotePage.css"
 
 export default function TERVotePage(){
 	const [error, setError] = useState<string | null>(null);
 	const [period, setSelectedPeriod] = useState<TERPeriod | null>();
-		
+	
 	useEffect(() => {
 		const getTer = async () => {
 			try {
@@ -32,7 +24,7 @@ export default function TERVotePage(){
 
 		getTer();
 	}, []);
-	
+		
 	return (
 		<TERPage>
 			<div className="dashbord-mini-info-layout">

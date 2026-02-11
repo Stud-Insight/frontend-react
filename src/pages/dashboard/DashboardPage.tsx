@@ -17,7 +17,7 @@ import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
-
+import { User, UserRoles } from "../../services/UserService.ts";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 
@@ -30,10 +30,13 @@ interface DashboardPageProps {
 export default function DashboardPage({children} : DashboardPageProps){
     const { user } = useAuth();
 	const { logout } = useAuth();
-
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
+	const roles: UserRoles[] = user?.groups.map(role => {
+		return role.name;
+	});
+	
     const logoutHandle = async () => {
         try {
             await logout();
@@ -58,17 +61,32 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<Logo width="auto" large={true}/>
 					<HorizontalDivider/>
 					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="TER" active={isActive("/dashboard/ter/:id/vote") || isActive("/dashboard/ter/:id/info")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Notifications" notification={3} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
 					<HorizontalDivider/>
-					<NavigationButton label="Mes Sujets" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
-					<HorizontalDivider/>
+
+					{!roles.includes(UserRoles.ETUDIANT) &&
+						<>
+							{roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN) && 
+								<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
+							}
+
+							{roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN) && 
+								<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+							}
+							
+							{roles.includes(UserRoles.ADMIN) &&
+								<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
+							}
+
+							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
+							
+							<HorizontalDivider/>
+						</>
+					}
 				</div>
 
 				<div className="dashboard-sidebar-content">

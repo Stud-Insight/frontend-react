@@ -72,13 +72,19 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 					</div>
 
 					<div className="ter-widget-info-layout-container">
+						<label style={{ color: "var(--gray1-col)" }}>Encadrants</label>
+						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+							{0}
+						</label>
+					</div>
+
+					<div className="ter-widget-info-layout-container">
 						<label style={{ color: "var(--gray1-col)" }}>Groupes</label>
 						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
 							{stats?.groups_total}
 						</label>
 					</div>
 
-				
 					<div className="ter-widget-info-layout-container">
 						<label style={{ color: "var(--gray1-col)" }}>Sujets</label>
 						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
