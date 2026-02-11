@@ -1,0 +1,11 @@
+.ter-admin-button-nav-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.ter-admin-selected-ter-title {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}

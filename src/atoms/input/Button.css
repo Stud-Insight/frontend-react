@@ -1,0 +1,38 @@
+.button-style {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+	padding: 12px;
+    gap: 10px;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--main-font);
+    font-size: 15px;
+    color: var(--white-col);
+    background-color: var(--blue-col);
+	transition: background-color 0.3s;
+}
+
+.button-style.cancel {
+	background-color: var(--gray1-col);
+}
+
+.button-style.danger {
+	background-color: var(--red-col);
+}
+
+.button-style:active {
+    transform: scale(0.97);
+}
+.button-style:hover {
+	background-color: color-mix(in srgb, var(--blue-col) 85%, transparent);
+}
+
+.button-style.cancel:hover {
+	background-color: color-mix(in srgb, var(--gray1-col) 85%, transparent);
+}
+
+.button-style.danger:hover {
+	background-color: color-mix(in srgb, var(--red-col) 85%, transparent);
+}

@@ -1,0 +1,5 @@
+.link-style {
+    color: var(--black-col);
+    font-family: var(--main-font);
+    font-size: 13px;
+}

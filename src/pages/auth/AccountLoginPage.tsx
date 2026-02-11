@@ -1,48 +1,50 @@
-import React from "react";
-import InputField from "../../components/input/InputField.tsx"
-import SubmitButton from "../../components/input/SubmitButton.tsx";
-import LinkButton from "../../components/nav/LinkButton.tsx";
-import Divider from "../../components/ui/Divider.tsx";
-import UserService from "../../service/UserService.ts";
-import LoginPage from "./LoginPage.tsx";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-import { useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
-import "./LoginPage.css"
+import InputField from "../../components/input/InputField.tsx";
+import Button from "../../atoms/input/Button.tsx";
+import LinkButton from "../../components/button/LinkButton.tsx";
+import InfoBox from "../../components/ui/InfoBox.tsx";
+import LoginPage from "./LoginPage.tsx";
+import UserService from "../../services/UserService.ts";
+import { useAuth } from "../../context/AuthContext.tsx";
 
-export default function AccountLoginPage(){
+import "./LoginPage.css";
+
+export default function AccountLoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const navigate = useNavigate();
+    const { login } = useAuth();
 
-    const login_handle = async (event: React.FormEvent) => {
+    const loginHandle = async (event: React.FormEvent) => {
         event.preventDefault();
-        //console.log("Email:", email);
-        //console.log("Password:", password);
+        setError(null);
+        setIsSubmitting(true);
 
-        navigate("/dashboard/home");
-
-        // try {
-        //     const data = await UserService.login(email, password);
-        // } catch (error: any){
-        //     console.error(error.message);
-        // }
-    }
+        try {
+            await login(email, password);
+            navigate("/dashboard/home");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Erreur de connexion";
+            setError(message);
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <LoginPage>
-            <form method="POST" className="content-style-div" onSubmit={login_handle}>
-                <InputField label="E-Mail" value={email} onChange={setEmail} icon={<IoMail/>}/>
-                <InputField label="Mot de passe" value={password} onChange={setPassword} icon={<FaLock/>} is_password={true} offset={-1.8}/>
+            <form method="POST" className="content-style-div" onSubmit={loginHandle}>
+                {error ? <InfoBox label={error} type="error"/> : undefined}
+                <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail/>}/>
+                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock/>} offset={-1.8}/>
                 <LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery" push_right={true}/>
-                <SubmitButton label="Se connecter" type="submit"/>
-                {/* <Divider label="ou"/>
-                <SubmitButton label="Se connecter via l'UM" style={"um"}/> */}
-                {/* <LinkButton label="Créer un compte ?" redirection="/auth/activation" push_right={true} push_left={true}/> */}
+                <Button label={isSubmitting ? "Connexion..." : "Se connecter"} type="submit"/>
             </form>
         </LoginPage>
     );

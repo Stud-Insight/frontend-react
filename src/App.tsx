@@ -1,78 +1,109 @@
-/*import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from "./pages/auth/LoginPage.tsx";
-import AccountLoginPage from "./pages/auth/AccountLoginPage.tsx";
-import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage.tsx";
-import AccountActivationPage from "./pages/auth/AccountActivationPage.tsx";
-import HomePage from "./pages/dashboard/HomePage.tsx";
-import UsersPage from "./pages/dashboard/UsersPage.tsx";
+import React, { ReactNode } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import AccountLoginPage from "./pages/auth/AccountLoginPage";
+import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
+import AccountActivationPage from "./pages/auth/AccountActivationPage";
+import HomePage from "./pages/dashboard/HomePage";
+import TERSelectionPage from "./pages/ter/user/TERSelectionPage";
+import TERInfoPage from "./pages/ter/user/TERInfoPage";
+import TERListPage from "./pages/ter/admin/TERListPage";
+import ChatPage from "./pages/dashboard/ChatPage";
+import SubjectPage from "./pages/dashboard/SubjectPage";
+import TERAdminPage from "./pages/ter/admin/TERAdminPage";
+import UsersPage from "./pages/dashboard/UsersPage";
+import ArchivePage from "./pages/dashboard/ArchivePage";
+import StagePage from "./pages/dashboard/StagePage";
 
 import "./index.css";
 
-function App(){
-    return (
-        <Router>
-            <Routes>
-                <Route path="/auth">
-                    <Route path="login" element={<AccountLoginPage/>}/>
-                    <Route path="recovery" element={<AccountRecoveryPage/>} />
-                    <Route path="activation" element={<AccountActivationPage/>} />
-                </Route>
+interface RouteProps {
+	children: ReactNode;
+};
 
-                {/* <Route path="/dashboard">
-                    <Route path="home" element={<HomePage/>}/>
-                    <Route path="users" element={<UsersPage/>} />
-                    <Route path="stage" element={<HomePage/>} />
-                    <Route path="ter" element={<HomePage/>} />
-                    <Route path="archive" element={<HomePage/>} />
-                    <Route path="notification" element={<HomePage/>} />
-                    <Route path="settings" element={<HomePage/>} />
-                </Route> *//*} 
-                /*<Route path="*" element={<Navigate to="/auth/login"/>}/>
-            </Routes>
-        </Router>
+function ProtectedRoute({ children }: RouteProps){
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Chargement...</div>;
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/auth/login" replace />;
+    }
+
+    return (
+		<>
+			{children}
+		</>
+	);
+}
+
+function PublicRoute({ children }: RouteProps){
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Chargement...</div>;
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard/home" replace />;
+    }
+
+    return (
+		<>
+			{children}
+		</>
+	);
+}
+
+function RootRedirect() {
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Chargement...</div>;
+    }
+
+    return <Navigate to={isAuthenticated ? "/dashboard/home" : "/auth/login"} replace />;
+}
+
+function AppRoutes() {
+    return (
+        <Routes>
+            <Route path="/auth">
+                <Route path="login" element={<PublicRoute><AccountLoginPage/></PublicRoute>}/>
+                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage/></PublicRoute>}/>
+                <Route path="activation" element={<PublicRoute><AccountActivationPage/></PublicRoute>}/>
+            </Route>
+
+            <Route path="/dashboard">
+                <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+               	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
+                <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
+				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
+                <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
+				<Route path="subjects" element={<ProtectedRoute><SubjectPage/></ProtectedRoute>}/>
+            </Route>
+
+			<Route path="/dashboard/ter">
+				<Route path="select" element={<ProtectedRoute><TERSelectionPage/></ProtectedRoute>}/>
+				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
+				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
+			</Route>
+
+            <Route path="/" element={<RootRedirect/>} />
+            <Route path="*" element={<RootRedirect/>} />
+        </Routes>
     );
 }
 
-export default App; */
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import AccountLoginPage from "./pages/auth/AccountLoginPage.tsx";
-import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage.tsx";
-import AccountActivationPage from "./pages/auth/AccountActivationPage.tsx";
-import DashboardPage from "./pages/dashboard/DashboardPage.tsx"; // Import manquant
-import HomePage from "./pages/dashboard/HomePage.tsx";
-import UsersPage from "./pages/dashboard/UsersPage.tsx";
-
-import "./index.css";
-import NotificationPage from './pages/dashboard/NotificationPage.tsx';
-
-function App(){
+function App() {
     return (
-        <Router>
-            <Routes>
-                {/* Routes d'authentification */}
-                <Route path="/auth">
-                    <Route path="login" element={<AccountLoginPage/>}/>
-                    <Route path="recovery" element={<AccountRecoveryPage/>} />
-                    <Route path="activation" element={<AccountActivationPage/>} />
-                </Route>
-
-                {/* Routes du Dashboard (réactivées et corrigées) */}
-                <Route path="/dashboard" element={<DashboardPage />}>
-                    <Route path="home" element={<HomePage/>}/>
-                    <Route path="users" element={<UsersPage/>} />
-                    <Route path="stage" element={<HomePage/>} />
-                    <Route path="ter" element={<HomePage/>} />
-                    <Route path="archive" element={<HomePage/>} />
-                    <Route path="notification" element={<NotificationPage/>} />
-                    <Route path="settings" element={<HomePage/>} />
-                </Route>
-                {/* Redirection par défaut */}
-                <Route path="*" element={<Navigate to="/auth/login"/>}/>
-            </Routes>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <AppRoutes/>
+            </Router>
+        </AuthProvider>
     );
 }
 

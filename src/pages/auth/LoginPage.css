@@ -6,15 +6,22 @@
     flex-direction: row-reverse;
 }
 
-.login-page-container {
-    width: 33.33%;
+.login-page-layout {
     display: flex;
     flex-direction: column;
-    justify-content: center; 
+    justify-content: space-between;
     align-items: center;
-    gap: 2px;
     box-sizing: border-box; 
     background-color: var(--white-col);
+	gap: 2px;
+	width: 33%;
+}
+
+.login-page-children-style {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	padding-bottom: 100px;
 }
 
 .login-logo-style {
@@ -23,8 +30,6 @@
 }
 
 .content-style-div {
-    position: relative;
-    top: -150px;
     display: flex;
     flex-direction: column;
     gap: 20px;

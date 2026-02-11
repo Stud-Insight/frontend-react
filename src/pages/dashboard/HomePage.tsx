@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import RespoDashboard from "./RespoDashboard";
 import StudentDashboard from "./StudentDashboard";
+import DashboardPage from "./DashboardPage";
+
 import "./HomePage.css";
 
 export default function HomePage() {
@@ -20,8 +22,10 @@ export default function HomePage() {
     if (loading) return <div className="loading-screen"><div className="loader"></div></div>;
 
     return (
-        <div className="dashboard-container">
-            {role === "RESPO_TER" ? <RespoDashboard /> : <StudentDashboard />}
-        </div>
+		<DashboardPage>
+			<div className="dashboard-container">
+				{role === "RESPO_TER" ? <RespoDashboard /> : <StudentDashboard />}
+			</div>
+		</DashboardPage>
     );
 }

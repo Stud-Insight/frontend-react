@@ -1,0 +1,232 @@
+import React, { useState, useEffect } from "react";
+import DashboardPage from "./DashboardPage";
+import Button from "../../atoms/input/Button";
+import InfoWidget from "../../components/ui/InfoWidget";
+import SubjectService, { Subject, SubjectStatus, SubjectTags, SubjectStatusColor } from "../../services/SubjectService";
+import InfoBox from "../../components/ui/InfoBox";
+import SubjectWidget from "../../components/objects/SubjectWidget";
+import ConfirmationDialog from "../../components/dialog/ConfirmationDialog";
+import InputField from "../../components/input/InputField";
+import ModalDialog from "../../components/dialog/ModalDialog";
+import InputTagSelection from "../../components/input/InputTagSelection";
+import InputArea from "../../components/input/InputArea";
+import InputNumberField from "../../components/input/InputNumberField";
+import InputAttachment from "../../components/input/InputAttachment";
+
+import { FaPlus } from "react-icons/fa6";
+import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
+
+import "./SubjectPage.css";
+
+export default function SubjectPage(){
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [subjects, setProjects] = useState<Subject[]>([]);
+	const [page, setPage] = useState<string | null>(null);
+	const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
+	const [modifySubject, setModifySubject] = useState<Subject | null>(null);
+	const [createSubject, setCreateSubject] = useState<boolean>(false);
+	const [title, setTitle] = useState<string>("");
+	const [desc, setDesc] = useState<string>("");
+	const [etuMin, setEtuMin] = useState<number>(0);
+	const [etuMax, setEtuMax] = useState<number>(0);
+	const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set([]));
+	const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
+	const draftCount = subjects.filter(p => p.status == SubjectStatus.DRAFT).length;
+	const submitCount = subjects.filter(p => p.status == SubjectStatus.SUBMITTED).length;
+	const approveCount = subjects.filter(p => p.status == SubjectStatus.VALIDATED).length;
+
+	const filteredSubjects: Subject[] = (page == null) ? subjects : subjects.filter((subject) => {
+		return subject.status == page;
+	});
+
+	const maxGroupEtu: number = 5;
+
+	const getSubjects = async () => {
+		try {
+			const data = await SubjectService.getUserSubjects();
+			setProjects(data);
+			console.log(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
+	const resetFieldHandle = () => {
+		setCreateSubject(false);
+		setModifySubject(null);
+		setDeleteSubject(null);
+		setTitle("");
+		setDesc("");
+		setEtuMin(0);
+		setEtuMax(0);
+		setSelectedTags(new Set());
+		setSelectedFiles([]);
+	};
+
+	const deleteHandle = async () => {
+		try {
+
+		} catch(err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		resetFieldHandle();
+	};
+
+	const editHandle = (proj: Subject) => {
+		setModifySubject(proj);
+		setTitle(proj.title);
+		setDesc(proj.description);
+		setEtuMin(proj.min_group_size ? proj.min_group_size : 0);
+		setEtuMax(proj.max_group_size ? proj.max_group_size : 0);
+		setSelectedTags(new Set(proj.tags));
+		setSelectedFiles([]);
+	};
+
+	const editConfirmHandle = async () => {
+		try {
+
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		};
+
+		resetFieldHandle();
+	}
+
+	const confirmCreationHandle = async () => {
+		try {
+			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
+			setSuccess(`Projet "${title}" à été créée!`);
+			getSubjects();
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		resetFieldHandle();
+	};
+
+	const addTagHandle = (tag: string) => {
+		setSelectedTags(prev => {
+			const newSet = new Set(prev);
+			newSet.add(tag);
+			return newSet;
+		});
+	}
+
+	const deleteTagHandle = (tag: string) => {
+		setSelectedTags(prev => {
+			const newSet = new Set(prev);
+			newSet.delete(tag);
+			return newSet;
+		});
+	}
+
+	const addFileHandle = (files: File[]) => {
+		setSelectedFiles((prev) => [...prev, ...files]);
+	}
+
+	const deleteFileHandle = (fileDelete: File) => {
+		setSelectedFiles((prev) =>
+			prev.filter((file) => file !== fileDelete)
+		);
+	}
+
+	useEffect(() => {
+		getSubjects();
+	}, []);
+
+	return (
+		<DashboardPage>
+			{createSubject &&
+				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} width={"90%"}>
+					<InputField value={title} label="Titre *" onChange={setTitle}/>
+					<InputArea value={desc} label="Description *" onChange={setDesc}/>
+
+					<div className="subject-page-main-layout">
+						<div className="subject-page-sub-layout">
+							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
+						</div>
+
+						<div className="subject-page-sub-layout">
+							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+						</div>
+						
+						<div className="subject-page-sub-layout">
+							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
+						</div>
+					</div>
+					
+					<Button label="Créer Sujet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
+				</ModalDialog>
+			}
+
+			{modifySubject &&
+				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} width={"90%"}>
+					<InputField value={title} label="Titre *" onChange={setTitle}/>
+					<InputArea value={desc} label="Description *" onChange={setDesc}/>
+
+					<div className="subject-page-main-layout">
+						<div className="subject-page-sub-layout">
+							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
+							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
+						</div>
+
+						<div className="subject-page-sub-layout">
+							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+						</div>
+						
+						<div className="subject-page-sub-layout">
+							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
+						</div>
+					</div>
+					
+					<Button label="Modifier" icon={<FaPlus/>} onChange={editConfirmHandle}/>
+				</ModalDialog>
+			}
+
+			<div className="dashboard-top-layout">
+				<div className="dashboard-top-title-layout">
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets</label>
+				</div>
+			
+				<div className="dashboard-top-button-layout">
+					<Button icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => {
+						setEtuMax(maxGroupEtu);
+						setCreateSubject(true);
+					}}/>
+				</div>
+			</div>
+			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
+
+			{error && <InfoBox label={error} type="error"/>}
+			{success && <InfoBox label={success} type="success"/>}
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
+				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
+				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
+				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
+			</div>
+
+			{filteredSubjects.map((sub, index) => (
+				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteSubject(sub)} onEdit={() => editHandle(sub)}/>
+			))}
+
+			{deleteSubject &&
+				<ConfirmationDialog 
+					label="Supprimer ce projet?" 
+					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
+					onCancel={() => setDeleteSubject(null)} 
+					onConfirm={deleteHandle}
+				/>
+			}
+
+		</DashboardPage>
+	)
+}

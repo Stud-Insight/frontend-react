@@ -1,0 +1,16 @@
+.tag-selection-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	height: auto;
+}
+
+.tag-selection-layout {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.tag-selection-container input {
+	width: auto;
+}

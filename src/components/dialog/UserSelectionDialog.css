@@ -1,0 +1,13 @@
+.user-list-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	overflow-y: auto; 
+}
+
+.user-list-buttons {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}

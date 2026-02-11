@@ -1,0 +1,28 @@
+.navigation-button-style {
+    background: none;
+    border: none;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+	padding: 10px;
+    color: var(--black-col);
+    font-family: var(--main-font);
+    font-weight: var(--mid-bold);
+    font-size: medium;
+    cursor: pointer;
+	border-radius: 10px;
+    transition: transform 0.1s ease;
+	background-color: var(--white-col);
+	transition: background-color 0.3s;
+}
+
+.navigation-button-style.active {
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+}
+
+.navigation-button-style:not(.active):hover {
+    background-color: var(--gray3-col);
+}

@@ -1,0 +1,32 @@
+.checkbox-style {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: none;
+	width: 15px;
+	height: 15px;
+	border-style: solid;
+    border-width: 2px;
+    border-color: var(--gray2-col);
+	color: var(--white-col);
+    border-radius: 4px;
+	transition: background-color 0.3s;
+	transition: border-color 0.3;
+    cursor: pointer;
+}
+
+.checkbox-style.checked {
+	background-color: var(--blue-col);
+	border-color: var(--blue-col);
+	color: var(--white-col);
+}
+
+.checkbox-style-uncheck {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.checkbox-style-check {
+	opacity: 1;
+	transition: opacity 0.3s;
+}

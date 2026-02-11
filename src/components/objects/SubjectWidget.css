@@ -1,0 +1,108 @@
+.subject-widget-layout {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.subject-widget-title-container {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+}
+
+.subject-widget-title-right {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.subject-widget-tag-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	font-weight: var(--mid-bold);
+}
+
+.subject-widget-tag-style {
+	display: flex;
+	flex-direction: row;
+	padding: 8px;
+	font-size: 12px;
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+	border-radius: 10px;
+	gap: 2px;
+}
+
+.subject-widget-footer-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.subject-widget-footer-content {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	font-size: 18px;
+	color: var(--gray1-col);
+}
+
+.subject-widget-state-style {
+	display: flex;
+	flex-direction: row;
+	padding: 8px;
+	font-size: 12px;
+	border-radius: 10px;
+	gap: 2px;
+}
+.subject-widget-task-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.subject-widget-expandable {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	overflow: hidden;
+	max-height: 0;
+	opacity: 0;
+	transition: max-height 0.4s, opacity 0.4s;
+}
+
+.subject-widget-expandable.expanded {
+	max-height: 500px;
+	opacity: 1;
+}
+
+.subject-widget-state-style.draft {
+	color: var(--gray1-col);
+	background-color: color-mix(in srgb, var(--gray1-col) 20%, transparent);
+}
+
+.subject-widget-expand-button {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	font-size: 20px;
+}
+.subject-widget-state-style.submitted {
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+}
+
+.subject-widget-state-style.VALIDATED {
+	color: var(--green-col);
+	background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
+}
+
+.subject-widget-state-style.rejected {
+	color: var(--red-col);
+	background-color: color-mix(in srgb, var(--red-col) 20%, transparent);
+}

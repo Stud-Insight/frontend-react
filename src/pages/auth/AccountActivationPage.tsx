@@ -4,10 +4,10 @@ import { FaLock } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
 import InputField from "../../components/input/InputField.tsx";
-import SubmitButton from "../../components/input/SubmitButton.tsx";
-import Divider from "../../components/ui/Divider.tsx";
+import Button from "../../atoms/input/Button.tsx";
+import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
-import LinkButton from "../../components/nav/LinkButton.tsx";
+import LinkButton from "../../components/button/LinkButton.tsx";
 import LoginPage from "./LoginPage.tsx";
 
 import "./LoginPage.css"
@@ -35,10 +35,10 @@ export default function AccountActivationPage(){
                     <InputField value={password_confirm} onChange={setPasswordConfirm} is_password={true} placeholder="Confirmation du mot de passe"/>
                 </div>
 
-                <Divider/>
-                <SubmitButton label="Valider"/>
+                <HorizontalDivider/>
+                <Button label="Valider"/>
 
-                {/*TODO CREER UN CAPTCHA POUR EVITER BOT */}
+                {/*TODO CREER UN CAPTCHA POUR EVIPeriod BOT */}
 
                 <LinkButton label="Retour à la page de connection" redirection="/auth/login" push_right={true}  push_left={true}/>
             </form>

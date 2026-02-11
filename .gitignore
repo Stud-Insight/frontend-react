@@ -1,3 +1,7 @@
 node_modules
 public
+postgres-data
+redis-data
+minio-data
 .DS_Store
+.env

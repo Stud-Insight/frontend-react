@@ -1,13 +1,19 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     entry: "./src/index.tsx",
+
     output: {
         path: path.join(__dirname, "public"),
         filename: "index.js",
         clean: true,
+        publicPath: '/',
     },
+
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+    },
+
     module: {
         rules: [
             {
@@ -16,26 +22,21 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-typescript"],
+                        presets: [
+                            "@babel/preset-env",
+                            "@babel/preset-react",
+                            "@babel/preset-typescript",
+                        ],
                     },
                 },
             },
             {
-                test: /\.css$/,
-                use: ["style-loader", "css-loader"], // Un seul endroit pour le CSS
-            },
-            {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                test: /\.(png|svg)$/,
                 type: "asset/resource",
+                generator: {
+                    filename: "images/[name][hash][ext]",
+                },
             },
         ],
     },
-    resolve: {
-        extensions: [".tsx", ".ts", ".js", ".jsx"],
-    },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: "./src/index.html",
-        }),
-    ],
 };

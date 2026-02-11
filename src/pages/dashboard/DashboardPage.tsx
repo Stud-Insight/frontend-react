@@ -1,105 +1,94 @@
-import React, { useState, useEffect } from "react";
-import { FaHome, FaFile, FaBell } from "react-icons/fa";
-import { FaBoxArchive } from "react-icons/fa6";
-import { IoMail, IoSettingsSharp } from "react-icons/io5";
-import { HiUserGroup } from "react-icons/hi";
+import React from "react";
+import NavigationButton from "../../components/button/NavigationButton.tsx";
+import Logo from "../../atoms/ui/Logo.tsx";
+import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
+import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
+import UserAvatar from "../../components/ui/UserAvatar.tsx";
+
+import { useState, ReactNode } from "react";
+import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
-import Toast from "../../components/ui/Toast.tsx";
-import { useNavigate, Outlet } from "react-router-dom"; 
-import { NotificationService } from "../../service/NotificationService";
-import NavigationButton from "../../components/nav/NavigationButton.tsx";
-import Logo from "../../components/ui/Logo.tsx";
-import Divider from "../../components/ui/Divider.tsx";
-import UserWidget from "../../components/ui/UserWidget.tsx";
+import { AiOutlineAppstore } from "react-icons/ai";
+import { FiUsers } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
+import { FaRegFolder } from "react-icons/fa";
+import { LuMessageSquare } from "react-icons/lu";
+import { TbSchool } from "react-icons/tb";
+import { HiOutlineCalendar } from "react-icons/hi";
+import { MdWorkOutline } from "react-icons/md";
+
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext.tsx";
 
 import "./DashboardPage.css"
 
-type UserPermission = "etu" | "prof" | "admin" | "extern";
+interface DashboardPageProps {
+    children?: ReactNode;
+};
 
-export default function DashboardPage() {
-    const [user, setUser] = useState("");
-    const [email, setEmail] = useState("");
-    const [perm, setPerm] = useState<UserPermission>("etu");
-    const [page, setPage] = useState("home");
-    const [toastMessage, setToastMessage] = useState<string | null>(null);
-    const [unreadCount, setUnreadCount] = useState(0);
+export default function DashboardPage({children} : DashboardPageProps){
+    const { user } = useAuth();
+	const { logout } = useAuth();
+
+    const { pathname } = useLocation();
     const navigate = useNavigate();
 
-    const page_map: Record<string, string> = {
-        home: "Accueil",
-        stage: "Stages",
-        ter: "TERs",
-        notification: "Notifications",
-        users: "Utilisateurs",
-        archive: "Archives",
-        settings: "Paramètres"
-    };
-
-    const logout_handle = () => {
-        navigate("/auth/login");
+    const logoutHandle = async () => {
+        try {
+            await logout();
+            navigate("/");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Erreur de connexion";
+        }
     }
 
-    const page_change_handler = (id: string) => {
-        setPage(id);
+    const pageHandle = (id: string) => {
         navigate("/dashboard/" + id);
     }
 
-    useEffect(() => {
-        setUser("Vincent");
-        setEmail("vincent.hannah@etu.umontpellier.fr");
-        setPerm("etu");
-
-        NotificationService.getHistory().then(Notifications => {
-            const unread = Notifications.filter(n =>!n.isRead).length;
-            setUnreadCount(unread);
-        });
-
-        NotificationService.connect((count) =>{
-            setUnreadCount(count);
-            if (count >0) {
-                setToastMessage("Vous avez reçu une nouvelle notification !");
-            }
-        });
-
-        return () => NotificationService.disconnect();
-    }, []);
-
     return (
         <div className="dashboard-content">
-            {/* Barre latérale (Sidebar) */}
-            {toastMessage && (
-                <Toast
-                    message={toastMessage}
-                    onClose={() => setToastMessage(null)}
-                />
-            )}
-            <div className="dashboard-sidebar-content">
-                <Logo width={"200"} height={"50"} large={true} className="logo-style-dashboard"/>
-                <UserWidget user={user} email={email} perm={perm}/>
-                <Divider/>
-                <div className="dashboard-group-content">
-                    <NavigationButton icon={<FaHome/>} id="home" active={page === "home"} label={page_map["home"]} onClick={page_change_handler}/>
-                    <NavigationButton icon={<IoMail/>} id="stage" active={page === "stage"} label={page_map["stage"]} onClick={page_change_handler}/>
-                    <NavigationButton icon={<FaFile/>} id="ter" active={page === "ter"} label={page_map["ter"]} onClick={page_change_handler}/>
-                    <NavigationButton icon={<FaBell/>} id="notification" active={page === "notification"} label={page_map["notification"]} onClick={page_change_handler} unreadCount={unreadCount}/>
-                </div>
-                <Divider/>
-                <div className="dashboard-group-content">
-                    <NavigationButton icon={<HiUserGroup/>} id="users" active={page === "users"} label={page_map["users"]} onClick={page_change_handler}/>
-                    <NavigationButton icon={<FaBoxArchive/>} id="archive" active={page === "archive"} label={page_map["archive"]} onClick={page_change_handler}/>
-                    <NavigationButton icon={<IoSettingsSharp/>} id="settings" active={page === "settings"} label={page_map["settings"]} onClick={page_change_handler}/>
-                </div>
-                <Divider/>
-                <NavigationButton icon={<MdLogout/>} label="Déconnexion" onClick={logout_handle}/>
-            </div>
+			<div className="dashboard-sidebar-layout">
+				<div className="dashboard-sidebar-content">
+					<Logo width="auto" large={true}/>
+					<HorizontalDivider/>
+					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
+					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
+					<HorizontalDivider/>
+					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Gestion TER" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
+					<HorizontalDivider/>
+				</div>
 
-            {/* Contenu principal (Main) */}
+				<div className="dashboard-sidebar-content">
+					<HorizontalDivider/>
+					<NavigationButton icon={<MdLogout/>} label="Déconnexion" onClick={logoutHandle}/>
+				</div>
+			</div>
+
+			<VerticalDivider/>
+
             <div className="dashboard-rightside-main">
-                <div className="dashboard-main-content">
-                    <label style={{display: 'block', marginBottom: '20px'}}>{page_map[page]}</label>
-                    
-                    {/* LE CONTENU DE VOS PAGES (HOME, NOTIFICATIONS, ETC.) APPARAÎTRA ICI */}
-                    <Outlet />
+				<div className="dashboard-header-container">
+					{/* <MdNotificationsNone size={20}/> */}
+
+					<div className="dashboard-user-container">
+						<label>{user?.first_name} {user?.last_name}</label>
+						<div className="dashboard-avatar-container">
+							<UserAvatar user={user}/>
+						</div>
+					</div>
+				</div>
+
+				<HorizontalDivider/>
+				
+                <div className="dashboard-main-container">
+                    {children}
                 </div>
             </div>
         </div>

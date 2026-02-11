@@ -1,0 +1,52 @@
+.input-attachement-style {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-style: dashed;
+	transition: border-color 0.5s;
+	transition: background-color 0.5s;
+	height: 100px;
+}
+
+.input-attachement-style:hover, .input-attachement-style.active {
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+}
+
+.input-attachement-main-layout {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.input-file-widget-super-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	font-size: 16px;
+}
+
+.input-file-widget-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 20px;
+	padding: 5px;
+	font-size: 25px;
+}
+
+.input-file-widget-info-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	font-size: 15px;
+}
+
+.input-file-list-layout {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}

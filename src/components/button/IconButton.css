@@ -1,0 +1,17 @@
+.icon-button-close {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 7px;
+	border-radius: 10px;
+	cursor: pointer;
+	color: var(--gray1-col);
+	background-color: var(--gray3-col);
+	transition: color 0.3s;
+	transition: background-color 0.3s;
+}
+
+.icon-button-close:hover {
+	color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
+}

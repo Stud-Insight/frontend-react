@@ -1,41 +1,26 @@
-import React from "react";
-import { useState } from "react";
+import React, { ReactNode, useRef } from "react";
+import Field from "../../atoms/input/Field";
 import "./InputField.css"
-import { IoEye } from "react-icons/io5";
 
-interface InputFieldInterface {
+interface InputFieldProps {
     label?: string,
-    icon?: React.ReactNode,
-    is_password?: boolean,
+    icon?: ReactNode,
     placeholder?: string,
-    offset?: number;
     value?: string
+	type?: string;
     onChange?: (value: string) => void; 
 };
 
-export default function InputField({label, icon, value, is_password, offset = 0, onChange, placeholder = ""}: InputFieldInterface){
-    const [showPassword, setShowPassword] = useState(false);
+export default function InputField({label, type = "text", icon, value, onChange, placeholder = ""}: InputFieldProps){
+	const inputRef = useRef<HTMLInputElement | null>(null);	
+
+	const pressHandle = () => {
+		inputRef.current?.focus();
+	};
 
     return (
-        <div className="input-field-container">
-            {(icon || label) && (
-                <div className="input-field-label">
-                    {icon && (
-                        <span style={{ transform: `translateY(${offset}px)` }}>
-                            {icon}
-                        </span>
-                    )}
-                    {label && <label>{label}</label>}
-                </div>
-            )}
-
-            <input 
-                className = "input-field" 
-                value = {value ? value : ""}
-                placeholder = {placeholder}
-                type = {is_password ? (showPassword ? "text" : "password") : "text"}
-                onChange={onChange ? (e) => onChange(e.target.value) : undefined}
-            />
-        </div>
+		<Field label={label} icon={icon} onClick={pressHandle}>
+			<input ref={inputRef} value={value} placeholder={placeholder} type={type} onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
+		</Field>
     );
 }

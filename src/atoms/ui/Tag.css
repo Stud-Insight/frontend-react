@@ -1,0 +1,14 @@
+.tag-widget-style {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 5px;
+	border-radius: 10px;
+	font-size: 12px;
+}
+
+.icon-widget-style {
+	cursor: pointer;
+}
