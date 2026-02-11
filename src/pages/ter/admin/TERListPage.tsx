@@ -14,7 +14,7 @@ import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineCalendar } from "react-icons/hi";
 
-import "./TERListPage.css"
+import "./TERListPage.css";
 
 export default function PeriodListPage(){
 	const addDays = (days: number) => {

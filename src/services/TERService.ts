@@ -93,43 +93,50 @@ export interface TERPeriodStats {
     subjects_assigned: number;
 }
 
-export interface TERStudent {
-	id: string;
-	first_name: string;
-	last_name: string;
-	email: string;
+interface AddStudentSchema {
+	user_id: string;
+}
+
+interface GroupCreateSchema {
+	name: string;
+	ter_period_id: string;
 }
 
 export default class TERService {
-	public static async getEnrolledStudents(id: string): Promise<User[] | null> {
-		try {
-			const res = await api.get<TERStudent[]>(
-				`/ter/periods/${id}/students`
-			);
-
-			const users: User[] = res.data.map((student) => ({
-				id: student.id,
-				first_name: student.first_name,
-				last_name: student.last_name,
-				email: student.email,
-				groups: [],
-			}));
-
-			return users;
+	public static async getAllGroups(id: string): Promise<Group[]> {
+		 try {
+			const res = await api.get<Group[]>(`/groups/?ter_period_id=${id}`);
+			return res.data.results;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async addEnroleStudents(period_id: string, stud_ids: string[]): Promise<{ added: number; total_enrolled: number } | null> {
+	public static async getEnrolledStudents(id: string): Promise<User[] | null> {
 		try {
-			const p = {
-				student_ids: stud_ids
+			const res = await api.get<User[]>(`/ter/periods/${id}/students`);
+			return res.data.results;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getEnrolledTeachers(id: string): Promise<User[] | null> {
+		try {
+			const res = await api.get<User[]>(`/ter/periods/${id}/encadrants`);
+			return res.data.results;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async addEnroleStudent(period_id: string, id: string): Promise<void> {
+		try {
+			const load: AddStudentSchema = {
+				user_id: id
 			}
 
-			const res = await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students`, p);
-
-			return res.data;
+			await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students`, load);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}

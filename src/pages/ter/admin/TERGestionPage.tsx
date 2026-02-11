@@ -5,21 +5,23 @@ import Button from "../../../atoms/input/Button";
 import InfoBox from "../../../components/ui/InfoBox";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import TagWidget from "../../../atoms/ui/Tag";
+import ImportCSVButton from "../../../components/button/ImportCSVButton";
+import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
+import IconButton from "../../../components/button/IconButton";
+import UserAvatar from "../../../components/ui/UserAvatar";
+
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
-import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
-import UserAvatar from "../../../components/ui/UserAvatar";
+import { MdDeleteOutline } from "react-icons/md";
 
-import "../../dashboard/UsersPage.css"
-import "../../dashboard/DashboardPage.css"
-import "./TERAdminPage.css"
+import "./TERGestionPage.css";
 
-export default function TERAdminPage(){
+export default function TERGestionPage(){
 	const { id } = useParams<{ id: string }>();
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -28,8 +30,9 @@ export default function TERAdminPage(){
 	const [addingStudent, setAddingStudent] = useState<boolean>(false);
 	const [addingTeacher, setAddingTeacher] = useState<boolean>(false);
 	const [enrolledStudents, setEnrolledStudents] = useState<User[]>([]);
+	const [enrolledTeachers, setEnrolledTeachers] = useState<User[]>([]);
 
-	const getAllTERStudents = async () => {
+	const getStudents = async () => {
 		try {
 			const data = await TERService.getEnrolledStudents(id);
 			setEnrolledStudents(data);
@@ -39,12 +42,27 @@ export default function TERAdminPage(){
 		}
 	}
 
-	const addStudentHandle = async (selectedUsers: Set<string>) => {
+	const getTeachers = async () => {
 		try {
-			await TERService.addEnroleStudents(id, Array.from(selectedUsers));
+			const data = await TERService.getEnrolledTeachers(id);
+			setEnrolledTeachers(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const addStudentsHandle = async (selectedUsers: Set<string>) => {
+		try {
+			await Promise.all(
+				Array.from(selectedUsers).map((stud_id) => {
+					TERService.addEnroleStudent(id, stud_id);
+				})
+			);
+
+			getStudents();
 			setSuccess(`Ajout de ${selectedUsers.size} étudiant(s) avec succès.`);
 			setTimeout(() => setSuccess(null), 5000);
-			getAllTERStudents();
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -56,8 +74,14 @@ export default function TERAdminPage(){
 	const studentView = () => {
 		return <>
 			<div className="dashboard-top-layout">
-				<div></div>
-				<Button icon={<FaPlus/>} label="Ajoute Etudiant" onClick={() => setAddingStudent(true)}/>
+				<div>
+
+				</div>
+
+				<div className="dashboard-top-button-layout">
+					<ImportCSVButton/>
+					<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+				</div>
 			</div>
 				
 			<table className="users-table-style">
@@ -81,7 +105,7 @@ export default function TERAdminPage(){
 							<td>{user.first_name} {user.last_name}</td>
 							<td>{user.email}</td>
 							<td>?</td>
-							<td></td>
+							<td><IconButton icon={<MdDeleteOutline/>}/></td>
 						</tr>
 					))}
 				</tbody>	
@@ -92,8 +116,13 @@ export default function TERAdminPage(){
 	const groupView = () => {
 		return <>
 			<div className="dashboard-top-layout">
-				<div></div>
-				<Button icon={<FaPlus/>} label="Créer Groupe"/>
+				<div>
+
+				</div>
+
+				<div className="dashboard-top-button-layout">
+					<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setAddingStudent(true)}/>
+				</div>
 			</div>
 		</>
 	}
@@ -101,8 +130,14 @@ export default function TERAdminPage(){
 	const teacherView = () => {
 		return <>
 			<div className="dashboard-top-layout">
-				<div></div>
-				<Button icon={<FaPlus/>} label="Invite Enseignant" onClick={() => setAddingTeacher(true)}/>
+				<div>
+
+				</div>
+
+				<div className="dashboard-top-button-layout">
+					<ImportCSVButton/>
+					<Button icon={<FaPlus/>} label="Ajouter Enseignant" onClick={() => setAddingTeacher(true)}/>
+				</div>
 			</div>
 
 			<table className="users-table-style">
@@ -130,7 +165,7 @@ export default function TERAdminPage(){
 	}
 
 	useEffect(() => {
-		const getTer = async () => {
+		const getPeriod = async () => {
 			try {
 				const data = await TERService.getPeriod(id);
 				setSelectedTER(data);
@@ -140,8 +175,9 @@ export default function TERAdminPage(){
 			}
 		}
 
-		getTer();
-		getAllTERStudents();
+		getPeriod();
+		getStudents();
+		getTeachers();
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
@@ -159,14 +195,14 @@ export default function TERAdminPage(){
 					label="Ajout etudiants au TER"
 					role_filter={[UserRoles.ETUDIANT]} 
 					onClose={() => setAddingStudent(false)} 
-					onConfirm={(users) => addStudentHandle(users)}
+					onConfirm={(users) => addStudentsHandle(users)}
 				/>
 			}
 
 			{addingTeacher &&
 				<UserSelectionDialog 
 					label="Ajout encadrants au TER"
-					role_filter={[UserRoles.ENCADRANT, UserRoles.EXTERNE, UserRoles.RESPO_TER]} 
+					role_filter={[UserRoles.ENCADRANT, UserRoles.EXTERNE, UserRoles.RESPO_TER, UserRoles.RESPO_STAGE, UserRoles.ADMIN]} 
 					onClose={() => setAddingTeacher(false)} 
 				/>
 			}
@@ -183,13 +219,13 @@ export default function TERAdminPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Étudiants" active={currentPage == 0} icon={<FiUser/>} info={enrolledStudents.length} color={`var(--blue-col)`} onClick={() => setCurrentPage(0)}/>
-				<InfoWidget label="Groupes" active={currentPage == 2} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
 				<InfoWidget label="Enseignants" active={currentPage == 1} icon={<TbSchool/>} info={0} color="var(--purple-col)" onClick={() => setCurrentPage(1)}/>
+				<InfoWidget label="Groupes" active={currentPage == 2} icon={<FiUsers/>} info={0} color="var(--blue-col)" onClick={() => setCurrentPage(2)}/>
 				<InfoWidget label="Sujets" active={currentPage == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(3)}/>
 				<InfoWidget label="Notations" active={currentPage == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setCurrentPage(4)}/>
 			</div>
 
-			{success && <InfoBox label={success} type="success"/> }
+			{success && <InfoBox label={success} type="success"/>}
 			{error && <InfoBox label={error} type="error"/>}
 	
 			{viewMap.get(currentPage)}

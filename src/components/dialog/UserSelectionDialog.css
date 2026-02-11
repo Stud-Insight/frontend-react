@@ -11,3 +11,7 @@
 	flex-direction: row;
 	gap: 20px;
 }
+
+.user-list-dialog-content #content {
+	height: 600px;
+}

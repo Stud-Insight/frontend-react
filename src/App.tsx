@@ -11,7 +11,7 @@ import TERPage from "./pages/ter/user/TERPage";
 import TERListPage from "./pages/ter/admin/TERListPage";
 import ChatPage from "./pages/dashboard/ChatPage";
 import SubjectPage from "./pages/dashboard/SubjectPage";
-import TERAdminPage from "./pages/ter/admin/TERAdminPage";
+import TERGestionPage from "./pages/ter/admin/TERGestionPage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import StagePage from "./pages/dashboard/StagePage";
@@ -100,7 +100,7 @@ function AppRoutes() {
 				<Route path=":id">
 					<Route path="vote" element={<ProtectedRoute><TERVotePage/></ProtectedRoute>}/>
 					<Route path="info" element={<ProtectedRoute><TERInfoPage/></ProtectedRoute>}/>
-					<Route path="admin" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
+					<Route path="admin" element={<ProtectedRoute><TERGestionPage/></ProtectedRoute>}/>
 				</Route>
 
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>

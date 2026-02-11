@@ -10,11 +10,12 @@ import { FaPlus } from "react-icons/fa6";
 interface UserSelectionDialogProps {
 	label: string;
 	role_filter?: string[];
+	exclude?: string[];
 	onClose?: () => void;
 	onConfirm?: (users: Set<string>) => void;
 };
 
-export default function UserSelectionDialog({label, role_filter, onClose, onConfirm}: UserSelectionDialogProps) {
+export default function UserSelectionDialog({label, role_filter, exclude, onClose, onConfirm}: UserSelectionDialogProps) {
 	const [users, setUsers] = useState<User[]>([]);
 	const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
 
@@ -48,7 +49,7 @@ export default function UserSelectionDialog({label, role_filter, onClose, onConf
 			try {
 				const list = await UserService.getAllUsers();
 
-				const filtered = role_filter
+				let filtered = role_filter
 					? list.filter(user =>
 						user.groups.some(group => role_filter.includes(group.name))
 					)
@@ -64,7 +65,7 @@ export default function UserSelectionDialog({label, role_filter, onClose, onConf
 	}, [role_filter]);
 
 	return (
-		<ModalDialog label={label} onClose={onClose} width={500}>
+		<ModalDialog label={label} onClose={onClose} className="user-list-dialog-content">
 			<div className="user-list-layout">
 				{users.map(user => (
 					<UserWidget key={user.id} user={user} selected={selectedUsers.has(user.id)} onClick={() => userSelectionHandle(user.id)}/>
