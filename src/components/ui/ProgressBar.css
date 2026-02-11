@@ -1,28 +1,28 @@
-.progress-widget {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 .progress-info {
     display: flex;
     justify-content: space-between;
     font-weight: 600;
-    font-size: 0.95rem; /* Plus petit */
+    font-size: 0.95rem;
 }
 
-.progress-count {
-    background: #edf2f7;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.85rem;
+.progress-label {
+	color: var(--gray1-col);
+	font-size: 14px;
 }
 
 .progress-bar-bg {
-    height: 8px; /* Barre plus fine */
+	position: relative;
+    height: 8px;
     background: #f1f5f9;
     border-radius: 4px;
     overflow: hidden;
+}
+
+.progress-bar-fill {
+	position: absolute;
+    height: 8px;
+    background: var(--blue-col);
+    border-radius: 4px;
 }
 
 .progress-subtext {

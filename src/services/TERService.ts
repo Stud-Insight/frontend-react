@@ -153,6 +153,20 @@ export default class TERService {
 		}
 	}
 
+	public static async getUserPeriod(): Promise<TERPeriod | null>{
+		try {
+			const periods = await api.get<TERPeriod[]>("/ter/periods/");
+
+			if (periods && periods.data.length > 0){
+				return periods.data[0];
+			}
+			
+			return null;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async getPeriod(id: string): Promise<TERPeriod | null>{
 		try {
 			const res = await api.get<TERPeriod>(`/ter/periods/${id}`);
@@ -177,8 +191,6 @@ export default class TERService {
 				min_group_size: 2,
 				max_group_size: 4,
 			};
-
-			console.log(load);
 			
 			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
 			return res.data;

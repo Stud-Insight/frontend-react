@@ -1,4 +1,5 @@
 .navigation-button-style {
+	position: relative;
     background: none;
     border: none;
     width: 100%;
@@ -26,3 +27,17 @@
 .navigation-button-style:not(.active):hover {
     background-color: var(--gray3-col);
 }
+
+.navigation-button-notification-style {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 13px;
+	right: 10px;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	color: var(--white-col);
+	background-color: var(--blue-col);
+}	

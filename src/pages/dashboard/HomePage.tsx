@@ -7,19 +7,14 @@ import "./HomePage.css";
 
 export default function HomePage() {
     const [role, setRole] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulation de l'appel API (Story 12.9)
         const fetchRole = async () => {
             await new Promise(r => setTimeout(r, 500));
-            setRole("RESPO_TER"); // Change ici en "STUDENT" pour tester l'autre vue
-            setLoading(false);
+            setRole("RESPO_TER");
         };
         fetchRole();
     }, []);
-
-    if (loading) return <div className="loading-screen"><div className="loader"></div></div>;
 
     return (
 		<DashboardPage>

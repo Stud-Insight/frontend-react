@@ -53,14 +53,14 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<Logo width="auto" large={true}/>
 					<HorizontalDivider/>
 					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Notifications" active={pathname.startsWith("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Notifications" notification={3} active={pathname.startsWith("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
 					<HorizontalDivider/>
 					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Gestion TER" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Gestion TER" active={pathname.endsWith("list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
 					<HorizontalDivider/>

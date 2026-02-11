@@ -8,24 +8,28 @@ interface NavigationButtonProps {
     offset?: number;
     size?: string;
     active?: boolean;
-	showBackground?: boolean;
+	notification?: number;
     onClick?: (id: string) => void;
 };
 
 
-export default function NavigationButton({label, icon, offset = 0, size = "20px", onClick, active = false, id = "", showBackground = false}: NavigationButtonProps){
+export default function NavigationButton({label, icon, offset = 0, size = "20px", onClick, active = false, id = "", notification = 0}: NavigationButtonProps){
     const className = `navigation-button-style${active ? " active" : ""}`;
 
-    const clickHandle = () => {
-        onClick ? onClick(id) : undefined;
-    };
-
     return (
-        <button className={className} onClick={clickHandle} style={{backgroundColor: showBackground && !active ? "var(--gray3-col)" : undefined}}>
-            <div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
+        <button className={className} onClick={() => onClick?.(id)}>
+			<div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
 				{icon}
 			</div>
 			<label>{label}</label>
+
+			{notification && notification > 0 ?
+				<div className="navigation-button-notification-style">
+					{notification}
+				</div>
+				:
+				undefined
+			}
         </button>
     )
 }

@@ -5,8 +5,9 @@ import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/HomePage";
-import TERSelectionPage from "./pages/ter/user/TERSelectionPage";
+import TERVotePage from "./pages/ter/user/TERVotePage";
 import TERInfoPage from "./pages/ter/user/TERInfoPage";
+import TERPage from "./pages/ter/user/TERPage";
 import TERListPage from "./pages/ter/admin/TERListPage";
 import ChatPage from "./pages/dashboard/ChatPage";
 import SubjectPage from "./pages/dashboard/SubjectPage";
@@ -88,7 +89,13 @@ function AppRoutes() {
             </Route>
 
 			<Route path="/dashboard/ter">
-				<Route path="select" element={<ProtectedRoute><TERSelectionPage/></ProtectedRoute>}/>
+				<Route path="" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>
+
+				<Route path=":id">
+					<Route path="vote" element={<ProtectedRoute><TERVotePage/></ProtectedRoute>} />
+					<Route path="info" element={<ProtectedRoute><TERInfoPage/></ProtectedRoute>} />
+				</Route>
+
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
 				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
 			</Route>

@@ -3,6 +3,7 @@ import DashboardPage from "./DashboardPage.tsx";
 import InfoWidget from "../../components/ui/InfoWidget.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import NotificationService, { Notification } from "../../services/NotificationService.ts";
+import NotificationWidget from "../../components/objects/NotificationWidget.tsx";
 import { FaRegBell } from "react-icons/fa6";
 
 import "./NotificationPage.css";
@@ -12,6 +13,12 @@ export default function NotificationPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
 
+	const notifLu: number = notifList.filter((notif) => {
+		return notif.isRead;
+	}).length;
+
+	const notifNonlu: number = notifList.length - notifLu;
+	
 	const notifClickHandle = (id: string) => {
 
 	};
@@ -44,25 +51,13 @@ export default function NotificationPage() {
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Notifications Non lu" icon={<FaRegBell/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="Notifications Lu" icon={<FaRegBell/>} info={0} color="var(--purple-col)"/>
+				<InfoWidget label="Notifications Lu" icon={<FaRegBell/>} info={notifNonlu} color="var(--blue-col)"/>
+				<InfoWidget label="Notifications Non Lu" icon={<FaRegBell/>} info={notifLu} color="var(--purple-col)"/>
 			</div>
 
 			<div className="notif-list">
 				{notifList.map((notif, index) => (
-					<div key={index} className={`notif-card ${notif.isRead ? 'is-read' : 'is-unread'}`} onClick={() => notifClickHandle(notif.id)}>
-						<div className="notif-indicator">
-							{!notif.isRead && <div className="blue-dot" />}
-						</div>
-						
-						<div className="notif-body">
-							<div className="notif-header">
-								<span className="notif-title">{notif.title}</span>
-								<span className="notif-date">{notif.date}</span>
-							</div>
-							<p className="notif-text">{notif.message}</p>
-						</div>
-					</div>
+					<NotificationWidget key={index} notif={notif}/>
 				))}
 			</div>
 		</DashboardPage>

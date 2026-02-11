@@ -11,7 +11,7 @@ import TERService, { TERPeriod } from "../../../services/TERService";
 import TERWidget from "../../../components/objects/TERWidget";
 import { TbSchool } from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiOutlineCalendar } from "react-icons/hi";
 
 import "./TERListPage.css"
@@ -37,7 +37,6 @@ export default function PeriodListPage(){
 	const [startDate, setStartDate] = useState<string>(addDays(12));
 	const [endDate, setEndDate] = useState<string>(addDays(100));
 
-	const location = useLocation();
     const navigate = useNavigate();
 
 	const detailHandle = (id: string) => {
@@ -110,7 +109,7 @@ export default function PeriodListPage(){
 					<Button icon={<FaPlus/>} label="Créer Un TER" onClick={() => setCreatePeriod(true)}/>
 				</div>
 			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les Periods.</label>
+			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les TERs.</label>
 			
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
