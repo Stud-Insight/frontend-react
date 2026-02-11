@@ -1,67 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage.tsx";
+import InfoWidget from "../../components/ui/InfoWidget.tsx";
+import InfoBox from "../../components/ui/InfoBox.tsx";
+import NotificationService, { Notification } from "../../services/NotificationService.ts";
+import { FaRegBell } from "react-icons/fa6";
+
 import "./NotificationPage.css";
 
-// Interface locale pour garantir la structure
-interface NotificationItem {
-    id: string;
-    title: string;
-    message: string;
-    date: string;
-    isRead: boolean;
-}
-
 export default function NotificationPage() {
-    // DONNÉES EN DUR : On les met ici pour être SÛR qu'elles existent au rendu
-    const [notifications, setNotifications] = useState<NotificationItem[]>([
-        { 
-            id: "1", 
-            title: "Nouveau TER", 
-            message: "Un nouveau sujet sur l'IA est disponible.", 
-            date: "2026-02-08 10:00", 
-            isRead: false 
-        },
-        { 
-            id: "2", 
-            title: "Stage Validé", 
-            message: "Votre convention a été signée par l'administration.", 
-            date: "2026-02-07 14:30", 
-            isRead: true 
-        }
-    ]);
+	const [notifList, setNotifList] = useState<Notification[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
 
-    // Fonction pour marquer comme lu (Story 7.6)
-    const handleToggleRead = (id: string) => {
-        setNotifications(prev => 
-            prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-        );
-    };
+	const notifClickHandle = (id: string) => {
+
+	};
+
+	useEffect(() => {
+		const getNotifs = async () => {
+			try {
+				const res = await NotificationService.getUserNotifications();
+				setNotifList(res);
+			} catch (err){
+				const message = err instanceof Error ? err.message : "Erreur de connexion";
+				setError(message);
+			}
+		};
+
+		getNotifs();
+	}, []);
 
     return (
-            <div className="notif-page-wrapper">
-                <h2 className="notif-page-title">Mes Notifications</h2>
-                
-                <div className="notif-list">
-                    {notifications.map((n) => (
-                        <div 
-                            key={n.id} 
-                            className={`notif-card ${n.isRead ? 'is-read' : 'is-unread'}`}
-                            onClick={() => handleToggleRead(n.id)}
-                        >
-                            <div className="notif-indicator">
-                                {!n.isRead && <div className="blue-dot" />}
-                            </div>
-                            
-                            <div className="notif-body">
-                                <div className="notif-header">
-                                    <span className="notif-title">{n.title}</span>
-                                    <span className="notif-date">{n.date}</span>
-                                </div>
-                                <p className="notif-text">{n.message}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+		<DashboardPage>
+			<div className="dashboard-top-layout">
+				<div className="dashboard-top-title-layout">
+					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Notifications</label>
+				</div>
+			</div>
+
+			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
+
+			{error && <InfoBox label={error} type="error"/>}
+			{success && <InfoBox label={success} type="success"/>}
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Notifications Non lu" icon={<FaRegBell/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="Notifications Lu" icon={<FaRegBell/>} info={0} color="var(--purple-col)"/>
+			</div>
+
+			<div className="notif-list">
+				{notifList.map((notif, index) => (
+					<div key={index} className={`notif-card ${notif.isRead ? 'is-read' : 'is-unread'}`} onClick={() => notifClickHandle(notif.id)}>
+						<div className="notif-indicator">
+							{!notif.isRead && <div className="blue-dot" />}
+						</div>
+						
+						<div className="notif-body">
+							<div className="notif-header">
+								<span className="notif-title">{notif.title}</span>
+								<span className="notif-date">{notif.date}</span>
+							</div>
+							<p className="notif-text">{notif.message}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</DashboardPage>
     );
 }

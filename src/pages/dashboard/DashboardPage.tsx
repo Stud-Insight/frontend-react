@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, ReactNode } from "react";
 import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
 
-import { useState, ReactNode } from "react";
 import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -16,6 +15,7 @@ import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
+import { FaRegBell } from "react-icons/fa6";
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
@@ -56,6 +56,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool/>} id="ter/select" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
 					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
+					<NavigationButton label="Notifications" active={pathname.startsWith("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
 					<HorizontalDivider/>
 					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
