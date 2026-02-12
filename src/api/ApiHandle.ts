@@ -23,7 +23,9 @@ export interface ApiError {
     details?: Record<string, any>;
 };
 
-export function errorFormat(error: AxiosError<ApiError>): never  {
+export function errorFormat(error: AxiosError<ApiError>): never {
+	console.log(error.response?.data);
+	
 	if (error.response) {
 		throw new Error(error.message);
 	} else {

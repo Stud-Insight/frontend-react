@@ -1,0 +1,78 @@
+import React, {useState} from "react";
+import ImportCSVButton from "../../../components/button/ImportCSVButton";
+import { User, UserRoles } from "../../../services/UserService";
+import { FaPlus } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
+import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
+import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
+
+import Button from "../../../atoms/input/Button";
+import UserAvatar from "../../../components/ui/UserAvatar";
+import IconButton from "../../../components/button/IconButton";
+
+interface TERStudentViewProps {
+	students: User[];
+	onAdd?: (users: Set<string>) => void;
+	onDelete?: (user: User) => void;
+};
+
+export default function TERStudentView({students, onAdd, onDelete}: TERStudentViewProps){
+	const [addingStudent, setAddingStudent] = useState<boolean>(false);
+	const [deleteStudent, setDeleteStudent] = useState<User | null>(null);
+
+	return (<>
+		{addingStudent && 
+			<UserSelectionDialog 
+				label="Ajout étudiants"
+				role_filter={[UserRoles.ETUDIANT]} 
+				onClose={() => setAddingStudent(false)} 
+				onConfirm={(users) => onAdd?.(users)}
+			/>
+		}
+
+		{deleteStudent &&
+			<ConfirmationDialog label={"Supprime etudiant du TER"} onCancel={() => setDeleteStudent(null)} onConfirm={() => {
+				onDelete?.(deleteStudent);
+				setDeleteStudent(null);
+			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`}/>
+		}
+		<div className="dashboard-top-layout">
+			<div>
+
+			</div>
+
+			<div className="dashboard-top-button-layout">
+				<ImportCSVButton/>
+				<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+			</div>
+		</div>
+			
+		<table className="users-table-style">
+			<thead>
+				<tr>
+					<th>Profile</th>
+					<th>Nom</th>
+					<th>E-Mail</th>
+					<th>Groupe</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{students && students.map((user, index) => (
+					<tr key={index}>
+						<td>
+							<div className="users-table-avatar-container">
+								<UserAvatar user={user}/>
+							</div>
+						</td>
+						<td>{user.first_name} {user.last_name}</td>
+						<td>{user.email}</td>
+						<td>?</td>
+						<td><IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteStudent(user)}/></td>
+					</tr>
+				))}
+			</tbody>	
+		</table>
+		</>
+	);
+}

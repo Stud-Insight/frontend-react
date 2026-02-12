@@ -292,7 +292,7 @@ export default function UsersPage(){
 			</div>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Encadrants" icon={<FiUser/>} active={page == UserRoles.ENCADRANT} info={getCountData().get(UserRoles.ENCADRANT)} color="var(--purple-col)" onClick={() => setPage(UserRoles.ENCADRANT)}/>
+				<InfoWidget label="Professeurs" icon={<FiUser/>} active={page == UserRoles.ENCADRANT} info={getCountData().get(UserRoles.ENCADRANT)} color="var(--purple-col)" onClick={() => setPage(UserRoles.ENCADRANT)}/>
 				<InfoWidget label="Résponsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
 				<InfoWidget label="Administrateurs" icon={<FiUser/>} active={page == UserRoles.ADMIN} info={getCountData().get(UserRoles.ADMIN)} color="var(--red-col)" onClick={() => setPage(UserRoles.ADMIN)}/>
 			</div>

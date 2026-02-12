@@ -4,7 +4,7 @@ import "./UserAvatar.css";
 
 interface UserAvatarProps {
 	user: User;
-	size: number;
+	size?: number;
 };
 
 export default function UserAvatar({user, size}: UserAvatarProps){

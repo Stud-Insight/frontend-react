@@ -124,6 +124,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	font-size: 13px;
-	gap: 5px;
+	font-size: 14px;
+	gap: 9px;
+	font-family: var(--main-font);
+    font-weight: var(--mid-bold);
 }

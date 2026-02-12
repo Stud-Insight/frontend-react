@@ -93,56 +93,58 @@ export interface TERPeriodStats {
     subjects_assigned: number;
 }
 
-interface AddStudentSchema {
-	user_id: string;
-}
-
-interface GroupCreateSchema {
-	name: string;
-	ter_period_id: string;
-}
-
 export default class TERService {
-	public static async getAllGroups(id: string): Promise<Group[]> {
-		 try {
-			const res = await api.get<Group[]>(`/groups/?ter_period_id=${id}`);
+	public static async getStudents(id: string): Promise<User[]> {
+		try {
+			const res = await api.get<{results: User[]}>(`/ter/periods/${id}/students`);
 			return res.data.results;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async getEnrolledStudents(id: string): Promise<User[] | null> {
+	public static async addStudent(period_id: string, user_id: string): Promise<void> {
 		try {
-			const res = await api.get<User[]>(`/ter/periods/${id}/students`);
+			await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students/${user_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async deleteStudent(period_id: string, user_id: string): Promise<void> {
+		try {
+			await api.delete<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students/${user_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getProfessors(period_id: string): Promise<User[]> {
+		try {
+			const res = await api.get<{results: User[]}>(`/ter/periods/${period_id}/professors`);
 			return res.data.results;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async getEnrolledTeachers(id: string): Promise<User[] | null> {
+	public static async addProfessor(period_id: string, professor_id: string): Promise<void> {
 		try {
-			const res = await api.get<User[]>(`/ter/periods/${id}/encadrants`);
-			return res.data.results;
+			await api.post<{results: User[]}>(`/ter/periods/${period_id}/professors/${professor_id}`);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async addEnroleStudent(period_id: string, id: string): Promise<void> {
+	public static async deleteProfessor(period_id: string, professor_id: string): Promise<void> {
 		try {
-			const load: AddStudentSchema = {
-				user_id: id
-			}
-
-			await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students`, load);
+			await api.delete<{results: User[]}>(`/ter/periods/${period_id}/professors/${professor_id}`);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async getAllPeriods(): Promise<TERPeriod[] | null> {
+	public static async getPeriods(): Promise<TERPeriod[]> {
 		try {
 			const res = await api.get<TERPeriod[]>("/ter/periods/");
 			return res.data;
@@ -151,7 +153,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getPeriodStats(id: string): Promise<TERPeriodStats | null> {
+	public static async getPeriodStats(id: string): Promise<TERPeriodStats> {
 		try {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}/stats`);
 			return res.data;
@@ -160,7 +162,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getUserPeriod(): Promise<TERPeriod | null>{
+	public static async getUserPeriod(): Promise<TERPeriod>{
 		try {
 			const period = await api.get<TERPeriod>("/ter/my");
 			return period.data;

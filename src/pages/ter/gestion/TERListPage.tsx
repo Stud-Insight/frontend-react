@@ -41,7 +41,7 @@ export default function PeriodListPage(){
 
 	const getAllTer = async () => {
 		try {
-			const data = await TERService.getAllPeriods();
+			const data = await TERService.getPeriods();
 			setTerList(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";

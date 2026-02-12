@@ -93,7 +93,6 @@ export default function TERPage({children}: TERPageProps){
 			<>
 			<label className="ter-title-style">TER</label>
 			<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>
-
 			</>
 		)
 	}

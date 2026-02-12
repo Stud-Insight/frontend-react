@@ -15,7 +15,7 @@ export const UserRolesLabels: Map<UserRoles, string> = new Map([
 	[UserRoles.ETUDIANT, "Étudiant"],
 	[UserRoles.RESPO_TER, "Responsable TER"],
 	[UserRoles.RESPO_STAGE, "Responsable Stage"],
-	[UserRoles.ENCADRANT, "Encadrant"],
+	[UserRoles.ENCADRANT, "Professeur"],
 	[UserRoles.EXTERNE, "Externe"],
 	[UserRoles.ADMIN, "Administrateur"],
 ]);
