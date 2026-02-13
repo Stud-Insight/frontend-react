@@ -9,9 +9,10 @@ interface UserWidgetProps {
 	user: User;
 	onClick?: () => void;
 	selected?: boolean;
+	onDelete?: (user: User) => void;
 };
 
-export default function UserWidget({user, onClick, selected = true}: UserWidgetProps){
+export default function UserWidget({user, onClick, selected = true, onDelete}: UserWidgetProps){
 	return (
 		<div className={`user-widget-layout ${selected ? "selected" : undefined}`} onClick={onClick}>
 			<div className="user-widget-left">

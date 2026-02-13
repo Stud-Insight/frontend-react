@@ -2,21 +2,22 @@ import React, {useState} from "react";
 import ImportCSVButton from "../../../components/button/ImportCSVButton";
 import { User, UserRoles } from "../../../services/UserService";
 import { FaPlus } from "react-icons/fa6";
-import { MdDeleteOutline } from "react-icons/md";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
-
 import Button from "../../../atoms/input/Button";
 import UserAvatar from "../../../components/ui/UserAvatar";
-import IconButton from "../../../components/button/IconButton";
+import { LuSend } from "react-icons/lu";
+import { MdDeleteOutline } from "react-icons/md";
+import OverflowMenu from "../../../components/input/OverflowMenu";
 
 interface TERStudentViewProps {
 	students: User[];
 	onAdd?: (users: Set<string>) => void;
 	onDelete?: (user: User) => void;
+	onContact?: (user: User) => void;
 };
 
-export default function TERStudentView({students, onAdd, onDelete}: TERStudentViewProps){
+export default function TERStudentView({students, onAdd, onDelete, onContact}: TERStudentViewProps){
 	const [addingStudent, setAddingStudent] = useState<boolean>(false);
 	const [deleteStudent, setDeleteStudent] = useState<User | null>(null);
 
@@ -36,6 +37,7 @@ export default function TERStudentView({students, onAdd, onDelete}: TERStudentVi
 				setDeleteStudent(null);
 			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`}/>
 		}
+		
 		<div className="dashboard-top-layout">
 			<div>
 
@@ -46,14 +48,13 @@ export default function TERStudentView({students, onAdd, onDelete}: TERStudentVi
 				<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
 			</div>
 		</div>
-			
+	
 		<table className="users-table-style">
 			<thead>
 				<tr>
 					<th>Profile</th>
 					<th>Nom</th>
-					<th>E-Mail</th>
-					<th>Groupe</th>
+					<th>E-Mail</th>	
 					<th></th>
 				</tr>
 			</thead>
@@ -67,8 +68,12 @@ export default function TERStudentView({students, onAdd, onDelete}: TERStudentVi
 						</td>
 						<td>{user.first_name} {user.last_name}</td>
 						<td>{user.email}</td>
-						<td>?</td>
-						<td><IconButton icon={<MdDeleteOutline/>} onClick={() => setDeleteStudent(user)}/></td>
+						<td>
+							<OverflowMenu options={[
+								{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
+								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}},
+							]}/>
+						</td>
 					</tr>
 				))}
 			</tbody>	

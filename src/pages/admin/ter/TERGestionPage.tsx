@@ -1,18 +1,12 @@
 import React, {useState, useEffect, ReactNode}from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
-import Button from "../../../atoms/input/Button";
 import InfoBox from "../../../components/ui/InfoBox";
-import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import TagWidget from "../../../atoms/ui/Tag";
-import ImportCSVButton from "../../../components/button/ImportCSVButton";
 import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
 import { Group } from "../../../services/GroupService";
 import GroupService from "../../../services/GroupService";
-import ModalDialog from "../../../components/dialog/ModalDialog";
-import InputField from "../../../components/input/InputField";
-import InputNumberField from "../../../components/input/InputNumberField";
-import GroupProjectWidget from "../../../components/objects/GroupProjectWidget"
+import { GoGear } from "react-icons/go";
 
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
@@ -39,6 +33,34 @@ export default function TERGestionPage(){
 	const [groups, setGroup] = useState<Group[]>([]);
 	const [professors, setProfessors] = useState<User[]>([]);
 
+	const addStudent = async (users: Set<string>) => {
+		try {
+			await Promise.all(
+				Array.from(users).map((stud_id) => 
+					TERService.addStudent(id, stud_id)
+				)
+			);
+			setSuccess(`Ajout de ${users.size} étudiant(s) avec succès.`);
+			getStudents();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
+	const deleteStudent = async (user: User) => {
+		try {
+			await TERService.deleteStudent(id, user.id);
+			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du TER.`);
+			getStudents();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
 	const getStudents = async () => {
 		try {
 			const data = await TERService.getStudents(id);
@@ -59,6 +81,23 @@ export default function TERGestionPage(){
 		}
 	}
 
+	const addProfessors = async (users: Set<string>) => {
+		try {
+			await Promise.all(
+				Array.from(users).map((prof_id) => 
+					TERService.addProfessor(id, prof_id)
+				)
+			);
+
+			setSuccess(`Ajout de ${users.size} professeur(s) avec succès.`);
+			getProfessors();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
 	const getGroups = async () => {
 		try {
 			const data = await GroupService.getAllTERGroups(id);
@@ -69,31 +108,11 @@ export default function TERGestionPage(){
 		}
 	}
 
-	const createGroupHandle = async () => {
+	const createGroup = async (nom: string, taille: number) => {
 		try {
-			await GroupService.createGroup(id, groupNom, groupeTaille);
-			setSuccess(`Groupe "${groupNom} à été crée avec success."`);
+			await GroupService.createGroup(id, nom, taille);
+			setSuccess(`Groupe "${nom} à été crée avec success."`);
 			getGroups();
-			setTimeout(() => setSuccess(null), 5000);
-		} catch (err){
-			const message = err instanceof Error ? err.message : "Erreur de connexion";
-			setError(message);
-		}
-
-		setGroupNom("");
-		setGroupTaille(2);
-		setAddingGroup(false);
-	};
-
-	const addStudentHandle = async (selectedUsers: Set<string>) => {
-		try {
-			await Promise.all(
-				Array.from(selectedUsers).map((stud_id) => 
-					TERService.addStudent(id, stud_id)
-				)
-			);
-			setSuccess(`Ajout de ${selectedUsers.size} étudiant(s) avec succès.`);
-			getStudents();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -101,22 +120,6 @@ export default function TERGestionPage(){
 		}
 	};
 	
-	const deleteStudentHandle = async () => {
-		try {
-			await Promise.all(
-				Array.from(selectedUsers).map((stud_id) => 
-					TERService.addStudent(id, stud_id)
-				)
-			);
-			setSuccess(`Ajout de ${selectedUsers.size} étudiant(s) avec succès.`);
-			getStudents();
-			setTimeout(() => setSuccess(null), 5000);
-		} catch (err){
-			const message = err instanceof Error ? err.message : "Erreur de connexion";
-			setError(message);
-		}
-	};
-
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
@@ -135,9 +138,9 @@ export default function TERGestionPage(){
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
-		[0, <TERStudentView students={students}/>],
-		[1, <TERProfessorView professors={professors}/>],
-		[2, <TERGroupView groups={groups}/>],
+		[0, <TERStudentView students={students} onAdd={users => addStudent(users)} onDelete={(user) => deleteStudent(user)}/>],
+		[1, <TERProfessorView professors={professors} onAdd={user => addProfessors(user)}/>],
+		[2, <TERGroupView groups={groups} onAdd={(nom, size) => createGroup(nom, size)}/>],
 		[3, <TERStudentView students={students}/>],
 		[4, <TERStudentView students={students}/>],
 	])
@@ -156,10 +159,14 @@ export default function TERGestionPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Étudiants" active={view == 0} icon={<FiUser/>} info={students.length} color={`var(--blue-col)`} onClick={() => setView(0)}/>
-				<InfoWidget label="Enseignants" active={view == 1} icon={<TbSchool/>} info={0} color="var(--purple-col)" onClick={() => setView(1)}/>
+				<InfoWidget label="Professeurs" active={view == 1} icon={<TbSchool/>} info={professors.length} color="var(--purple-col)" onClick={() => setView(1)}/>
 				<InfoWidget label="Groupes" active={view == 2} icon={<FiUsers/>} info={groups.length} color="var(--blue-col)" onClick={() => setView(2)}/>
+			</div>
+
+			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Sujets" active={view == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setView(3)}/>
 				<InfoWidget label="Notations" active={view == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setView(4)}/>
+				<InfoWidget label="Paramêtres" active={view == 5} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(5)}/>
 			</div>
 
 			{success && <InfoBox label={success} type="success"/>}

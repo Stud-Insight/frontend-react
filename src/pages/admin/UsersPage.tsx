@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import DashboardPage from "./DashboardPage";
+import DashboardPage from "../dashboard/DashboardPage";
 import Button from "../../atoms/input/Button";
 import InfoBox from "../../components/ui/InfoBox";
 import UserService, { User, UserRoles, UserRolesColors, UserRolesLabels} from "../../services/UserService";
@@ -13,7 +13,6 @@ import UserAvatar from "../../components/ui/UserAvatar";
 import TagWidget from "../../atoms/ui/Tag";
 import InputTagSelection from "../../components/input/InputTagSelection";
 import ImportCSVButton from "../../components/button/ImportCSVButton";
-import HorizontalDivider from "../../components/ui/HorizontalDivider";
 
 import { CgImport } from "react-icons/cg";
 import { IoPricetagOutline } from "react-icons/io5";
@@ -25,8 +24,6 @@ import { IoBan } from "react-icons/io5";
 import { FiUser, FiMail } from "react-icons/fi";
 
 import "./UsersPage.css";
-import "./DashboardPage.css";
-import ContainerWidget from "../../components/ui/ContainerWidget";
 
 export default function UsersPage(){
 	const { user, refreshUser } = useAuth();

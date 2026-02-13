@@ -72,7 +72,7 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 					</div>
 
 					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Encadrants</label>
+						<label style={{ color: "var(--gray1-col)" }}>Professeurs</label>
 						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
 							{0}
 						</label>

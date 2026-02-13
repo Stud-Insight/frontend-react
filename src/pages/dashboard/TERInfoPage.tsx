@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react"
-import DashboardPage from "../../dashboard/DashboardPage";
-import ContainerWidget from "../../../components/ui/ContainerWidget";
-import UserWidget from "../../../components/objects/UserWidget";
-import ScheduleEventWidget from "../../../components/ui/ScheduleEventWidget";
-import InfoBox from "../../../components/ui/InfoBox";
-import SubjectWidget from "../../../components/objects/SubjectWidget";
-import { FaRegClock, FaRegCheckCircle } from "react-icons/fa";
-import { FaArrowTrendUp } from "react-icons/fa6";
-import { FiUsers } from "react-icons/fi";
+import ContainerWidget from "../../components/ui/ContainerWidget";
+import ScheduleEventWidget from "../../components/ui/ScheduleEventWidget";
+import SubjectWidget from "../../components/objects/SubjectWidget";
 import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
-import { User } from "../../../services/UserService";
-import { Subject, SubjectStatus } from "../../../services/SubjectService";
-import InfoWidget from "../../../components/ui/InfoWidget";
+import { Subject, SubjectStatus } from "../../services/SubjectService";
 import { useParams } from "react-router-dom";
 import TERPage from "./TERPage";
 

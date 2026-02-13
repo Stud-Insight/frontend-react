@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import InfoWidget from "../../../components/ui/InfoWidget";
+import InfoWidget from "../../components/ui/InfoWidget";
 import TERPage from "./TERPage";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";

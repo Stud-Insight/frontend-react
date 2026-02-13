@@ -21,6 +21,7 @@ export default function TERGroupView({groups, onAdd}: TERGroupViewProps){
 		onAdd?.(groupNom, groupTaille);
 		setGroupNom("");
 		setGroupTaille(2);
+		setAddingGroup(false);
 	};
 
 	return (

@@ -15,7 +15,7 @@ export default function UserAvatar({user, size}: UserAvatarProps){
 	};
 
 	const getColor = (user: User) => {
-		// return "var(--blue-col)";
+		return "var(--blue-col)";
 
 		if (user.groups){
 			let roles = user.groups.map(role => {

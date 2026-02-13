@@ -20,6 +20,7 @@ import { FiUser } from "react-icons/fi";
 import { User, UserRoles } from "../../services/UserService.ts";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
+import { PiQuestionBold } from "react-icons/pi";
 
 import "./DashboardPage.css"
 
@@ -87,6 +88,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 							<HorizontalDivider/>
 						</>
 					}
+					<NavigationButton label="Aide" icon={<PiQuestionBold/>}/>
 				</div>
 
 				<div className="dashboard-sidebar-content">

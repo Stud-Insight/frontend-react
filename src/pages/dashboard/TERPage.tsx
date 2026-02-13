@@ -1,8 +1,8 @@
 import React, { useEffect, useState, ReactNode } from "react";
-import DashboardPage from "../../dashboard/DashboardPage";
-import TERService, { TERPeriod } from "../../../services/TERService";
-import InfoBox from "../../../components/ui/InfoBox";
-import ProgressBar from "../../../components/ui/ProgressBar";
+import DashboardPage from "./DashboardPage";
+import TERService, { TERPeriod } from "../../services/TERService";
+import InfoBox from "../../components/ui/InfoBox";
+import ProgressBar from "../../components/ui/ProgressBar";
 
 import { useNavigate } from "react-router-dom";
 import "./TERPage.css";
