@@ -6,8 +6,8 @@ import "./ArchivePage.css"
 export default function ArchivePage(){
 	return (
 		<DashboardPage>
-			<label style={{fontWeight: 800, fontSize: "25px"}}>Archives</label>
-			<label>Les ter archive</label>
+			<span style={{fontWeight: 800, fontSize: "25px"}}>Archives</span>
+			<span>Les ter archive</span>
 		</DashboardPage>
 	)
 }

@@ -20,10 +20,10 @@ export default function UserWidget({user, onClick, selected = true, onDelete}: U
 			</div>
 
 			<div className="user-widget-right">
-				<label style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</label>
-				{/* <label>{role ? role : undefined}</label> */}
-				<label>{user.id.slice(0, 8)}</label>
-				<label>{user.email}</label>
+				<span style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</span>
+				{/* <span>{role ? role : undefined}</span> */}
+				<span>{user.id.slice(0, 8)}</span>
+				<span>{user.email}</span>
 			</div>
 
 			<div className={`user-selected-icon ${selected ? "selected" : undefined}`}>

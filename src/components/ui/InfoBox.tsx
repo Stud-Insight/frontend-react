@@ -24,7 +24,7 @@ export default function InfoBox({label, type = "info"}: InfoBoxProps) {
             <div className="info-box-icon">
                 {getIcon()}
             </div>
-            <label>{label}</label>
+            <span>{label}</span>
         </div>
     );
 }

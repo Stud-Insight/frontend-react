@@ -14,7 +14,7 @@ export default function ProgressBar({label, current, tag, subtext}: ProgressBarP
     return ( 
 		<ContainerWidget>
 			 <div className="progress-info">
-                <label className="progress-label">{label}</label>
+                <span className="progress-label">{label}</span>
 				<Tag label={tag} color="var(--gray1-col)"/>
             </div>
 
@@ -22,7 +22,7 @@ export default function ProgressBar({label, current, tag, subtext}: ProgressBarP
                 <div className="progress-bar-fill" style= {{ width: `${current * 100}%`}}/>
             </div>
 
-            {subtext && <label className="progress-subtext">{subtext}</label>}
+            {subtext && <span className="progress-subtext">{subtext}</span>}
 		</ContainerWidget>
     );
 }

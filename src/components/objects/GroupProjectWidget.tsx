@@ -3,6 +3,7 @@ import ContainerWidget from "../ui/ContainerWidget";
 import { Group } from "../../services/GroupService";
 import { FiUsers } from "react-icons/fi";
 import Button from "../../atoms/input/Button";
+import Icon from "../../atoms/ui/Icon";
 
 import "./GroupProjectWidget.css"
 
@@ -15,18 +16,16 @@ export default function GroupProjectWidget({group}: GroupProjectWidgetProps){
 		<ContainerWidget>
 			<div className="group-project-widget-layout">
 				<div className="group-project-widget-title">
-					<div className="info-widget-icon">
-						<FiUsers/>
-					</div>
+					<Icon icon={<FiUsers/>} color="var(--blue-col)"/>
 					<div className="group-project-widget-title-right">
-						<label style={{fontWeight: "var(--big-bold)"}}>{group.name}</label>
-						<label style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>{group.id}</label>
+						<span style={{fontWeight: "var(--big-bold)"}}>{group.name}</span>
+						<span style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>{group.id}</span>
 					</div>
 				</div>	
 
 				{/* <div className="group-project-name-tags-layout">
 					{group.members.map((stud, index) => (
-						<label className="group-project-name-tags">{stud.first_name} {stud.last_name}</label>
+						<span className="group-project-name-tags">{stud.first_name} {stud.last_name}</span>
 					))}
 				</div>
 				

@@ -20,18 +20,6 @@
 	gap: 5px;
 }
 
-.info-widget-icon {
-	display: flex;
-	padding: 10px;
-	aspect-ratio: 1 / 1;
-	font-size: 24px;
-	border-radius: 10px;
-	justify-content: center;
-	align-items: center;
-	color: var(--blue-col);
-	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
-}
-
 .group-project-footer {
 	display: flex;
 	flex-direction: row;

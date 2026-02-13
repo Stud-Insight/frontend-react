@@ -75,14 +75,14 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 						if (opt == selected){
 							return (
 								<div key={index} className="dropdown-option-style selected" onClick={() => selectionHandler(opt)}>
-									<label>{opt}</label>
+									<span>{opt}</span>
 									<FaCheck/>
 								</div>
 							);
 						} else {
 							return (
 								<div key={index} className="dropdown-option-style" onClick={() => selectionHandler(opt)}>
-									<label>{opt}</label>
+									<span>{opt}</span>
 								</div>
 							);
 						};

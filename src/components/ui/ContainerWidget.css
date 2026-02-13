@@ -10,7 +10,8 @@
 	border-width: 2px;
 	border-color: var(--white-col);
 	background-color: var(--white-col);
-	box-shadow: 3px 3px 5px var(--gray2-col);
+	/* box-shadow: 3px 3px 5px var(--gray2-col); */
+	box-shadow: 0 4px 8px 0 var(--gray2-col), 0 6px 20px 0 var(--gray2-col);
 	transition: border-color 0.3s;
 	transition: background-color 0.3s;
 	transition: transform 0.15s;

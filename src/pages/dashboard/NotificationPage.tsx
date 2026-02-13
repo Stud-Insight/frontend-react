@@ -41,11 +41,11 @@ export default function NotificationPage() {
 		<DashboardPage>
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Notifications</label>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Notifications</span>
 				</div>
 			</div>
 
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
+			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}

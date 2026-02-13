@@ -15,6 +15,7 @@ import InputAttachment from "../../components/input/InputAttachment";
 
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
+import { MdOutlineEdit } from "react-icons/md";
 
 import "./SubjectPage.css";
 
@@ -162,13 +163,13 @@ export default function SubjectPage(){
 					<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
 					<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
 					<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>	
-					<Button label="Modifier" icon={<FaPlus/>} onClick={editConfirmHandle}/>
+					<Button label="Modifier" icon={<MdOutlineEdit/>} onClick={editConfirmHandle}/>
 				</ModalDialog>
 			}
 
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets TER</label>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets TER</span>
 				</div>
 			
 				<div className="dashboard-top-button-layout">
@@ -178,7 +179,7 @@ export default function SubjectPage(){
 					}}/>
 				</div>
 			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
+			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}

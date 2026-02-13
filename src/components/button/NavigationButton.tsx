@@ -25,7 +25,7 @@ export default function NavigationButton({label, children, icon, offset = 0, siz
 				<div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
 					{icon}
 				</div>
-				<label>{label}</label>
+				<span>{label}</span>
 			
 			</>:
 				children

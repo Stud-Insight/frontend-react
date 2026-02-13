@@ -103,15 +103,15 @@ export default function InputDate({label, icon, start, end, onChange}: InputDate
 	return (
 		<div className="date-layout-container">
 			<Field className="ter-list-label-layout" label={label} icon={icon} onClick={() => setExpand(!expand)}>
-				<label>{formatDate(start)}</label>
-				<label>-</label>
-				<label>{formatDate(end)}</label>
+				<span>{formatDate(start)}</span>
+				<span>-</span>
+				<span>{formatDate(end)}</span>
 			</Field>
 
 			<Field className={`calender-layout ${expand ? "expand" : ""}`}>
 				<div className="calender-header-layout">
 					<IconButton icon={<IoChevronBack />} onClick={() => switchDateHandler(-1)}/>
-					<label className="calender-title"> {monthName} {selectedYear}</label>
+					<span className="calender-title"> {monthName} {selectedYear}</span>
 					<IconButton icon={<IoChevronForward/>} onClick={() => switchDateHandler(1)}/>
 				</div>
 

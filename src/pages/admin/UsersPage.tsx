@@ -260,7 +260,7 @@ export default function UsersPage(){
 
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion Utilisateurs</label>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion Utilisateurs</span>
 				</div>
 
 				<div className="dashboard-top-button-layout">
@@ -277,7 +277,7 @@ export default function UsersPage(){
 				</div>
 			</div>
 
-			<label style={{color: "var(--gray1-col)"}}>Gérez les comptes utilisateurs, leurs rôles et leurs accès à la plateforme.</label>
+			<span style={{color: "var(--gray1-col)"}}>Gérez les comptes utilisateurs, leurs rôles et leurs accès à la plateforme.</span>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
@@ -320,10 +320,10 @@ export default function UsersPage(){
 								</div>
 							</td>
 							<td>
-								<label>{`#${user.id.slice(0, 8)}`}</label>
+								<span>{`#${user.id.slice(0, 8)}`}</span>
 							</td>
 							<td>
-								<label>{user.first_name} {user.last_name}</label>
+								<span>{user.first_name} {user.last_name}</span>
 							</td>
 							<td>{user.email}</td>
                             <td>{dateFormat(user.date_joined)}</td>

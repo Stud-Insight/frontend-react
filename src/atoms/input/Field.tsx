@@ -14,7 +14,7 @@ export default function Field({label, icon, children, onClick, className}: Field
 		<div className="field-layout">
 			<div className="field-label">
 				{icon}
-				{label && <label>{label}</label>}
+				{label && <span>{label}</span>}
 			</div>
 
 			<div className={`field-content ${className}`} onClick={onClick}>

@@ -104,14 +104,14 @@ export default function PeriodListPage(){
 			}
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion TER</label>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Gestion TER</span>
 				</div>
 			
 				<div className="dashboard-top-button-layout">
 					<Button icon={<FaPlus/>} label="Créer Un TER" onClick={() => setCreatePeriod(true)}/>
 				</div>
 			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez les TERs.</label>
+			<span style={{color: "var(--gray1-col)"}}>Créez et gérez les TERs.</span>
 			
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}

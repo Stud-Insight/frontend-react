@@ -99,7 +99,7 @@
 	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
 }
 
-.subject-widget-state-style.VALIDATED {
+.subject-widget-state-style.validated {
 	color: var(--green-col);
 	background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
 }

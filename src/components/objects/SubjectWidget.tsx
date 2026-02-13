@@ -56,13 +56,13 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 					<Icon icon={<FaRegFile/>} color="var(--blue-col)"/>
 					
 					<div className="subject-widget-title-right">
-						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</label>
-						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.professor?.first_name} {subject.professor?.last_name.toUpperCase()}</label>
+						<span style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</span>
+						<span style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.professor?.first_name} {subject.professor?.last_name.toUpperCase()}</span>
 					</div>
 				</div>
 
 				<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
-					<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
+					<span style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</span>
 
 					<div className="subject-widget-task-list">
 						{subject.taches && subject.taches.map((task, index) => (
@@ -70,8 +70,12 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 						))}
 					</div>
 
-					<div className="subject-widget-tag-layout">
-						<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
+					<div className="subject-widget-tag-layout"> 
+						{subject.min_group_size == subject.max_group_size ? 
+							<TagWidget label={`${subject.max_group_size} Etudiants`}/>
+							:
+							<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
+						}
 						{subject.tags?.map((tag, index) => (
 							<TagWidget key={index} label={tag}/>
 						))}
@@ -86,7 +90,7 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 							<div className="subject-widget-footer-content">
 								<TagWidget label={SubjectStatusLabel.get(subject.status)} color={SubjectStatusColor.get(subject.status)}/>
 								-
-								<label style={{fontSize: "14px"}}>{dateFormat(subject.created)}</label>
+								<span style={{fontSize: "14px"}}>{dateFormat(subject.created)}</span>
 							</div>
 
 							<OverflowMenu options={[

@@ -15,7 +15,7 @@ export default function ConfirmationDialog({label, info, onCancel, onConfirm}: C
 	return (
 		<ModalDialog onClose={onCancel} label={label} className="confirmation-dialog-layout-layout">
 			<div className="confirmation-dialog-layout">
-				<label>{info}</label>
+				<span>{info}</span>
 
 				<div id="button-content">
 					<Button label="Annuler" style="cancel" onClick={onCancel}/>

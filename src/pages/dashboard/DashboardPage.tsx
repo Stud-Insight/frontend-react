@@ -96,8 +96,8 @@ export default function DashboardPage({children} : DashboardPageProps){
 					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={(id) => pageHandle(id)}>
 						<UserAvatar user={user} size={50}/>
 						<div className="dashboard-profile-text">
-							<label style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</label>
-							<label style={{color: "var(--gray1-col)"}}>{user?.email}</label>
+							<span style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</span>
+							<span style={{color: "var(--gray1-col)"}}>{user?.email}</span>
 						</div>
 					</NavigationButton>
 					<HorizontalDivider/>
@@ -112,7 +112,7 @@ export default function DashboardPage({children} : DashboardPageProps){
 					{/* <MdNotificationsNone size={20}/>
 
 					<div className="dashboard-user-container">
-						<label>{user?.first_name} {user?.last_name}</label>
+						<span>{user?.first_name} {user?.last_name}</span>
 						<div className="dashboard-avatar-container">
 							<UserAvatar user={user}/>
 						</div>

@@ -18,7 +18,7 @@ export default function ContainerWidget({icon, label, active = false, children, 
 			{label != null && icon != null && 
 				<div className="container-widget-title">
 					{icon}
-					<label>{label}</label>
+					<span>{label}</span>
 				</div>
 			}
 			

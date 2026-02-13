@@ -3,23 +3,23 @@ import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import InfoBox from "../../../components/ui/InfoBox";
 import TagWidget from "../../../atoms/ui/Tag";
-import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
-import { Group } from "../../../services/GroupService";
-import GroupService from "../../../services/GroupService";
-import { GoGear } from "react-icons/go";
+import TERStudentView from "./TERStudentsView";
+import TERGroupView from "./TERGroupView";
+import TERProfessorView from "./TERProfessorView";
+import TERGradeView from "./TERGradeView";
 
+import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
+import GroupService, { Group } from "../../../services/GroupService";
+import GradeService, { Grade } from "../../../services/GradeService";
+import SubjectService, { Subject } from "../../../services/SubjectService";
+
+import { GoGear } from "react-icons/go";
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-import { FaPlus } from "react-icons/fa6";
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
-import { MdDeleteOutline } from "react-icons/md";
-
-import TERStudentView from "./TERStudentsView";
-import TERGroupView from "./TERGroupView";
-import TERProfessorView from "./TERProfessorView";
 
 import "./TERGestionPage.css";
 
@@ -30,7 +30,9 @@ export default function TERGestionPage(){
 	const [period, setPeriod] = useState<TERPeriod | null>();
 	const [view, setView] = useState<number>(0);
 	const [students, setStudents] = useState<User[]>([]);
+	const [grades, setGrades] = useState<Grade[]>([]);
 	const [groups, setGroup] = useState<Group[]>([]);
+	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [professors, setProfessors] = useState<User[]>([]);
 
 	const addStudent = async (users: Set<string>) => {
@@ -119,6 +121,16 @@ export default function TERGestionPage(){
 			setError(message);
 		}
 	};
+
+	const getGrades = async () => {
+		try {
+			const res = await GradeService.getGrades(id);
+			setGrades(res);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
 	
 	useEffect(() => {
 		const getPeriod = async () => {
@@ -135,6 +147,7 @@ export default function TERGestionPage(){
 		getStudents();
 		getProfessors();
 		getGroups();
+		getGrades();
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
@@ -142,20 +155,20 @@ export default function TERGestionPage(){
 		[1, <TERProfessorView professors={professors} onAdd={user => addProfessors(user)}/>],
 		[2, <TERGroupView groups={groups} onAdd={(nom, size) => createGroup(nom, size)}/>],
 		[3, <TERStudentView students={students}/>],
-		[4, <TERStudentView students={students}/>],
+		[4, <TERGradeView grades={grades}/>],
 	])
 
 	return (
 		<DashboardPage>
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
-					<label style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</label>
+					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
 					<TagWidget label={TERStatusLabel.get(period?.status)}/>
 				</div>
 				<div></div>
 			</div>
 
-			<label style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, projets et participants.</label>
+			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, projets et participants.</span>
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Étudiants" active={view == 0} icon={<FiUser/>} info={students.length} color={`var(--blue-col)`} onClick={() => setView(0)}/>
@@ -164,8 +177,8 @@ export default function TERGestionPage(){
 			</div>
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Sujets" active={view == 3} icon={<FaRegFile/>} info={0} color="var(--orange-col)" onClick={() => setView(3)}/>
-				<InfoWidget label="Notations" active={view == 4} icon={<TbSchool/>} info={0} color="var(--orange-col)" onClick={() => setView(4)}/>
+				<InfoWidget label="Sujets" active={view == 3} icon={<FaRegFile/>} info={subjects.length} color="var(--orange-col)" onClick={() => setView(3)}/>
+				<InfoWidget label="Notations" active={view == 4} icon={<TbSchool/>} info={grades.length} color="var(--orange-col)" onClick={() => setView(4)}/>
 				<InfoWidget label="Paramêtres" active={view == 5} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(5)}/>
 			</div>
 

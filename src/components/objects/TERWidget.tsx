@@ -18,6 +18,7 @@ interface TERWidgetProps {
 
 export default function TERWidget({ data, onClick }: TERWidgetProps){
 	const [stats, setStats] = useState<TERPeriodStats | null>(null);
+	const [professorCount, setProfessorCount] = useState<number>(0);
 
 	const dateFormat = (dateString: string) =>
 		new Date(dateString).toLocaleDateString("fr-FR", {
@@ -32,11 +33,21 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 				const g = await TERService.getPeriodStats(data.id);
 				setStats(g);
 			} catch (err){
-				console.log("Erreur Period Widget");
+				console.log("Erreur TER Widget");
 			}
 		}
-		
+
+		const getProfessors = async () => {
+			try {
+				const g = await TERService.getProfessors(data.id);
+				setProfessorCount(g.length);
+			} catch (err){
+				console.log("Erreur TER Widget");
+			}
+		}
+	
 		getTerData();
+		getProfessors();
 	}, [data.id]);
 
 	return (
@@ -44,9 +55,9 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 			<div className="ter-widget-title-layout">
 				<div className="ter-widget-title-right-layout">
 					<div className="ter-widget-title-container ">
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
 							{data.name}
-						</label>
+						</span>
 						<TagWidget label={TERStatusLabel.get(data.status)}/>
 					</div>
 					
@@ -54,9 +65,9 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 						<HiOutlineCalendar/>
 
 						<div className="ter-widget-date-layout">
-							<label>{dateFormat(data.group_formation_start)}</label>
-							<label>-</label>
-							<label>{dateFormat(data.project_end ?? data.group_formation_end)}</label>
+							<span>{dateFormat(data.group_formation_start)}</span>
+							<span>-</span>
+							<span>{dateFormat(data.project_end ?? data.group_formation_end)}</span>
 						</div>
 					</div>
 				</div>
@@ -65,31 +76,31 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 
 				<div className="ter-widget-info-layout">
 					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Etudiants</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+						<span style={{ color: "var(--gray1-col)" }}>Etudiants</span>
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
 							{stats?.students_enrolled}
-						</label>
+						</span>
 					</div>
 
 					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Professeurs</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-							{0}
-						</label>
+						<span style={{ color: "var(--gray1-col)" }}>Professeurs</span>
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+							{professorCount}
+						</span>
 					</div>
 
 					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Groupes</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+						<span style={{ color: "var(--gray1-col)" }}>Groupes</span>
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
 							{stats?.groups_total}
-						</label>
+						</span>
 					</div>
 
 					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Sujets</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+						<span style={{ color: "var(--gray1-col)" }}>Sujets</span>
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
 							{stats?.subjects_total}
-						</label>
+						</span>
 					</div>
 				</div>
 				

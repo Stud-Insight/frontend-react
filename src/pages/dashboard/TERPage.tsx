@@ -81,7 +81,7 @@ export default function TERPage({children}: TERPageProps){
 		if (period){
 			return (
 				<>
-					<label className="ter-title-style">{period.academic_year} / {period.name}</label>
+					<span className="ter-title-style">{period.academic_year} / {period.name}</span>
 					<ProgressBar label={`Phase: ${phaseLabel.get(phase)}`} current={0.3} tag={`${3} / ${getDaysBetween(start, deadline)} jours`} subtext={`Deadline: ${formatDate(deadline)}`}/>
 					{error && <InfoBox label={error} type="error"/>}
 					{children}
@@ -91,7 +91,7 @@ export default function TERPage({children}: TERPageProps){
 
 		return (
 			<>
-			<label className="ter-title-style">TER</label>
+			<span className="ter-title-style">TER</span>
 			<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>
 			</>
 		)

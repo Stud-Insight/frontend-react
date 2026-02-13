@@ -9,7 +9,7 @@ export default function Divider({label}: DividerInterface){
     return label ? (
         <div className="divider-style">
             <div className="sep" />
-            <label>{label}</label>
+            <span>{label}</span>
             <div className="sep" />
         </div>
     ) : (

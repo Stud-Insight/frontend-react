@@ -17,7 +17,7 @@ export default function HomePage() {
 
     return (
 		<DashboardPage>
-			<label>Accueil</label>
+			<span>Accueil</span>
 			{/* <div className="dashboard-container">
 				<StudentDashboard/>
 			</div> */}

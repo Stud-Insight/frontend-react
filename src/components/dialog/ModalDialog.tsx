@@ -21,7 +21,7 @@ export default function ModalDialog({label, onClose, children, className}: Modal
 		<div className="modal-dialog-layout">
 			<div className={`modal-dialog-content ${className}`}>
 				<div className="modal-dialog-title">
-					<label className="modal-dialog-label">{label}</label>
+					<span className="modal-dialog-label">{label}</span>
 					<IconButton icon={<RxCross2/>} onClick={closeHandler}/>
 				</div>
 				<HorizontalDivider/>

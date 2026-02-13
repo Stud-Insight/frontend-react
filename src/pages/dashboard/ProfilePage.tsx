@@ -26,11 +26,11 @@ export default function ProfilePage(){
 		<DashboardPage>
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Profile</label>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Profile</span>
 				</div>
 			</div>
 
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
+			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
 
 			<div className="profile-page-wrapper">
 				<div className="profile-page-layout">
@@ -40,11 +40,11 @@ export default function ProfilePage(){
 					</ContainerWidget>
 
 					<ContainerWidget icon={<FiUser/>} label="Info" className="profile-info-avatar">
-						<label>{user?.first_name}</label>
-						<label>{user?.last_name}</label>
-						<label>{user?.email}</label>
-						<label>{user?.email}</label>
-						<label>{user?.email}</label>
+						<span>{user?.first_name}</span>
+						<span>{user?.last_name}</span>
+						<span>{user?.email}</span>
+						<span>{user?.email}</span>
+						<span>{user?.email}</span>
 					</ContainerWidget>
 				</div>
 

@@ -36,7 +36,7 @@ export default function NavigationButton({ label, icon, offset = 0, size, onClic
                     {/* On affiche le badge directement sur l'icône */}
                     <NotificationBadge count={unreadCount} />
                 </span>
-                <label>{label}</label>
+                <span>{label}</span>
             </div>
             {active ? <IoIosArrowForward /> : undefined}
         </button>
