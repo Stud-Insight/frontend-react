@@ -61,39 +61,39 @@ export default function DashboardPage({children} : DashboardPageProps){
 				<div className="dashboard-sidebar-content">
 					<Logo large={true}/>
 					<HorizontalDivider/>
-					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={(id) => pageHandle(id)}/>
-					<NavigationButton label="Notifications" notification={3} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={(id) => pageHandle(id)}/>
-					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={(id) => pageHandle(id)}/> */}
+					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={pageHandle}/>
+					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={pageHandle}/>
+					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={pageHandle}/>
+					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={pageHandle}/>
+					<NavigationButton label="Notifications" notification={3} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle}/>
+					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={pageHandle}/> */}
 					<HorizontalDivider/>
 
 					{!roles.includes(UserRoles.ETUDIANT) &&
 						<>
 							{roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN) && 
-								<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={(id) => pageHandle(id)}/>
+								<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle}/>
 							}
 
 							{roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN) && 
-								<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={(id) => pageHandle(id)}/>
+								<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={pageHandle}/>
 							}
 							
 							{roles.includes(UserRoles.ADMIN) &&
-								<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={(id) => pageHandle(id)}/>
+								<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={pageHandle}/>
 							}
 
-							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={(id) => pageHandle(id)}/>
+							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
 							
 							<HorizontalDivider/>
 						</>
 					}
-					<NavigationButton label="Aide" icon={<PiQuestionBold/>}/>
+					<NavigationButton label="Aide" icon={<PiQuestionBold/>} id="help" active={isActive("/dashboard/help")}  onClick={pageHandle}/>
 				</div>
 
 				<div className="dashboard-sidebar-content">
 					<HorizontalDivider/>
-					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={(id) => pageHandle(id)}>
+					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={pageHandle}>
 						<UserAvatar user={user} size={50}/>
 						<div className="dashboard-profile-text">
 							<span style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</span>

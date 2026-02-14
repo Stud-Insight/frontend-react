@@ -21,13 +21,18 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 	const [addingStudent, setAddingStudent] = useState<boolean>(false);
 	const [deleteStudent, setDeleteStudent] = useState<User | null>(null);
 
+	const addUsersHandle = (users: Set<string>) => {
+		onAdd?.(users);
+		setAddingStudent(false);
+	};
+
 	return (<>
 		{addingStudent && 
 			<UserSelectionDialog 
 				label="Ajout étudiants"
 				role_filter={[UserRoles.ETUDIANT]} 
 				onClose={() => setAddingStudent(false)} 
-				onConfirm={(users) => onAdd?.(users)}
+				onConfirm={(users) => addUsersHandle(users)}
 			/>
 		}
 
@@ -48,36 +53,38 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 				<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
 			</div>
 		</div>
-	
-		<table className="users-table-style">
-			<thead>
-				<tr>
-					<th>Profile</th>
-					<th>Nom</th>
-					<th>E-Mail</th>	
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				{students && students.map((user, index) => (
-					<tr key={index}>
-						<td>
-							<div className="users-table-avatar-container">
-								<UserAvatar user={user}/>
-							</div>
-						</td>
-						<td>{user.first_name} {user.last_name}</td>
-						<td>{user.email}</td>
-						<td>
-							<OverflowMenu options={[
-								{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
-								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}},
-							]}/>
-						</td>
+		
+		{students && students.length > 0 &&
+			<table className="users-table-style">
+				<thead>
+					<tr>
+						<th>Profile</th>
+						<th>Nom</th>
+						<th>E-Mail</th>	
+						<th></th>
 					</tr>
-				))}
-			</tbody>	
-		</table>
+				</thead>
+				<tbody>
+					{students.map(user => (
+						<tr key={user.id}>
+							<td>
+								<div className="users-table-avatar-container">
+									<UserAvatar user={user}/>
+								</div>
+							</td>
+							<td>{user.first_name} {user.last_name}</td>
+							<td>{user.email}</td>
+							<td>
+								<OverflowMenu options={[
+									{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
+									{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}},
+								]}/>
+							</td>
+						</tr>
+					))}
+				</tbody>	
+			</table>
+		}
 		</>
 	);
 }

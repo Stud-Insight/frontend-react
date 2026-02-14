@@ -27,7 +27,7 @@ export default function TERProfessorView({professors, onAdd, onDelete, onContact
 			{addingProfesssor &&
 				<UserSelectionDialog 
 					label="Ajout professeurs"
-					role_filter={[UserRoles.ENCADRANT, UserRoles.EXTERNE, UserRoles.RESPO_TER, UserRoles.RESPO_STAGE, UserRoles.ADMIN]} 
+					role_filter={[UserRoles.ENCADRANT]} 
 					onClose={() => setAddingProfesssor(false)} 
 					onConfirm={(users) => {
 						onAdd?.(users);
@@ -54,35 +54,37 @@ export default function TERProfessorView({professors, onAdd, onDelete, onContact
 				</div>
 			</div>
 
-			<table className="users-table-style">
-				<thead>
-					<tr>
-						<th>Profile</th>
-						<th>Nom</th>
-						<th>E-Mail</th>	
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{professors && professors.map((user, index) => (
-						<tr key={index}>
-							<td>
-								<div className="users-table-avatar-container">
-									<UserAvatar user={user}/>
-								</div>
-							</td>
-							<td>{user.first_name} {user.last_name}</td>
-							<td>{user.email}</td>
-							<td>
-								<OverflowMenu options={[
-									{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
-									{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteProfessor(user)}},
-								]}/>
-							</td>
+			{professors && professors.length > 0 &&
+				<table className="users-table-style">
+					<thead>
+						<tr>
+							<th>Profile</th>
+							<th>Nom</th>
+							<th>E-Mail</th>	
+							<th></th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{professors.map((user, index) => (
+							<tr key={index}>
+								<td>
+									<div className="users-table-avatar-container">
+										<UserAvatar user={user}/>
+									</div>
+								</td>
+								<td>{user.first_name} {user.last_name}</td>
+								<td>{user.email}</td>
+								<td>
+									<OverflowMenu options={[
+										{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
+										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteProfessor(user)}},
+									]}/>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			}
 		</>
 	)
 }

@@ -293,80 +293,82 @@ export default function UsersPage(){
 				<InfoWidget label="Résponsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
 				<InfoWidget label="Administrateurs" icon={<FiUser/>} active={page == UserRoles.ADMIN} info={getCountData().get(UserRoles.ADMIN)} color="var(--red-col)" onClick={() => setPage(UserRoles.ADMIN)}/>
 			</div>
-				
-			<table className="users-table-style">
-                <thead>
-                    <tr>
-                        <th><InputCheckbox/></th>
-						<th>Profile</th>
-						<th>ID</th>
-						<th>Nom</th>
-						<th>E-Mail</th>
-                        <th>Dâte Activation</th>
-                        <th>Dâte Connexion</th>
-						<th>Rôle</th>
-						<th></th>
-                    </tr>
-                </thead>
-                <tbody>
-		 			{filteredUsers && filteredUsers.map((user, index) => (
-                        <tr key={index}>
-                            <td>
-								<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
-							</td>
-                            <td>
-								<div className="users-table-avatar-container">
-									<UserAvatar user={user} />
-								</div>
-							</td>
-							<td>
-								<span>{`#${user.id.slice(0, 8)}`}</span>
-							</td>
-							<td>
-								<span>{user.first_name} {user.last_name}</span>
-							</td>
-							<td>{user.email}</td>
-                            <td>{dateFormat(user.date_joined)}</td>
-                            <td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
-							<td>
-								<div className="users-table-tag-layout">
-									{user.groups.map((roles, index) => (
-										<TagWidget label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
-									))}
-								</div>
-							</td>
+			
+			{filteredUsers.length > 0 && 
+				<table className="users-table-style">
+					<thead>
+						<tr>
+							<th><InputCheckbox/></th>
+							<th>Profile</th>
+							<th>ID</th>
+							<th>Nom</th>
+							<th>E-Mail</th>
+							<th>Dâte Activation</th>
+							<th>Dâte Connexion</th>
+							<th>Rôle</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{filteredUsers && filteredUsers.map((user, index) => (
+							<tr key={index}>
+								<td>
+									<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
+								</td>
+								<td>
+									<div className="users-table-avatar-container">
+										<UserAvatar user={user} />
+									</div>
+								</td>
+								<td>
+									<span>{`#${user.id.slice(0, 8)}`}</span>
+								</td>
+								<td>
+									<span>{user.first_name} {user.last_name}</span>
+								</td>
+								<td>{user.email}</td>
+								<td>{dateFormat(user.date_joined)}</td>
+								<td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
+								<td>
+									<div className="users-table-tag-layout">
+										{user.groups.map((roles, index) => (
+											<TagWidget label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
+										))}
+									</div>
+								</td>
 
-							<td>
-								<OverflowMenu options={[
-									{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {
-										setEditUser(user);
-										setMail(user.email);
-										setPrenom(user.first_name);
-										setNom(user.last_name);
+								<td>
+									<OverflowMenu options={[
+										{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {
+											setEditUser(user);
+											setMail(user.email);
+											setPrenom(user.first_name);
+											setNom(user.last_name);
 
-										setRoles(new Set(
-											user.groups.map(group => group.name)
-										));
+											setRoles(new Set(
+												user.groups.map(group => group.name)
+											));
 
-										setEditUser(user);
-									}},
+											setEditUser(user);
+										}},
 
-									...((g.id != user.id) ? 
-										[{label: "Bloquer", icon: <IoBan/>, onClick: () => {
-												setBlockUser(user);
-											}},
-											
-											{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {
-												setDeleteUser(user);
-											}}]
-										:
-										[])
-								]}/>
-							</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+										...((g.id != user.id) ? 
+											[{label: "Bloquer", icon: <IoBan/>, onClick: () => {
+													setBlockUser(user);
+												}},
+												
+												{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {
+													setDeleteUser(user);
+												}}]
+											:
+											[])
+									]}/>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			}
 		</DashboardPage>	
 	)
 }

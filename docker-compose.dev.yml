@@ -73,25 +73,7 @@ services:
     command: >
       sh -c "
       python manage.py migrate &&
-      python manage.py shell -c 'from django.contrib.auth import get_user_model;
-      User = get_user_model();
-
-      def create_user(email, password, first_name, last_name, staff, superuser):
-          user = User.objects.create(
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                is_staff=staff,
-                is_superuser=superuser,
-                is_active=True
-            );
-          user.set_password(password);
-          user.save();
-          print(f\"Created user: {email}\");
-
-      create_user(\"admin@gmail.com\",\"123\",\"Jean\",\"Dupont\",True,True);
-      create_user(\"user@gmail.com\",\"123\",\"Marie\",\"Dupont\",False,False);
-      '
+      python manage.py seed_user
       "
 
   postgres:

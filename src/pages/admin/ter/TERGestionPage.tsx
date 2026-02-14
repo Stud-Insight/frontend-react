@@ -7,6 +7,7 @@ import TERStudentView from "./TERStudentsView";
 import TERGroupView from "./TERGroupView";
 import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
+import TERSubjectView from "./TERSubjectView";
 
 import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
@@ -42,7 +43,7 @@ export default function TERGestionPage(){
 					TERService.addStudent(id, stud_id)
 				)
 			);
-			setSuccess(`Ajout de ${users.size} étudiant(s) avec succès.`);
+			setSuccess(`Ajout de ${users.size} étudiant(s) avec succès à "${period?.name}".`);
 			getStudents();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -54,7 +55,7 @@ export default function TERGestionPage(){
 	const deleteStudent = async (user: User) => {
 		try {
 			await TERService.deleteStudent(id, user.id);
-			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du TER.`);
+			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé de "${period?.name}".`);
 			getStudents();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -83,6 +84,18 @@ export default function TERGestionPage(){
 		}
 	}
 
+	const deleteProfessor = async (prof: User) => {
+		try {
+			await TERService.deleteProfessor(id, prof.id);
+			getProfessors();
+			setSuccess(`Professeur "${prof.first_name} ${prof.last_name}" supprimé de "${period?.name}".`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
 	const addProfessors = async (users: Set<string>) => {
 		try {
 			await Promise.all(
@@ -91,7 +104,7 @@ export default function TERGestionPage(){
 				)
 			);
 
-			setSuccess(`Ajout de ${users.size} professeur(s) avec succès.`);
+			setSuccess(`Ajout de ${users.size} professeur(s) dans "${period?.name}"`);
 			getProfessors();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -102,7 +115,8 @@ export default function TERGestionPage(){
 
 	const getGroups = async () => {
 		try {
-			const data = await GroupService.getAllTERGroups(id);
+			const data = await GroupService.getGroups(id);
+			console.log(data);
 			setGroup(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -110,10 +124,10 @@ export default function TERGestionPage(){
 		}
 	}
 
-	const createGroup = async (nom: string, taille: number) => {
+	const createGroup = async (nom: string, taille: number, users: Set<User>) => {
 		try {
-			await GroupService.createGroup(id, nom, taille);
-			setSuccess(`Groupe "${nom} à été crée avec success."`);
+			await GroupService.createGroup(id, nom, taille, users);
+			setSuccess(`Groupe "${nom}" à été crée dans "${period?.name}"`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -151,10 +165,10 @@ export default function TERGestionPage(){
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
-		[0, <TERStudentView students={students} onAdd={users => addStudent(users)} onDelete={(user) => deleteStudent(user)}/>],
-		[1, <TERProfessorView professors={professors} onAdd={user => addProfessors(user)}/>],
-		[2, <TERGroupView groups={groups} onAdd={(nom, size) => createGroup(nom, size)}/>],
-		[3, <TERStudentView students={students}/>],
+		[0, <TERStudentView students={students} onAdd={addStudent} onDelete={deleteStudent}/>],
+		[1, <TERProfessorView professors={professors} onAdd={addProfessors} onDelete={deleteProfessor}/>],
+		[2, <TERGroupView groups={groups} onAdd={createGroup} students={students}/>],
+		[3, <TERSubjectView subjects={[]}/>],
 		[4, <TERGradeView grades={grades}/>],
 	])
 

@@ -32,6 +32,8 @@ interface GroupCreateSchema {
 	name: string;
 	ter_period_id: string | null;
 	stage_period_id: string | null;
+	max_group_size: number | null;
+	member_ids: string[];
 }
 
 export interface Group {
@@ -41,6 +43,7 @@ export interface Group {
 	name: string;
 	leader: User;
 	members: User[];
+	max_group_size: number;
 	status: GroupStatus;
 	project_type: ProjectType;
 	ter_period?: TERPeriod | null;
@@ -51,7 +54,7 @@ export interface Group {
 }
 
 export default class GroupService {
-	public static async getAllTERGroups(id: string): Promise<Group[]> {
+	public static async getGroups(id: string): Promise<Group[]> {
 		 try {
 			const res = await api.get<{results: Group[]}>("/groups/", {params: {ter_period_id: id}});
 			return res.data.results;
@@ -68,17 +71,30 @@ export default class GroupService {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
-	public static async createGroup(period_id: string, nom: string, capacite: number): Promise<void> {
+
+	public static async addMember(group_id: string, user_id: string): Promise<void> {
+		try {
+			await api.post<Group>(`/groups/${group_id}/members`, {
+				user_id: user_id
+			});
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async createGroup(period_id: string, name: string, size: number, users: Set<User>): Promise<void> {
 		try {
 			const load: GroupCreateSchema = {
-				name: nom,
+				name: name,
 				ter_period_id: period_id,
-				stage_period_id: null
+				stage_period_id: null,
+				max_group_size: size,
+				member_ids: Array.from(users).map(user => {
+					return user.id;
+				})
 			};
 
-			console.log(load);
-
-			await api.post("/groups/", load);
+			await api.post<Group>("/groups/", load);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

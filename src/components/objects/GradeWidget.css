@@ -51,12 +51,11 @@
 
 .grade-widget-sub-style {
 	display: grid;
-	grid-template-columns: 1fr 80px 60px; 
+	grid-template-columns: 1fr 80px 20px; 
 	font-size: small;
 	font-weight: var(--small-bold);
-	width: auto;
-	gap: 10px;
-	padding: 5px;
+	width: 250px;
+	padding: 10px;
 	color: var(--gray1-col);
 	border-radius: 10px;
 	background-color: var(--beige-col);
