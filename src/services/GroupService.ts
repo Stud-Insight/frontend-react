@@ -88,6 +88,14 @@ export default class GroupService {
 		}
 	}
 
+	public static async removeMember(group_id: string, user_id: string): Promise<void> {
+		try {
+			await api.delete<Group>(`/groups/${group_id}/members/${user_id}`);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async createGroup(period_id: string, name: string, size: number, users: Set<User>): Promise<void> {
 		try {
 			const load: GroupCreateSchema = {
@@ -101,6 +109,14 @@ export default class GroupService {
 			};
 
 			await api.post<Group>("/groups/", load);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}	
+
+	public static async deleteGroup(group_id: string): Promise<void> {
+		try {
+			await api.delete<Group>(`/groups/${group_id}`);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
