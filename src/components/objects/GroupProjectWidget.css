@@ -56,3 +56,10 @@
 	opacity: 1;
 	max-height: 400;
 }
+
+.group-content-title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+}

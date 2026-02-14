@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
-import InfoWidget from "../../components/ui/InfoWidget";
-import TERPage from "./ter/TERPage";
+import InfoWidget from "../../../components/ui/InfoWidget";
+import TERPage from "./TERPage";
+import TERService, { TERPeriod } from "../../../services/TERService";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ContainerWidget from "../ui/ContainerWidget";
-import { Group } from "../../services/GroupService";
+import { Group, GroupStatusLabel, GroupStatusColor, GroupStatus } from "../../services/GroupService";
 import { FiUsers } from "react-icons/fi";
-import Button from "../../atoms/input/Button";
+import { User } from "../../services/UserService";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../input/OverflowMenu";
 import IconButton from "../button/IconButton";
@@ -11,7 +11,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import UserWidget from "./UserWidget";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { FiUser } from "react-icons/fi";
+import Tag from "../../atoms/ui/Tag";
 
 import "./GroupProjectWidget.css"
 
@@ -19,9 +19,10 @@ interface GroupProjectWidgetProps {
 	group: Group;
 	onEdit?: () => void;
 	onDelete?: () => void;
+	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, onEdit, onDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({group, onEdit, onDelete, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 
 	return (
@@ -30,8 +31,11 @@ export default function GroupProjectWidget({group, onEdit, onDelete}: GroupProje
 				<div className="group-project-widget-title">
 					<Icon icon={<FiUsers/>} color="var(--blue-col)"/>
 					<div className="group-project-widget-title-right">
-						<span style={{fontWeight: "var(--big-bold)"}}>{group.name}</span>
-						<span style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>{group.id}</span>
+						<div className="group-content-title">
+							<span style={{fontWeight: "var(--big-bold)"}}>{group.name}</span>
+							<Tag label={GroupStatusLabel.get(group.status)} color={GroupStatusColor.get(group.status)}/>
+						</div>
+						<span style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>#{group.id}</span>
 						<span className="group-project-info">{group.members ? group.members.length : 0} / {group.max_group_size}</span>
 					</div>
 				</div>
@@ -47,10 +51,10 @@ export default function GroupProjectWidget({group, onEdit, onDelete}: GroupProje
 
 			{expanded && 
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
-					<UserWidget user={group.leader} selected={false} isLeader={true}/>
+					<UserWidget user={group.leader} selected={false} isLeader={true} onDelete={() => onUserDelete?.(group.leader)}/>
 					{group.members && group.members.map(member => {
 						if (member.id != group.leader.id){
-							return <UserWidget key={member.id} user={member} selected={false} isLeader={false}/>
+							return <UserWidget key={member.id} user={member} selected={false} isLeader={false} onDelete={() => onUserDelete?.(member)}/>
 						}
 					})}
 				</div>

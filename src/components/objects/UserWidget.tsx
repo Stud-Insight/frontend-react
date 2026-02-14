@@ -18,23 +18,25 @@ interface UserWidgetProps {
 
 export default function UserWidget({user, onClick, selected = true, isLeader = false, onDelete}: UserWidgetProps){
 	return (
-		<div className={`user-widget-layout ${selected ? "selected" : undefined}`} onClick={onClick}>
-			<div className="user-widget-left">
-				<UserAvatar user={user}/>
-			</div>
-
-			<div className="user-widget-right">
-				<div className="user-widget-name">
-					<span style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</span>
-					{isLeader &&
-						<FaCrown color="var(--yellow-col)"/>
-					}
+		<div className={`user-widget-wrapper ${selected ? "selected" : ""}`} onClick={onClick}>
+			<div className="user-widget-layout">
+				<div className="user-widget-left">
+					<UserAvatar user={user}/>
 				</div>
-				<span>{user.id.slice(0, 8)}</span>
-				<span>{user.email}</span>
+
+				<div className="user-widget-right">
+					<div className="user-widget-name">
+						<span style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</span>
+						{isLeader &&
+							<FaCrown color="var(--yellow-col)"/>
+						}
+					</div>
+					<span>#{user.id.slice(0, 8)}</span>
+					<span>{user.email}</span>
+				</div>
 			</div>
 		
-			{onDelete && 
+			{onDelete &&
 				<IconButton icon={<MdDeleteOutline/>} onClick={onDelete}/>
 			}
 

@@ -5,15 +5,21 @@ import { TERPeriod } from "./TERService";
 import { TERSubject } from "./TERService";
 
 export enum GroupStatus {
-	OUVERT,
-	FORME,
-	CLOTURE
+	OUVERT = "ouvert",
+	FORME = "forme",
+	CLOTURE = "cloture"
 };
 
 export const GroupStatusLabel: Map<GroupStatus, string> = new Map([
 	[GroupStatus.OUVERT, "Ouvert"],
-	[GroupStatus.FORME, "Forme"],
-	[GroupStatus.CLOTURE, "Fermé"],
+	[GroupStatus.FORME, "En Attente"],
+	[GroupStatus.CLOTURE, "Cloturé"],
+]);
+
+export const GroupStatusColor: Map<GroupStatus, string> = new Map([
+	[GroupStatus.OUVERT, "var(--gray1-col)"],
+	[GroupStatus.FORME, "var(--gray1-col)"],
+	[GroupStatus.CLOTURE, "var(--blue-col)"],
 ]);
 
 export enum InvitationStatus {
