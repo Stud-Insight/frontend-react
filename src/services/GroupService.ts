@@ -78,6 +78,16 @@ export default class GroupService {
 		}
 	}
 
+	public static async changeGroupLeader(group_id: string, user_id: string): Promise<void> {
+		try {
+			await api.post(`/groups/${group_id}/transfer-leadership`, {
+				new_leader_id: user_id
+			});
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async addMember(group_id: string, user_id: string): Promise<void> {
 		try {
 			await api.post<Group>(`/groups/${group_id}/members`, {

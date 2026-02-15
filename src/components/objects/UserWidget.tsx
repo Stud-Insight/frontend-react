@@ -1,22 +1,23 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import UserAvatar from "../ui/UserAvatar";
 import { User } from "../../services/UserService";
 import { MdDone } from "react-icons/md";
 import IconButton from "../button/IconButton";
 import { MdDeleteOutline } from "react-icons/md";
-import { FaCrown } from "react-icons/fa6";
+import { FaCrown } from "react-icons/fa";
+import { PiCrownSimple } from "react-icons/pi";
 import "./UserWidget.css"
 
 interface UserWidgetProps {
 	user: User;
+	crown?: boolean;
 	onClick?: () => void;
-	onDelete?: () => void;
 	selected?: boolean;
-	isLeader?: boolean;
+	children?: ReactNode;
 
 };
 
-export default function UserWidget({user, onClick, selected = true, isLeader = false, onDelete}: UserWidgetProps){
+export default function UserWidget({user, onClick, selected = false, crown = false, children}: UserWidgetProps){
 	return (
 		<div className={`user-widget-wrapper ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="user-widget-layout">
@@ -27,7 +28,7 @@ export default function UserWidget({user, onClick, selected = true, isLeader = f
 				<div className="user-widget-right">
 					<div className="user-widget-name">
 						<span style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</span>
-						{isLeader &&
+						{crown &&
 							<FaCrown color="var(--yellow-col)"/>
 						}
 					</div>
@@ -35,11 +36,9 @@ export default function UserWidget({user, onClick, selected = true, isLeader = f
 					<span>{user.email}</span>
 				</div>
 			</div>
-		
-			{onDelete &&
-				<IconButton icon={<MdDeleteOutline/>} onClick={onDelete}/>
-			}
-
+			
+			{children}
+			
 			<div className={`user-selected-icon ${selected ? "selected" : undefined}`}>
 				<MdDone/>
 			</div>

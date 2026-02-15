@@ -6,12 +6,16 @@ import { User } from "../../services/UserService";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../input/OverflowMenu";
 import IconButton from "../button/IconButton";
+import UserWidget from "./UserWidget";
+import Tag from "../../atoms/ui/Tag";
+
+import { FaPlus } from "react-icons/fa";
+import { FaMinus } from "react-icons/fa";
+import { FaCrown } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
-import UserWidget from "./UserWidget";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import Tag from "../../atoms/ui/Tag";
 
 import "./GroupProjectWidget.css"
 
@@ -19,10 +23,11 @@ interface GroupProjectWidgetProps {
 	group: Group;
 	onEdit?: () => void;
 	onDelete?: () => void;
+	onLeader?: (user: User) => void;
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, onEdit, onDelete, onUserDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 
 	return (
@@ -51,10 +56,21 @@ export default function GroupProjectWidget({group, onEdit, onDelete, onUserDelet
 
 			{expanded && 
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
-					<UserWidget user={group.leader} selected={false} isLeader={true} onDelete={() => onUserDelete?.(group.leader)}/>
+					<UserWidget user={group.leader} selected={false} crown={true}>
+						<OverflowMenu options={[
+							{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
+						]}/>
+					</UserWidget>
 					{group.members && group.members.map(member => {
 						if (member.id != group.leader.id){
-							return <UserWidget key={member.id} user={member} selected={false} isLeader={false} onDelete={() => onUserDelete?.(member)}/>
+							return (
+								<UserWidget key={member.id} user={member} selected={false} crown={false}>
+									<OverflowMenu options={[
+										{label: "Transfer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
+										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
+									]}/>
+								</UserWidget>
+							)
 						}
 					})}
 				</div>

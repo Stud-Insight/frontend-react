@@ -18,6 +18,7 @@ interface TERGroupViewProps {
 	onAdd?: (nom: string, size: number, users: Set<User>) => void;
 	onDelete?: (group: Group) => void;
 	onUserDelete?: (group: Group, user: User) => void;
+	onChangeLeader?: (group: Group, user: User) => void;
 };
 
 interface DeleteUserGroup {
@@ -25,7 +26,7 @@ interface DeleteUserGroup {
 	group: Group;
 };
 
-export default function TERGroupView({groups, students, onAdd, onDelete, onUserDelete}: TERGroupViewProps){
+export default function TERGroupView({groups, students, onAdd, onDelete, onChangeLeader, onUserDelete}: TERGroupViewProps){
 	const [addingGroup, setAddingGroup] = useState<boolean>(false);
 	const [editGroup, setEditGroup] = useState<Group | null>(null);
 	const [deleteGroup, setDeleteGroup] = useState<Group | null>(null);
@@ -33,6 +34,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 	const [groupTaille, setGroupTaille] = useState<number>(0);
 	const [groupUsers, setGroupUsers] = useState<Set<User>>(new Set());
 	const [deleteUser, setDeleteUser] = useState<DeleteUserGroup | null>(null);
+	const [leader, setLeader] = useState<DeleteUserGroup | null>(null);
 
 	const sortedGroups = groups.sort((a, b) => (
 		a.name.localeCompare(b.name)
@@ -44,16 +46,14 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 		setGroupTaille(0);
 		setAddingGroup(false);
 		setEditGroup(null);
+		setDeleteUser(null);
+		setDeleteGroup(null);
+		setLeader(null);
 	};
-
+	
 	const editHandle = (g: Group) => {
 		setGroupNom(g.name);
-		setGroupUsers(new Set(students.filter(stud => (
-			g.members.some(us => {
-				return us.id == stud.id
-			})
-		))));
-
+		setGroupUsers(new Set(g.members));
 		setGroupTaille(g.max_group_size);
 		setEditGroup(g);
 	};
@@ -72,25 +72,31 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 	};
 
 	const deleteGroupHandle = () => {
-		
+		onDelete?.(deleteGroup);
+		resetFields();
+	}
+
+	const changeLeaderHandle = () => {
+		onChangeLeader?.(leader?.group, leader?.user);
+		resetFields();
 	}
 
 	return (
 		<>
 			{addingGroup &&
-				<ModalDialog label="Creation Groupe" onClose={resetFields}>
+				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={groupNom} onChange={setGroupNom}/>
 					<InputNumberField label="Taille" value={groupTaille} onChange={setGroupTaille} min={0} max={4}/>
-					<InputUserSelection label="Membres" users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
+					<InputUserSelection value={groupUsers} label="Membres" users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
 					<Button icon={<FaPlus/>} label="Confirmer" onClick={addGroupHandle}/>
 				</ModalDialog>
 			}
 
 			{editGroup &&
-				<ModalDialog label="Modifier Groupe" onClose={resetFields}>
+				<ModalDialog label="Modifier Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={groupNom} onChange={setGroupNom}/>
 					<InputNumberField label="Taille" value={groupTaille} onChange={setGroupTaille} min={0} max={4}/>
-					<InputUserSelection label="Membres" users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
+					<InputUserSelection label="Membres" value={groupUsers} users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
 					<Button icon={<MdOutlineEdit/>} label="Modifier"/>
 				</ModalDialog>
 			}
@@ -99,7 +105,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 				<ConfirmationDialog 
 				label="Supprimer Etudiant" 
 				onCancel={() => setDeleteUser(null)}
-				onConfirm={deleteGroupHandle}
+				onConfirm={removeUserGroupHandle}
 				info={`Etes vous sur de vouloir supprimer "${deleteUser.user.first_name} ${deleteUser.user.last_name}" du groupe "${deleteUser.group.name}"?`}/>
 			}
 
@@ -107,8 +113,16 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 				<ConfirmationDialog 
 				label="Supprimer Groupe" 
 				onCancel={() => setDeleteGroup(null)}
-				onConfirm={removeUserGroupHandle}
-				info={`Etes vous sur de vouloir supprimer "${deleteGroup.name}"?`}/>
+				onConfirm={deleteGroupHandle}
+				info={`Etes vous sur de vouloir supprimer le groupe "${deleteGroup.name}"?`}/>
+			}
+
+			{leader &&
+				<ConfirmationDialog 
+				label="Changement Chef" 
+				onCancel={() => setLeader(null)}
+				onConfirm={changeLeaderHandle}
+				info={`Etes vous sur de vouloir changer "${leader.user.first_name} ${leader.user.last_name}" en responsable du groupe "${leader.group.name}"?`}/>
 			}
 
 			<div className="dashboard-top-layout">
@@ -122,7 +136,9 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onUserD
 				<GroupProjectWidget key={group.id} group={group} 
 				onDelete={() => setDeleteGroup(group)}
 				onEdit={() => editHandle(group)} 
-				onUserDelete={(user) => setDeleteUser({user: user, group: group})}/>
+				onUserDelete={user => setDeleteUser({user: user, group: group})}
+				onLeader={user => setLeader({user: user, group: group})}
+				/>
 			))}
 		</>
 	)

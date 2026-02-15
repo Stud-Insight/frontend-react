@@ -116,13 +116,23 @@ export default function TERGestionPage(){
 	const getGroups = async () => {
 		try {
 			const data = await GroupService.getGroups(id);
-			console.log(data);
 			setGroup(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
 	}
+
+	const removeStudentGroup = async (group: Group, user: User) => {
+		try {
+			await GroupService.removeMember(group.id, user.id);
+			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du groupe "${group.name}".`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
 
 	const createGroup = async (nom: string, taille: number, users: Set<User>) => {
 		try {
@@ -135,6 +145,30 @@ export default function TERGestionPage(){
 			setError(message);
 		}
 	};
+
+	const changeGroupLeader = async (group: Group, user: User) => {
+		try {
+			await GroupService.changeGroupLeader(group.id, user.id);
+			setSuccess(`"${user.first_name} ${user.last_name}" est maintenant le responsable du groupe "${group.name}".`);
+			getGroups();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const deleteGroup = async (group: Group) => {
+		try {
+			await GroupService.deleteGroup(group.id);
+			setSuccess(`Groupe "${group.name}" à été supprimé de "${period?.name}".`);
+			getGroups();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
 
 	const getGrades = async () => {
 		try {
@@ -167,7 +201,12 @@ export default function TERGestionPage(){
 	const viewMap: Map<number, ReactNode> = new Map([
 		[0, <TERStudentView students={students} onAdd={addStudent} onDelete={deleteStudent}/>],
 		[1, <TERProfessorView professors={professors} onAdd={addProfessors} onDelete={deleteProfessor}/>],
-		[2, <TERGroupView groups={groups} onAdd={createGroup} students={students}/>],
+		[2, <TERGroupView groups={groups} students={students} 
+			onAdd={createGroup} 
+			onDelete={deleteGroup} 
+			onUserDelete={removeStudentGroup}
+			onChangeLeader={changeGroupLeader}
+			/>],
 		[3, <TERSubjectView subjects={[]}/>],
 		[4, <TERGradeView grades={grades}/>],
 	])

@@ -10,6 +10,8 @@ import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 import { FaPlus } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
 
+import "./TERGroupView.css"
+
 interface TERGradeViewProps {
 	grades: Grade[];
 	onAdd?: (grade: Grade) => void;

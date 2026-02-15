@@ -9,75 +9,67 @@ import "./InputUserSelection.css";
 interface InputUserSelectionProps {
 	label: string;
 	icon?: ReactNode;
+	value: Set<User>;
 	users: User[];
 	maxSelection?: number;
 	onChange?: (users: Set<User>) => void;
 };
 
-export default function InputUserSelection({label, icon, users, onChange, maxSelection = users.length}: InputUserSelectionProps){
+export default function InputUserSelection({label, icon, value, users, onChange, maxSelection = users.length}: InputUserSelectionProps){
 	const [filter, setFilter] = useState<User[]>([]);
-	const [value, setValue] = useState<string>("");
-	const [selected, setSelected] = useState<Set<User>>(new Set());
-
+	const [searchValue, setSearchValue] = useState<string>("");
+	const selected = value;
+	
 	const changeHandle = (e: string) => {
-		setValue(e);
+		setSearchValue(e);
 	}	
 
 	const selectUserHandle = (user: User) => {
-		setSelected(prev => {
-			const newSet = new Set(prev);
+		const newSet = new Set(selected);
 
-			if (newSet.has(user)) {
-				newSet.delete(user);
-			} else {
-				if (selected.size < maxSelection){
-					newSet.add(user);
-				}
+		if (Array.from(newSet).some(u => u.id === user.id)) {
+			newSet.forEach(u => {
+				if (u.id === user.id) newSet.delete(u);
+			});
+		} else {
+			if (newSet.size < maxSelection) {
+				newSet.add(user);
 			}
+		}
 
-			return newSet;
-		});
-
-		onChange?.(selected);
-		setValue("");
+		onChange?.(newSet);
+		setSearchValue("");
 	};
 	
 	useEffect(() => {
-		const lower = value.toLowerCase();
+		const lower = searchValue.toLowerCase();
 
-		const g = users.filter(user => {
+		const filtered = users.filter(user => {
 			const name = `${user.first_name} ${user.last_name}`.toLowerCase();
 
 			const isSelected = Array.from(selected).some(
 				u => u.id === user.id
 			);
 
-			return !isSelected &&
-				(name.includes(lower) || user.email.includes(lower));
+			return !isSelected && (name.includes(lower) || user.email.toLowerCase().includes(lower));
 		});
 
-		setFilter(g);
-	}, [value, selected, users]);
+		setFilter(filtered);
+	}, [searchValue, selected, users]);
 
 	return (	
-		<>
-			<Field className="user-selection-input" label={label} icon={icon}>
-				{selected && 
-					Array.from(selected).map(user => (
-						<Tag key={user.id} label={`${user.first_name} ${user.last_name}`} className="user-selection-tag-style" onDelete={() => selectUserHandle(user)}/>
-					))
-				}
-				<input value={value} onChange={(e) => changeHandle(e.target.value)}/>
-			</Field>
-			
-			{filter.length > 0 && 
+		<div>
+			<Field label={label} icon={icon}>
 				<div className="user-selection-content">
+					{Array.from(value).map(user => (
+						<UserWidget user={user} selected={true} onClick={() => selectUserHandle(user)}/>
+					))}
+
 					{filter.map(user => (
 						<UserWidget user={user} selected={false} onClick={() => selectUserHandle(user)}/>
 					))}
 				</div>
-			}
-		
-		</>
+			</Field>
+		</div>
 	)
 }
