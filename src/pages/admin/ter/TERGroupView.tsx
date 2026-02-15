@@ -15,9 +15,11 @@ import { MdOutlineEdit } from "react-icons/md";
 interface TERGroupViewProps {
 	groups: Group[];
 	students: User[];
-	onAdd?: (nom: string, size: number, users: Set<User>) => void;
+	onAdd?: (nom: string, size: number) => void;
 	onDelete?: (group: Group) => void;
+	onUpdate?: (group: Group, name: string, size: number) => void;
 	onUserDelete?: (group: Group, user: User) => void;
+	onAddUsers?: (group: Group, users: Set<User>) => void;
 	onChangeLeader?: (group: Group, user: User) => void;
 };
 
@@ -26,13 +28,14 @@ interface DeleteUserGroup {
 	group: Group;
 };
 
-export default function TERGroupView({groups, students, onAdd, onDelete, onChangeLeader, onUserDelete}: TERGroupViewProps){
+export default function TERGroupView({groups, students, onAdd, onDelete, onAddUsers, onChangeLeader, onUserDelete, onUpdate}: TERGroupViewProps){
 	const [addingGroup, setAddingGroup] = useState<boolean>(false);
+	const [addingUser, setAddingUser] = useState<Group | null>(null);
 	const [editGroup, setEditGroup] = useState<Group | null>(null);
 	const [deleteGroup, setDeleteGroup] = useState<Group | null>(null);
 	const [groupNom, setGroupNom] = useState<string>("");
 	const [groupTaille, setGroupTaille] = useState<number>(0);
-	const [groupUsers, setGroupUsers] = useState<Set<User>>(new Set());
+	const [selectedUsers, setSelectedUsers] = useState<Set<User>>(new Set([]));
 	const [deleteUser, setDeleteUser] = useState<DeleteUserGroup | null>(null);
 	const [leader, setLeader] = useState<DeleteUserGroup | null>(null);
 
@@ -41,7 +44,6 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 	))
 
 	const resetFields = () => {
-		setGroupUsers(new Set());
 		setGroupNom("");
 		setGroupTaille(0);
 		setAddingGroup(false);
@@ -49,31 +51,46 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 		setDeleteUser(null);
 		setDeleteGroup(null);
 		setLeader(null);
+		setAddingUser(null);
+		setSelectedUsers(new Set());
 	};
 	
 	const editHandle = (g: Group) => {
 		setGroupNom(g.name);
-		setGroupUsers(new Set(g.members));
 		setGroupTaille(g.max_group_size);
 		setEditGroup(g);
 	};
 
 	const removeUserGroupHandle = () => {
 		onUserDelete?.(deleteUser.group, deleteUser.user)
-		setDeleteUser(null);
 		resetFields();
 	}
 
 	const addGroupHandle = () => {
-		onAdd?.(groupNom, groupTaille, groupUsers);
+		onAdd?.(groupNom, groupTaille);
 		setGroupNom("");
 		setGroupTaille(0);
 		setAddingGroup(false);
 	};
+	
+	const updateGroupHandle = () => {
+		onUpdate?.(editGroup, groupNom, groupTaille);
+		resetFields();
+	}
 
 	const deleteGroupHandle = () => {
 		onDelete?.(deleteGroup);
 		resetFields();
+	}
+
+	const addUserHandle = () => {
+		onAddUsers?.(addingUser, selectedUsers);
+		resetFields();
+	}
+
+	const addUserHandlePre = (g: Group) => {
+		resetFields();
+		setAddingUser(g);
 	}
 
 	const changeLeaderHandle = () => {
@@ -87,8 +104,14 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={groupNom} onChange={setGroupNom}/>
 					<InputNumberField label="Taille" value={groupTaille} onChange={setGroupTaille} min={0} max={4}/>
-					<InputUserSelection value={groupUsers} label="Membres" users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
 					<Button icon={<FaPlus/>} label="Confirmer" onClick={addGroupHandle}/>
+				</ModalDialog>
+			}
+
+			{addingUser &&
+				<ModalDialog label="Ajouter Etudiants" onClose={resetFields} className="group-view-selection-modal">
+					<InputUserSelection value={selectedUsers} label="Membres" users={students} onChange={setSelectedUsers} maxSelection={addingUser.max_group_size - addingUser.member_count}/>
+					<Button icon={<FaPlus/>} label={`Ajouter (${selectedUsers.size})`} onClick={addUserHandle}/>
 				</ModalDialog>
 			}
 
@@ -96,8 +119,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 				<ModalDialog label="Modifier Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={groupNom} onChange={setGroupNom}/>
 					<InputNumberField label="Taille" value={groupTaille} onChange={setGroupTaille} min={0} max={4}/>
-					<InputUserSelection label="Membres" value={groupUsers} users={students} maxSelection={groupTaille} onChange={(users) => setGroupUsers(users)}/>
-					<Button icon={<MdOutlineEdit/>} label="Modifier"/>
+					<Button icon={<MdOutlineEdit/>} label="Modifier" onClick={updateGroupHandle}/>
 				</ModalDialog>
 			}
 
@@ -108,6 +130,8 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 				onConfirm={removeUserGroupHandle}
 				info={`Etes vous sur de vouloir supprimer "${deleteUser.user.first_name} ${deleteUser.user.last_name}" du groupe "${deleteUser.group.name}"?`}/>
 			}
+
+			{}
 
 			{deleteGroup &&
 				<ConfirmationDialog 
@@ -138,6 +162,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onChang
 				onEdit={() => editHandle(group)} 
 				onUserDelete={user => setDeleteUser({user: user, group: group})}
 				onLeader={user => setLeader({user: user, group: group})}
+				onAdd={() => addUserHandlePre(group)}
 				/>
 			))}
 		</>

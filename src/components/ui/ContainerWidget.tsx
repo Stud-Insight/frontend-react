@@ -14,7 +14,7 @@ interface ContainerWidgetProps {
 
 export default function ContainerWidget({icon, label, active = false, children, className, onClick}: ContainerWidgetProps){
 	return (
-		<div className={`container-widget-layout ${active ? "active" : undefined} ${className}`} onClick={onClick}>
+		<div className={`container-widget-layout ${active ? "active" : ""} ${className}`} onClick={onClick}>
 			{label != null && icon != null && 
 				<div className="container-widget-title">
 					{icon}

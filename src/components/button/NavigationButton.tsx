@@ -14,12 +14,9 @@ interface NavigationButtonProps {
     onClick?: (id: string) => void;
 };
 
-
 export default function NavigationButton({label, children, icon, offset = 0, size = "20px", onClick, active = false, id = "", notification = 0, className}: NavigationButtonProps){
-    const className1 = `navigation-button-style ${active ? "active" : ""} ${className}`;
-
     return (
-        <button className={className1} onClick={() => onClick?.(id)}>
+        <button className={`navigation-button-style ${active ? "active" : ""} ${className}`} onClick={() => onClick?.(id)}>
 			{children == null ? 
 			<>
 				<div style={{transform: `translateY(${offset}px)`, fontSize: size}}>

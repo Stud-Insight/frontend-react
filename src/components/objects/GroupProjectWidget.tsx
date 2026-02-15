@@ -24,10 +24,11 @@ interface GroupProjectWidgetProps {
 	onEdit?: () => void;
 	onDelete?: () => void;
 	onLeader?: (user: User) => void;
+	onAdd?: () => void;
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, onUserDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 
 	return (
@@ -46,8 +47,11 @@ export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, o
 				</div>
 
 				<div className="group-widget-buttons-layout">
-					<IconButton size={20} icon={expanded ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpanded(!expanded)}/>
+					{group.members && group.members.length > 0 &&
+						<IconButton size={20} icon={expanded ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpanded(!expanded)}/>
+					}
 					<OverflowMenu options={[
+						{label: "Ajouter Etudiants", icon: <FaPlus/>, onClick: () => onAdd?.()},
 						{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit?.()},
 						{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete?.()},
 					]}/>
@@ -61,12 +65,13 @@ export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, o
 							{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
 						]}/>
 					</UserWidget>
+
 					{group.members && group.members.map(member => {
 						if (member.id != group.leader.id){
 							return (
 								<UserWidget key={member.id} user={member} selected={false} crown={false}>
 									<OverflowMenu options={[
-										{label: "Transfer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
+										{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
 										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
 									]}/>
 								</UserWidget>

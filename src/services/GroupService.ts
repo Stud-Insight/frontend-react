@@ -34,6 +34,11 @@ export enum ProjectType {
 	STAGE = "Stage"
 }
 
+interface GroupUpdateSchema {
+	name: string | null;
+	max_group_size: number | null;
+}
+
 interface GroupCreateSchema {
 	name: string;
 	ter_period_id: string | null;
@@ -47,7 +52,7 @@ export interface Group {
 	created: string;
 	modified: string;
 	name: string;
-	leader: User;
+	leader: User | null;
 	members: User[];
 	max_group_size: number;
 	status: GroupStatus;
@@ -90,7 +95,7 @@ export default class GroupService {
 
 	public static async addMember(group_id: string, user_id: string): Promise<void> {
 		try {
-			await api.post<Group>(`/groups/${group_id}/members`, {
+			await api.post(`/groups/${group_id}/members`, {
 				user_id: user_id
 			});
 		} catch (error){
@@ -100,7 +105,7 @@ export default class GroupService {
 
 	public static async removeMember(group_id: string, user_id: string): Promise<void> {
 		try {
-			await api.delete<Group>(`/groups/${group_id}/members/${user_id}`);
+			await api.delete(`/groups/${group_id}/members/${user_id}`);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -118,7 +123,7 @@ export default class GroupService {
 				})
 			};
 
-			await api.post<Group>("/groups/", load);
+			await api.post("/groups/", load);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -126,9 +131,22 @@ export default class GroupService {
 
 	public static async deleteGroup(group_id: string): Promise<void> {
 		try {
-			await api.delete<Group>(`/groups/${group_id}`);
+			await api.delete(`/groups/${group_id}`);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
-	}	
+	}
+
+	public static async updateGroup(group_id: string, name: string, size: number): Promise<void> {
+		try {
+			const load: GroupUpdateSchema = {
+				name: name,
+				max_group_size: size,
+			};
+
+			await api.put(`/groups/${group_id}`, load);
+		} catch (error){
+
+		}
+	}
 }

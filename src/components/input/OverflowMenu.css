@@ -3,18 +3,23 @@
 }
 
 .expanded-overflow-menu {
+	position: absolute;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	position: absolute;
-	right: 50%;
+	right: 0;
 	opacity: 0;
 	z-index: 1000;
 	padding: 8px;
-	gap: 0px;
 	pointer-events: none;
-	width: auto;
+	width: max-content;
 	transition: opacity 0.3s;
+}
+
+.expanded-overflow-menu .container-widget-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0px;
 }
 
 .expanded-overflow-menu.expanded {

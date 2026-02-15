@@ -87,8 +87,8 @@ export default function TERGestionPage(){
 	const deleteProfessor = async (prof: User) => {
 		try {
 			await TERService.deleteProfessor(id, prof.id);
-			getProfessors();
 			setSuccess(`Professeur "${prof.first_name} ${prof.last_name}" supprimé de "${period?.name}".`);
+			getProfessors();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -123,10 +123,11 @@ export default function TERGestionPage(){
 		}
 	}
 
-	const removeStudentGroup = async (group: Group, user: User) => {
+	const updateGroup = async (group: Group, name: string, size: number) => {
 		try {
-			await GroupService.removeMember(group.id, user.id);
-			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du groupe "${group.name}".`);
+			await GroupService.updateGroup(group.id, name, size);
+			setSuccess(`Groupe "${group.name}" à été modifié avec succés.`);
+			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -134,9 +135,38 @@ export default function TERGestionPage(){
 		}
 	};
 
-	const createGroup = async (nom: string, taille: number, users: Set<User>) => {
+	const removeStudentGroup = async (group: Group, user: User) => {
 		try {
-			await GroupService.createGroup(id, nom, taille, users);
+			await GroupService.removeMember(group.id, user.id);
+			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du groupe "${group.name}".`);
+			getGroups();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
+	const addStudentGroup = async (group: Group, users: Set<User>) => {
+		try {
+			await Promise.all(
+				Array.from(users).map(user => (
+					GroupService.addMember(group.id, user.id)
+				))
+			);
+
+			setSuccess(`${users.size} Etudiant(s) ajouté au groupe "${group.name}".`);
+			getGroups();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
+	const createGroup = async (nom: string, taille: number) => {
+		try {
+			await GroupService.createGroup(id, nom, taille, new Set());
 			setSuccess(`Groupe "${nom}" à été crée dans "${period?.name}"`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
@@ -149,7 +179,7 @@ export default function TERGestionPage(){
 	const changeGroupLeader = async (group: Group, user: User) => {
 		try {
 			await GroupService.changeGroupLeader(group.id, user.id);
-			setSuccess(`"${user.first_name} ${user.last_name}" est maintenant le responsable du groupe "${group.name}".`);
+			setSuccess(`"${user.first_name} ${user.last_name}" est maintenant le leader du groupe "${group.name}".`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -203,7 +233,9 @@ export default function TERGestionPage(){
 		[1, <TERProfessorView professors={professors} onAdd={addProfessors} onDelete={deleteProfessor}/>],
 		[2, <TERGroupView groups={groups} students={students} 
 			onAdd={createGroup} 
-			onDelete={deleteGroup} 
+			onDelete={deleteGroup}
+			onUpdate={updateGroup}
+			onAddUsers={addStudentGroup}
 			onUserDelete={removeStudentGroup}
 			onChangeLeader={changeGroupLeader}
 			/>],

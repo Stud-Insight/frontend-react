@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
 import ContainerWidget from "../../components/ui/ContainerWidget";
 import UserAvatar from "../../components/ui/UserAvatar";
@@ -8,12 +8,16 @@ import { useAuth } from "../../context/AuthContext";
 import { MdOutlineEdit } from "react-icons/md";
 import InputAttachment from "../../components/input/InputAttachment"
 import { FiUser } from "react-icons/fi";
+import InputField from "../../components/input/InputField";
 
 import "./ProfilePage.css";
 
 export default function ProfilePage(){
-	const {user} = useAuth();
-
+	const { user } = useAuth();
+	const [nom, setNom] = useState<string>("");
+	const [prenom, setPrenom] = useState<string>("");
+	const [mail, setMail] = useState<string>("");
+	const [mdp, setMdp] = useState<string>("");
 	const updateAvatarHandle = () => {
 
 	};
@@ -22,6 +26,19 @@ export default function ProfilePage(){
 
 	};
 
+	const requestPasswordChange = () => {
+
+	};
+
+	const resetFields = () => {
+		setNom(user?.last_name);
+		setPrenom(user?.first_name);
+		setMail(user?.email);
+	}
+
+	useEffect(() => {
+		resetFields();
+	}, []);
 	return (
 		<DashboardPage>
 			<div className="dashboard-top-layout">
@@ -30,7 +47,7 @@ export default function ProfilePage(){
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
+			<span style={{color: "var(--gray1-col)"}}>Gérez et modifier votre profile.</span>
 
 			<div className="profile-page-wrapper">
 				<div className="profile-page-layout">
@@ -40,11 +57,10 @@ export default function ProfilePage(){
 					</ContainerWidget>
 
 					<ContainerWidget icon={<FiUser/>} label="Info" className="profile-info-avatar">
-						<span>{user?.first_name}</span>
-						<span>{user?.last_name}</span>
-						<span>{user?.email}</span>
-						<span>{user?.email}</span>
-						<span>{user?.email}</span>
+						<InputField label="ID" value={`#${user?.id}`}/>
+						<InputField label="Nom" value={nom}/>
+						<InputField label="Prenom" value={prenom}/>
+						<InputField label="E-Mail" value={mail}/>
 					</ContainerWidget>
 				</div>
 

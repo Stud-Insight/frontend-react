@@ -126,7 +126,7 @@
 	flex-direction: column;
 	align-items: flex-start;
 	font-size: 14px;
-	gap: 3px;
+	gap: 10px;
 	font-family: var(--main-font);
     font-weight: var(--mid-bold);
 }

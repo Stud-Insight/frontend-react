@@ -97,7 +97,6 @@ export default function DashboardPage({children} : DashboardPageProps){
 						<UserAvatar user={user} size={50}/>
 						<div className="dashboard-profile-text">
 							<span style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</span>
-							<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>#{user?.id.slice(0, 8)}</span>
 							<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>{user?.email}</span>
 						</div>
 					</NavigationButton>
