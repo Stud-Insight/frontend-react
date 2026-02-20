@@ -45,10 +45,10 @@ export default function TERSelectionDialog({label, maxSelection = 1, onClose, on
 	}, []);
 
 	return (
-		<ModalDialog label={label} onClose={onClose} className="user-list-dialog-content">
+		<ModalDialog label={label} onClose={onClose}>
 			<div className="user-list-layout">
 				{periods && periods.map(period => (
-					<TERWidget data={period} selected={selected.has(period)} moreInfo={false} onSelect={() => selectionHandle(period)}/>
+					<TERWidget period={period} selected={selected.has(period)} moreInfo={false} onSelect={() => selectionHandle(period)}/>
 				))}
 			</div>
 

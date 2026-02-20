@@ -21,6 +21,7 @@ import "./GroupProjectWidget.css"
 
 interface GroupProjectWidgetProps {
 	group: Group;
+	admin?: boolean;
 	onEdit?: () => void;
 	onDelete?: () => void;
 	onLeader?: (user: User) => void;
@@ -28,7 +29,7 @@ interface GroupProjectWidgetProps {
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({group, admin = true, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 
 	return (
@@ -41,21 +42,25 @@ export default function GroupProjectWidget({group, onEdit, onDelete, onLeader, o
 							<span style={{fontWeight: "var(--big-bold)"}}>{group.name}</span>
 							<Tag label={GroupStatusLabel.get(group.status)} color={GroupStatusColor.get(group.status)}/>
 						</div>
-						<span style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>#{group.id}</span>
+						{admin &&
+							<span style={{color: "var(--gray1-col)", fontWeight: "var(--small-bold)"}}>#{group.id}</span>
+						}
 						<span className="group-project-info">{group.members ? group.members.length : 0} / {group.max_group_size}</span>
 					</div>
 				</div>
 
-				<div className="group-widget-buttons-layout">
-					{group.members && group.members.length > 0 &&
-						<IconButton size={20} icon={expanded ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpanded(!expanded)}/>
-					}
-					<OverflowMenu options={[
-						{label: "Ajouter Etudiants", icon: <FaPlus/>, onClick: () => onAdd?.()},
-						{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit?.()},
-						{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete?.()},
-					]}/>
-				</div>	
+				{admin &&
+					<div className="group-widget-buttons-layout">
+						{group.members && group.members.length > 0 &&
+							<IconButton size={20} icon={expanded ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpanded(!expanded)}/>
+						}
+						<OverflowMenu options={[
+							{label: "Ajouter Etudiants", icon: <FaPlus/>, onClick: () => onAdd?.()},
+							{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit?.()},
+							{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete?.()},
+						]}/>
+					</div>	
+				}
 			</div>
 
 			{expanded && 

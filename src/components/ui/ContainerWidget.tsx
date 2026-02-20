@@ -15,14 +15,14 @@ interface ContainerWidgetProps {
 export default function ContainerWidget({icon, label, active = false, children, className, onClick}: ContainerWidgetProps){
 	return (
 		<div className={`container-widget-layout ${active ? "active" : ""} ${className}`} onClick={onClick}>
-			{label != null && icon != null && 
+			{(label != null && icon != null) && 
 				<div className="container-widget-title">
 					{icon}
 					<span>{label}</span>
 				</div>
 			}
 			
-			{label != null && icon != null && 
+			{(label != null && icon != null) && 
 				<HorizontalDivider/>
 			}
 		

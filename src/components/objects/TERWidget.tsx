@@ -57,7 +57,7 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 	}, []);
 
 	return (
-		<div className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
+		<ContainerWidget className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
 			<div className="ter-widget-title-layout">
 				<div>
 					<Icon icon={<TbSchool/>} color="var(--blue-col)"/>
@@ -88,48 +88,53 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 					</div>
 				</div>
 			</div>
-		
-			{/* {moreInfo &&
-				<>
-					<HorizontalDivider/>
+		</ContainerWidget>
 
-					<div className="ter-widget-info-layout">
-						<div className="ter-widget-info-layout-container">
-							<span style={{ color: "var(--gray1-col)" }}>Etudiants</span>
-							<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-								{stats?.students_enrolled}
-							</span>
-						</div>
-
-						<div className="ter-widget-info-layout-container">
-							<span style={{ color: "var(--gray1-col)" }}>Professeurs</span>
-							<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-								{professorCount}
-							</span>
-						</div>
-
-						<div className="ter-widget-info-layout-container">
-							<span style={{ color: "var(--gray1-col)" }}>Groupes</span>
-							<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-								{stats?.groups_total}
-							</span>
-						</div>
-
-						<div className="ter-widget-info-layout-container">
-							<span style={{ color: "var(--gray1-col)" }}>Sujets</span>
-							<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-								{stats?.subjects_total}
-							</span>
-						</div>
-					</div>
-				</>
-			} */}
+		// <div className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
 			
-			{onSelect &&
-				<div className={`ter-widget-tick ${selected ? "selected" : ""}`}>
-					<MdDone/>
-				</div>
-			}
-		</div>
+		// 	</div>
+		
+		// 	{/* {moreInfo &&
+		// 		<>
+		// 			<HorizontalDivider/>
+
+		// 			<div className="ter-widget-info-layout">
+		// 				<div className="ter-widget-info-layout-container">
+		// 					<span style={{ color: "var(--gray1-col)" }}>Etudiants</span>
+		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+		// 						{stats?.students_enrolled}
+		// 					</span>
+		// 				</div>
+
+		// 				<div className="ter-widget-info-layout-container">
+		// 					<span style={{ color: "var(--gray1-col)" }}>Professeurs</span>
+		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+		// 						{professorCount}
+		// 					</span>
+		// 				</div>
+
+		// 				<div className="ter-widget-info-layout-container">
+		// 					<span style={{ color: "var(--gray1-col)" }}>Groupes</span>
+		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+		// 						{stats?.groups_total}
+		// 					</span>
+		// 				</div>
+
+		// 				<div className="ter-widget-info-layout-container">
+		// 					<span style={{ color: "var(--gray1-col)" }}>Sujets</span>
+		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
+		// 						{stats?.subjects_total}
+		// 					</span>
+		// 				</div>
+		// 			</div>
+		// 		</>
+		// 	} */}
+			
+		// 	{onSelect &&
+		// 		<div className={`ter-widget-tick ${selected ? "selected" : ""}`}>
+		// 			<MdDone/>
+		// 		</div>
+		// 	}
+		// </div>
 	);
 }

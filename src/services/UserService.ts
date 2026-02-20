@@ -129,4 +129,16 @@ export default class UserService {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
+
+	public static isProfessor(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ENCADRANT;
+		});
+	}
+
+	public static isStudent(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ETUDIANT;
+		});
+	}
 };

@@ -65,9 +65,9 @@ export interface Group {
 }
 
 export default class GroupService {
-	public static async getGroups(id: string): Promise<Group[]> {
+	public static async getGroups(period_id: string): Promise<Group[]> {
 		 try {
-			const res = await api.get<{results: Group[]}>("/groups/", {params: {ter_period_id: id}});
+			const res = await api.get<{results: Group[]}>("/groups/", {params: {ter_period_id: period_id}});
 			return res.data.results;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
