@@ -47,8 +47,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const markAllAsRead = () => {
 		setNotifications(prevNotifications => prevNotifications.map(n => ({ ...n, isRead: true })));
 	};
-	//const { user } = useAuth();
-	const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
+	const { user } = useAuth();
 	const { logout } = useAuth();
 
 	const { pathname } = useLocation();

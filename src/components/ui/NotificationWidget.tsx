@@ -1,14 +1,14 @@
-// src/components/ui/NotificationWidget.tsx
+
 import React from 'react';
 import './NotificationWidget.css';
 
-// On définit la structure d'une notification
+
 export interface Notification {
     id: number;
     title: string;
     description: string;
     time: string;
-    isRead: boolean; // Le point bleu dépend de ça
+    isRead: boolean;
 }
 
 interface NotificationWidgetProps {

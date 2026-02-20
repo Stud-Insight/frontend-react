@@ -78,8 +78,7 @@ function AppRoutes() {
             </Route>
 
             <Route path="/dashboard">
-                {/* <Route path="home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> */}
-                <Route path="home" element={<HomePage />} />
+                <Route path="home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
                 <Route path="users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
                 <Route path="chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
                 <Route path="stages" element={<ProtectedRoute><StagePage /></ProtectedRoute>} />
