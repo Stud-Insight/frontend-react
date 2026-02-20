@@ -14,14 +14,15 @@ import TERAdminPage from "./pages/ter/admin/TERAdminPage";
 import UsersPage from "./pages/dashboard/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
 import StagePage from "./pages/dashboard/StagePage";
+import NotificationBadge from "./components/ui/NotificationBadge";
 
 import "./index.css";
 
 interface RouteProps {
-	children: ReactNode;
+    children: ReactNode;
 };
 
-function ProtectedRoute({ children }: RouteProps){
+function ProtectedRoute({ children }: RouteProps) {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -33,13 +34,13 @@ function ProtectedRoute({ children }: RouteProps){
     }
 
     return (
-		<>
-			{children}
-		</>
-	);
+        <>
+            {children}
+        </>
+    );
 }
 
-function PublicRoute({ children }: RouteProps){
+function PublicRoute({ children }: RouteProps) {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -51,10 +52,10 @@ function PublicRoute({ children }: RouteProps){
     }
 
     return (
-		<>
-			{children}
-		</>
-	);
+        <>
+            {children}
+        </>
+    );
 }
 
 function RootRedirect() {
@@ -71,28 +72,29 @@ function AppRoutes() {
     return (
         <Routes>
             <Route path="/auth">
-                <Route path="login" element={<PublicRoute><AccountLoginPage/></PublicRoute>}/>
-                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage/></PublicRoute>}/>
-                <Route path="activation" element={<PublicRoute><AccountActivationPage/></PublicRoute>}/>
+                <Route path="login" element={<PublicRoute><AccountLoginPage /></PublicRoute>} />
+                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage /></PublicRoute>} />
+                <Route path="activation" element={<PublicRoute><AccountActivationPage /></PublicRoute>} />
             </Route>
 
             <Route path="/dashboard">
-                <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
-               	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
-                <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
-				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
-                <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
-				<Route path="subjects" element={<ProtectedRoute><SubjectPage/></ProtectedRoute>}/>
+                {/* <Route path="home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} /> */}
+                <Route path="home" element={<HomePage />} />
+                <Route path="users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />
+                <Route path="chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
+                <Route path="stages" element={<ProtectedRoute><StagePage /></ProtectedRoute>} />
+                <Route path="archive" element={<ProtectedRoute><ArchivePage /></ProtectedRoute>} />
+                <Route path="subjects" element={<ProtectedRoute><SubjectPage /></ProtectedRoute>} />
             </Route>
 
-			<Route path="/dashboard/ter">
-				<Route path="select" element={<ProtectedRoute><TERSelectionPage/></ProtectedRoute>}/>
-				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
-				<Route path="list/:id" element={<ProtectedRoute><TERAdminPage/></ProtectedRoute>}/>
-			</Route>
+            <Route path="/dashboard/ter">
+                <Route path="select" element={<ProtectedRoute><TERSelectionPage /></ProtectedRoute>} />
+                <Route path="list" element={<ProtectedRoute><TERListPage /></ProtectedRoute>} />
+                <Route path="list/:id" element={<ProtectedRoute><TERAdminPage /></ProtectedRoute>} />
+            </Route>
 
-            <Route path="/" element={<RootRedirect/>} />
-            <Route path="*" element={<RootRedirect/>} />
+            <Route path="/" element={<RootRedirect />} />
+            <Route path="*" element={<RootRedirect />} />
         </Routes>
     );
 }
@@ -101,7 +103,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <AppRoutes/>
+                <AppRoutes />
             </Router>
         </AuthProvider>
     );
