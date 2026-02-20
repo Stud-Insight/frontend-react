@@ -28,7 +28,7 @@ export default function SubjectPage(){
 	const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
 	const [modifySubject, setModifySubject] = useState<Subject | null>(null);
 	const [createSubject, setCreateSubject] = useState<boolean>(false);
-	const [sendSubject, setSendSubject] = useState<Subject | null>(null);
+	const [publishSubject, setPublishSubject] = useState<Subject | null>(null);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
 	const [etuMin, setEtuMin] = useState<number>(0);
@@ -60,6 +60,7 @@ export default function SubjectPage(){
 		setCreateSubject(false);
 		setModifySubject(null);
 		setDeleteSubject(null);
+		setPublishSubject(null);
 		setTitle("");
 		setDesc("");
 		setEtuMin(0);
@@ -102,7 +103,7 @@ export default function SubjectPage(){
 	const confirmCreationHandle = async () => {
 		try {
 			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
-			setSuccess(`Projet "${title}" à été créée!`);
+			setSuccess(`Sujet "${title}" à été créée!`);
 			getSubjects();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -139,8 +140,24 @@ export default function SubjectPage(){
 		);
 	}
 
-	const onSendHandle = (period: TERPeriod) => {
+	const onPublishHandle = async (periods: Set<TERPeriod>) => {
+		try {
+			const g = Array.from(periods).map(period => (
+				period.id
+			));
 
+			const p: TERPeriod = Array.from(periods)[0];
+
+			await SubjectService.publishSubject(new Set(g), publishSubject?.id);
+			getSubjects();
+			setSuccess(`Sujet "${publishSubject?.title}" à été soumis à "${p.name}"`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch(err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		resetFieldHandle();
 	}
 
 	useEffect(() => {
@@ -175,15 +192,15 @@ export default function SubjectPage(){
 
 			{deleteSubject &&
 				<ConfirmationDialog 
-					label="Supprimer ce projet?" 
-					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
+					label="Supprimer ce sujet?" 
+					info="Ce sujet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
 					onCancel={() => setDeleteSubject(null)} 
 					onConfirm={deleteHandle}
 				/>
 			}
 
-			{sendSubject &&
-				<TERSelectionDialog label="Publier ce projet?" onClose={() => setSendSubject(null)} onConfirm={(period) => onSendHandle(period)}/>
+			{publishSubject &&
+				<TERSelectionDialog label="Publier ce projet?" maxSelection={1} onClose={() => setPublishSubject(null)} onConfirm={(periods) => onPublishHandle(periods)}/>
 			}
 
 			<div className="dashboard-top-layout">
@@ -214,7 +231,7 @@ export default function SubjectPage(){
 				<SubjectWidget key={index} subject={sub} 
 				onDelete={() => setDeleteSubject(sub)} 
 				onEdit={() => editHandle(sub)}
-				onPublish={() => setSendSubject(sub)}
+				onPublish={() => setPublishSubject(sub)}
 				/>
 			))}
 

@@ -10,21 +10,21 @@ interface TERSelectionDialogProp {
 	label: string;
 	maxSelection?: number;
 	onClose?: () => void;
-	onConfirm?: (period: TERPeriod) => void;
+	onConfirm?: (period: Set<TERPeriod>) => void;
 };
 
 export default function TERSelectionDialog({label, maxSelection = 1, onClose, onConfirm}: TERSelectionDialogProp){
 	const [periods, setPeriods] = useState<TERPeriod[]>([]);
-	const [selected, setSelect] = useState<Set<string>>(new Set);
+	const [selected, setSelect] = useState<Set<TERPeriod>>(new Set);
 
 	const selectionHandle = (ter: TERPeriod) => {
 		setSelect(prev => {
 			const newSet = new Set(prev);
 
-			if (newSet.has(ter.id)) {
-				newSet.delete(ter.id);
+			if (newSet.has(ter)) {
+				newSet.delete(ter);
 			} else {
-				newSet.add(ter.id);
+				newSet.add(ter);
 			}
 
 			return newSet;
@@ -48,13 +48,13 @@ export default function TERSelectionDialog({label, maxSelection = 1, onClose, on
 		<ModalDialog label={label} onClose={onClose} className="user-list-dialog-content">
 			<div className="user-list-layout">
 				{periods && periods.map(period => (
-					<TERWidget data={period} selected={selected.has(period.id)} moreInfo={false} onSelect={() => selectionHandle(period)}/>
+					<TERWidget data={period} selected={selected.has(period)} moreInfo={false} onSelect={() => selectionHandle(period)}/>
 				))}
 			</div>
 
 			<div className="user-list-buttons">
 				<Button label="Annuler" style="cancel" width={`${100}%`} onClick={onClose}/>
-				<Button label="Publier" width={`${100}%`} onClick={onConfirm}/>
+				<Button label={`Publier (${selected.size})`} width={`${100}%`} onClick={() => onConfirm?.(selected)}/>
 			</div>
 		</ModalDialog>
 	)

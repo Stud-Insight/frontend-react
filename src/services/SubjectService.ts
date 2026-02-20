@@ -11,7 +11,7 @@ export enum SubjectStatus {
 
 export const SubjectStatusColor: Map<SubjectStatus, string> = new Map([
 	[SubjectStatus.DRAFT, "var(--gray1-col)"],
-	[SubjectStatus.SUBMITTED, "var(--gray1-col)"],
+	[SubjectStatus.SUBMITTED, "var(--blue-col)"],
 	[SubjectStatus.VALIDATED, "var(--green-col)"],
 	[SubjectStatus.REJECTED, "var(--red-col)"],
 ]);
@@ -103,6 +103,18 @@ export default class SubjectService {
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}	
+	}
+
+	public static async publishSubject(period_ids: Set<string>, subject_id: string): Promise<void>{
+		try {
+			await Promise.all(
+				Array.from(period_ids).map(id => (
+					api.post(`ter/subjects/${subject_id}/submit?ter_period_id=${id}`)
+				))
+			);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
 	}
 }
 

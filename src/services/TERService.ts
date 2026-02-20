@@ -97,7 +97,6 @@ export default class TERService {
 	public static async getMyPeriods(): Promise<TERPeriod[]> {
 		try {
 			const res = await api.get<{results: TERPeriod[]}>(`/ter/periods/me`);
-			console.log(res.data);
 			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
