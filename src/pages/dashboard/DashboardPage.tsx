@@ -5,9 +5,10 @@ import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
 import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
-import { Outlet } from "react-router-dom";
+import NotificationWidget from "../../components/ui/NotificationWidget.tsx";
 
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useRef, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -31,6 +32,8 @@ interface DashboardPageProps {
 
 export default function DashboardPage({ children }: DashboardPageProps) {
 	const [unreadCount, setUnreadCount] = useState(3);
+	const notificationRef = useRef<HTMLDivElement>(null);
+	const [showNotifications, setShowNotifications] = useState(false);
 	//const { user } = useAuth();
 	const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
 	const { logout } = useAuth();
@@ -50,6 +53,19 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const pageHandle = (id: string) => {
 		navigate("/dashboard/" + id);
 	}
+
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+				setShowNotifications(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [setShowNotifications]);
 
 	return (
 		<div className="dashboard-content">
@@ -81,10 +97,17 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			<div className="dashboard-rightside-main">
 				<div className="dashboard-header-container">
 					{/* <MdNotificationsNone size={20}/> */}
-					<div style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}
-						onClick={() => setUnreadCount(0)}>
-						<MdNotificationsNone size={25} color="#555" />
-						<NotificationBadge count={unreadCount} />
+					<div
+						ref={notificationRef}
+						style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}>
+						<div onClick={() => {
+							setShowNotifications(!showNotifications);
+							setUnreadCount(0);
+						}}>
+							<MdNotificationsNone size={25} color="#555" />
+							<NotificationBadge count={unreadCount} />
+						</div>
+						{showNotifications && <NotificationWidget />}
 					</div>
 
 					<div className="dashboard-user-container">
