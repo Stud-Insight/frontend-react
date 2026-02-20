@@ -58,3 +58,22 @@
     font-size: 12px;
     cursor: pointer;
 }
+
+.notification-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.unread-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #007bff;
+    /* Bleu */
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.notification-item.unread {
+    background-color: #f0f7ff;
+}

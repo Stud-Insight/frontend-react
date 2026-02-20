@@ -31,9 +31,21 @@ interface DashboardPageProps {
 };
 
 export default function DashboardPage({ children }: DashboardPageProps) {
-	const [unreadCount, setUnreadCount] = useState(3);
 	const notificationRef = useRef<HTMLDivElement>(null);
 	const [showNotifications, setShowNotifications] = useState(false);
+	const [notifications, setNotifications] = useState([
+		{ id: 1, title: 'Nouveau message', description: 'Vincent vous a envoyé un message', time: '2 min', isRead: false },
+		{ id: 2, title: 'TER Validé', description: 'Votre sujet a été approuvé', time: '1 heure ', isRead: false },
+		{ id: 3, title: 'Soutenance', description: 'Date fixée au 15 Juin', time: 'Hier', isRead: false },
+	])
+	const unreadCount = notifications.filter(n => !n.isRead).length;
+	const markAsRead = (id: number) => {
+		setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n)
+		)
+	}
+	const markAllAsRead = () => {
+		setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+	};
 	//const { user } = useAuth();
 	const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
 	const { logout } = useAuth();
@@ -102,12 +114,11 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 						style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}>
 						<div onClick={() => {
 							setShowNotifications(!showNotifications);
-							setUnreadCount(0);
 						}}>
 							<MdNotificationsNone size={25} color="#555" />
 							<NotificationBadge count={unreadCount} />
 						</div>
-						{showNotifications && <NotificationWidget />}
+						{showNotifications && <NotificationWidget notifications={notifications} onNotificationClick={markAsRead} onReadAll={markAllAsRead} />}
 					</div>
 
 					<div className="dashboard-user-container">

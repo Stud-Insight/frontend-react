@@ -1,32 +1,58 @@
-import React from "react";
+// src/components/ui/NotificationWidget.tsx
+import React from 'react';
 import './NotificationWidget.css';
 
-const NotificationWidget: React.FC = () => {
-    //Juste des données pour le visuel 
-    const notifications = [
-        { id: 1, title: "Nouveau message", text: "Vincent vous a envoyé un message.", time: "2 min" },
-        { id: 2, title: "Rendu TER ", description: "Le dossier de TER est disponible.", time: "1 heure" },
-        { id: 3, title: "Calendrier", description: "Votre soutenance a été programmée.", time: "Hier" },
-    ];
+// On définit la structure d'une notification
+export interface Notification {
+    id: number;
+    title: string;
+    description: string;
+    time: string;
+    isRead: boolean; // Le point bleu dépend de ça
+}
 
+interface NotificationWidgetProps {
+    notifications: Notification[];
+    onNotificationClick: (id: number) => void;
+    onReadAll: () => void;
+
+}
+
+const NotificationWidget: React.FC<NotificationWidgetProps> = ({ notifications, onNotificationClick, onReadAll }) => {
     return (
         <div className="notification-widget-dropdown">
             <div className="widget-header">
                 <h3>Notifications</h3>
             </div>
             <div className="widget-body">
-                {notifications.map((notif) => (
-                    <div key={notif.id} className="notification-item">
-                        <div className="notification-item-content">
-                            <strong>{notif.title}</strong>
-                            <p> {notif.description || notif.text} </p>
-                            <span className="notification-time">{notif.time}</span>
+                {notifications.length === 0 ? (
+                    <p style={{ padding: '15px', fontSize: '12px' }}>Aucune notification</p>
+                ) : (
+                    notifications.map((notif) => (
+                        <div
+                            key={notif.id}
+                            className={`notification-item ${!notif.isRead ? 'unread' : ''}`}
+                            onClick={() => onNotificationClick(notif.id)}
+                        >
+                            <div className="notification-item-content">
+                                <div className="notification-title-row">
+                                    <strong>{notif.title}</strong>
+                                    {!notif.isRead && <span className="unread-dot"></span>}
+                                </div>
+                                <p>{notif.description}</p>
+                                <span className="notification-time">{notif.time}</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
-            <div className="widget-footer">
-                <button> Tout marquer comme lu</button>
+            <div className='widget-footer'>
+                <button onClick={(e) => {
+                    e.stopPropagation();
+                    onReadAll();
+                }}>
+                    Tout marquer comme lu
+                </button>
             </div>
         </div>
     );
