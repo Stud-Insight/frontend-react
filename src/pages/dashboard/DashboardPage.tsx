@@ -69,25 +69,22 @@ export default function DashboardPage({children} : DashboardPageProps){
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={pageHandle}/> */}
 					<HorizontalDivider/>
 
-					{!roles.includes(UserRoles.ETUDIANT) &&
-						<>
-							{roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN) && 
-								<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle}/>
-							}
-
-							{roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN) && 
-								<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={pageHandle}/>
-							}
-							
-							{roles.includes(UserRoles.ADMIN) &&
-								<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={pageHandle}/>
-							}
-
-							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
-							
-							<HorizontalDivider/>
-						</>
+					{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) && 
+						<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle}/>
 					}
+
+					{(roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN)) && 
+						<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={pageHandle}/>
+					}
+					
+					{roles.includes(UserRoles.ADMIN) &&
+						<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={pageHandle}/>
+					}
+
+					<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
+					
+					<HorizontalDivider/>
+
 					<NavigationButton label="Aide" icon={<PiQuestionBold/>} id="help" active={isActive("/dashboard/help")}  onClick={pageHandle}/>
 				</div>
 

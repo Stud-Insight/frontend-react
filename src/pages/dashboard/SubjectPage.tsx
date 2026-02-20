@@ -12,11 +12,12 @@ import InputTagSelection from "../../components/input/InputTagSelection";
 import InputArea from "../../components/input/InputArea";
 import InputNumberField from "../../components/input/InputNumberField";
 import InputAttachment from "../../components/input/InputAttachment";
+import TERSelectionDialog from "../../components/dialog/TERSelectionDialog";
+import { TERPeriod } from "../../services/TERService";
 
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
-
 import "./SubjectPage.css";
 
 export default function SubjectPage(){
@@ -27,6 +28,7 @@ export default function SubjectPage(){
 	const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
 	const [modifySubject, setModifySubject] = useState<Subject | null>(null);
 	const [createSubject, setCreateSubject] = useState<boolean>(false);
+	const [sendSubject, setSendSubject] = useState<Subject | null>(null);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
 	const [etuMin, setEtuMin] = useState<number>(0);
@@ -137,6 +139,10 @@ export default function SubjectPage(){
 		);
 	}
 
+	const onSendHandle = (period: TERPeriod) => {
+
+	}
+
 	useEffect(() => {
 		getSubjects();
 	}, []);
@@ -167,6 +173,19 @@ export default function SubjectPage(){
 				</ModalDialog>
 			}
 
+			{deleteSubject &&
+				<ConfirmationDialog 
+					label="Supprimer ce projet?" 
+					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
+					onCancel={() => setDeleteSubject(null)} 
+					onConfirm={deleteHandle}
+				/>
+			}
+
+			{sendSubject &&
+				<TERSelectionDialog label="Publier ce projet?" onClose={() => setSendSubject(null)} onConfirm={(period) => onSendHandle(period)}/>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
 					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets TER</span>
@@ -192,17 +211,12 @@ export default function SubjectPage(){
 			</div>
 
 			{filteredSubjects.map((sub, index) => (
-				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteSubject(sub)} onEdit={() => editHandle(sub)}/>
-			))}
-
-			{deleteSubject &&
-				<ConfirmationDialog 
-					label="Supprimer ce projet?" 
-					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
-					onCancel={() => setDeleteSubject(null)} 
-					onConfirm={deleteHandle}
+				<SubjectWidget key={index} subject={sub} 
+				onDelete={() => setDeleteSubject(sub)} 
+				onEdit={() => editHandle(sub)}
+				onPublish={() => setSendSubject(sub)}
 				/>
-			}
+			))}
 
 		</DashboardPage>
 	)

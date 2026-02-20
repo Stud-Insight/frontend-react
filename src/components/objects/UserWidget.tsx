@@ -2,10 +2,7 @@ import React, {ReactNode} from "react";
 import UserAvatar from "../ui/UserAvatar";
 import { User } from "../../services/UserService";
 import { MdDone } from "react-icons/md";
-import IconButton from "../button/IconButton";
-import { MdDeleteOutline } from "react-icons/md";
 import { FaCrown } from "react-icons/fa";
-import { PiCrownSimple } from "react-icons/pi";
 import "./UserWidget.css"
 
 interface UserWidgetProps {
@@ -39,7 +36,7 @@ export default function UserWidget({user, onClick, selected = false, crown = fal
 			
 			{children}
 			
-			<div className={`user-selected-icon ${selected ? "selected" : undefined}`}>
+			<div className={`user-selected-icon ${selected ? "selected" : ""}`}>
 				<MdDone/>
 			</div>
 		</div>
