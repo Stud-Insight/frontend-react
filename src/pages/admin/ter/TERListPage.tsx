@@ -58,7 +58,6 @@ export default function PeriodListPage(){
 			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate);
 			setSuccess(`TER "${title}" ajouté au systéme.`);
 			getAllTer();
-			
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -122,8 +121,8 @@ export default function PeriodListPage(){
 				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={0} color="var(--purple-col)"/>
 			</div>
 
-			{terList && terList.map((ter, index) => (
-				<TERWidget key={index} data={ter} onClick={() => clickHandle(ter.id)}/>
+			{terList && terList.map(ter => (
+				<TERWidget key={ter.id} period={ter} onClick={() => clickHandle(ter.id)} moreInfo={true}/>
 			))}
 		</DashboardPage>
 	)

@@ -171,6 +171,15 @@ export default class TERService {
 		}
 	}
 
+	public static async getSubjects(id: string): Promise<Subject[]> {
+		try {
+			const res = await api.get<Subject[]>(`/ter/periods/${id}/subjects`);
+			return res.data.results;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	} 
+
 	public static async getUserPeriod(): Promise<TERPeriod>{
 		try {
 			const period = await api.get<TERPeriod>("/ter/my");

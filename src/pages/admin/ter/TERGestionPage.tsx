@@ -2,7 +2,7 @@ import React, {useState, useEffect, ReactNode}from "react";
 import DashboardPage from "../../dashboard/DashboardPage";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import InfoBox from "../../../components/ui/InfoBox";
-import TagWidget from "../../../atoms/ui/Tag";
+import Tag from "../../../atoms/ui/Tag";
 import TERStudentView from "./TERStudentsView";
 import TERGroupView from "./TERGroupView";
 import TERProfessorView from "./TERProfessorView";
@@ -113,6 +113,15 @@ export default function TERGestionPage(){
 		}
 	}
 
+	const getSubjects = async () => {
+		try {
+			const data = await TERService.getSubjects(id);
+			setSubjects(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
 	const getGroups = async () => {
 		try {
 			const data = await GroupService.getGroups(id);
@@ -226,6 +235,7 @@ export default function TERGestionPage(){
 		getProfessors();
 		getGroups();
 		getGrades();
+		getSubjects();
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
@@ -248,7 +258,7 @@ export default function TERGestionPage(){
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
 					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
-					<TagWidget label={TERStatusLabel.get(period?.status)}/>
+					<Tag label={TERStatusLabel.get(period?.status)}/>
 				</div>
 				<div></div>
 			</div>

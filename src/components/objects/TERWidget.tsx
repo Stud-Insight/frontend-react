@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
-import TagWidget from "../../atoms/ui/Tag";
+import Tag from "../../atoms/ui/Tag";
 import Button from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
 
@@ -22,7 +22,7 @@ interface TERWidgetProps {
 	onSelect?: () => void;
 };
 
-export default function TERWidget({ period, onClick, onSelect, selected = false, moreInfo = true }: TERWidgetProps){
+export default function TERWidget({period, onClick, onSelect, selected = false, moreInfo = true }: TERWidgetProps){
 	const [stats, setStats] = useState<TERPeriodStats | null>(null);
 	const [professorCount, setProfessorCount] = useState<number>(0);
 
@@ -51,10 +51,10 @@ export default function TERWidget({ period, onClick, onSelect, selected = false,
 				console.log("Erreur TER Widget");
 			}
 		}
-	
+		
 		getTerData();
 		getProfessors();
-	}, [period.id]);
+	}, []);
 
 	return (
 		<div className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
@@ -68,7 +68,7 @@ export default function TERWidget({ period, onClick, onSelect, selected = false,
 						<span style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
 							{period.name}
 						</span>
-						<TagWidget label={TERStatusLabel.get(period.status)}/>
+						<Tag label={TERStatusLabel.get(period.status)}/>
 					</div>
 					
 					<div className="ter-widget-date-container">
@@ -81,9 +81,15 @@ export default function TERWidget({ period, onClick, onSelect, selected = false,
 						</div>
 					</div>
 				</div>
+
+				<div className="ter-widget-button-pos">
+					<div>
+						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
+					</div>
+				</div>
 			</div>
 		
-			{moreInfo &&
+			{/* {moreInfo &&
 				<>
 					<HorizontalDivider/>
 
@@ -116,16 +122,8 @@ export default function TERWidget({ period, onClick, onSelect, selected = false,
 							</span>
 						</div>
 					</div>
-					
-					<HorizontalDivider/>
-				
-					<div className="ter-widget-button-pos">
-						<div>
-							<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
-						</div>
-					</div>
 				</>
-			}
+			} */}
 			
 			{onSelect &&
 				<div className={`ter-widget-tick ${selected ? "selected" : ""}`}>

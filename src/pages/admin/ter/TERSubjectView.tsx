@@ -8,7 +8,7 @@ interface TERSubjectViewProps {
 export default function TERSubjectView({subjects}: TERSubjectViewProps){
 	return (
 		<>
-		
+			
 		</>
 	)
 }

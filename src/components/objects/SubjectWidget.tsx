@@ -3,7 +3,7 @@ import { Subject, SubjectStatus, SubjectStatusLabel, SubjectStatusColor } from "
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../button/IconButton";
-import TagWidget from "../../atoms/ui/Tag";
+import Tag from "../../atoms/ui/Tag";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../../components/input/OverflowMenu";
 import Tag from "../../atoms/ui/Tag";
@@ -98,12 +98,12 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 
 							<div className="subject-widget-tag-layout"> 
 								{subject.min_group_size == subject.max_group_size ? 
-									<TagWidget label={`${subject.max_group_size} Etudiants`}/>
+									<Tag label={`${subject.max_group_size} Etudiants`}/>
 									:
-									<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
+									<Tag label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
 								}
 								{subject.tags?.map((tag, index) => (
-									<TagWidget key={index} label={tag}/>
+									<Tag key={index} label={tag}/>
 								))}
 							</div>
 						</div>

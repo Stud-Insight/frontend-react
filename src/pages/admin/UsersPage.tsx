@@ -10,7 +10,7 @@ import ModalDialog from "../../components/dialog/ModalDialog";
 import InputField from "../../components/input/InputField";
 import OverflowMenu from "../../components/input/OverflowMenu";
 import UserAvatar from "../../components/ui/UserAvatar";
-import TagWidget from "../../atoms/ui/Tag";
+import Tag from "../../atoms/ui/Tag";
 import InputTagSelection from "../../components/input/InputTagSelection";
 import ImportCSVButton from "../../components/button/ImportCSVButton";
 
@@ -332,7 +332,7 @@ export default function UsersPage(){
 								<td>
 									<div className="users-table-tag-layout">
 										{user.groups.map((roles, index) => (
-											<TagWidget label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
+											<Tag label={UserRolesLabels.get(roles.name)} color={UserRolesColors.get(roles.name)}/>
 										))}
 									</div>
 								</td>
