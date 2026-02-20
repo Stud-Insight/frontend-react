@@ -105,13 +105,29 @@ export default class SubjectService {
 		}	
 	}
 
-	public static async publishSubject(period_ids: Set<string>, subject_id: string): Promise<void>{
+	public static async publishSubject(period_ids: Set<string>, subject_id: string): Promise<void> {
 		try {
 			await Promise.all(
 				Array.from(period_ids).map(id => (
 					api.post(`ter/subjects/${subject_id}/submit?ter_period_id=${id}`)
 				))
 			);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async rejectSubject(subject_id: string): Promise<void> {
+		try {
+			await api.post(`ter/subjects/${subject_id}/reject`)
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async acceptSubject(subject_id: string): Promise<void> {
+		try {
+			await api.post(`ter/subjects/${subject_id}/validate`)
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

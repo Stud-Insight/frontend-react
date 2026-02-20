@@ -6,40 +6,42 @@ import IconButton from "../button/IconButton";
 import Tag from "../../atoms/ui/Tag";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../../components/input/OverflowMenu";
-import Tag from "../../atoms/ui/Tag";
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
 import { MdOutlineEdit } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { FaRegFile, FaRegClock } from "react-icons/fa";
-
+import { FaRegFile} from "react-icons/fa";
 import "./SubjectWidget.css";
+import Button from "../../atoms/input/Button";
 
 interface SubjectWidgetProps {
 	subject: Subject;
 	privateMode?: boolean;
+	adminMode?: boolean;
 	onDownload?: () => void;
 	onDelete?: () => void;
 	onEdit?: () => void;
 	onPublish?: () => void;
 	onExport?: () => void;
+	onAccept?: () => void;
+	onReject?: () => void;
 };
 
-export default function SubjectWidget({subject, privateMode = true, onDelete, onEdit, onDownload, onPublish, onExport}: SubjectWidgetProps){
+export default function SubjectWidget({subject, privateMode = true, adminMode = false, onDelete, onEdit, onDownload, onPublish, onExport, onAccept, onReject}: SubjectWidgetProps){
 	const [expand, setExpand] = useState<boolean>(false);
 
 	let options = [
 		{label: "Télécharger", icon: <CgExport/>, onClick: () => {onExport?.()}}
-	];
+	];	
 
 	if (subject.status == SubjectStatus.DRAFT){
 		options.push({label: "Publier", icon: <LuSend/>, onClick: () => {onPublish?.()}});
 		options.push({label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {onEdit?.()}});
 		options.push({label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {onDelete?.()}});
 	}
-
+	
 	const dateFormat = (dateString: string) => {
 		const date_t = new Date(dateString);
 
@@ -63,6 +65,7 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 						<div className="subject-widget-title-right">
 							<div className="group-content-title">
 								<span style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</span>
+								
 								{privateMode &&
 									<Tag label={SubjectStatusLabel.get(subject.status)} color={SubjectStatusColor.get(subject.status)}/>								
 								}
@@ -76,6 +79,13 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 						</div>
 					</div>
 					<div className="subject-widget-expand-button">
+						{adminMode && subject.status == SubjectStatus.SUBMITTED &&
+							<>
+								<Button label="Rejeter" onClick={onReject}/>
+								<Button label="Accepter" onClick={onAccept}/>
+							</>
+						}
+
 						<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
 						{privateMode &&
 							<OverflowMenu options={options}/>

@@ -113,15 +113,6 @@ export default function TERGestionPage(){
 		}
 	}
 
-	const getSubjects = async () => {
-		try {
-			const data = await TERService.getSubjects(id);
-			setSubjects(data);
-		} catch (err){
-			const message = err instanceof Error ? err.message : "Erreur de connexion";
-			setError(message);
-		}
-	}
 	const getGroups = async () => {
 		try {
 			const data = await GroupService.getGroups(id);
@@ -200,8 +191,8 @@ export default function TERGestionPage(){
 	const deleteGroup = async (group: Group) => {
 		try {
 			await GroupService.deleteGroup(group.id);
-			setSuccess(`Groupe "${group.name}" à été supprimé de "${period?.name}".`);
 			getGroups();
+			setSuccess(`Groupe "${group.name}" à été supprimé de "${period?.name}".`);
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -213,6 +204,40 @@ export default function TERGestionPage(){
 		try {
 			const res = await GradeService.getGrades(id);
 			setGrades(res);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const getSubjects = async () => {
+		try {
+			const data = await TERService.getSubjects(id);
+			setSubjects(data);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const acceptSubject = async (subject: Subject) => {
+		try {
+			await SubjectService.acceptSubject(subject.id);
+			getSubjects();
+			setSuccess(`Sujet "${subject.title}" à été accepté avec succés.`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const rejectSubject = async (subject: Subject) => {
+		try {
+			await SubjectService.rejectSubject(subject.id);
+			getSubjects();
+			setSuccess(`Sujet "${subject.title}" à été rejeté avec succés.`);
+			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -249,7 +274,7 @@ export default function TERGestionPage(){
 			onUserDelete={removeStudentGroup}
 			onChangeLeader={changeGroupLeader}
 			/>],
-		[3, <TERSubjectView subjects={[]}/>],
+		[3, <TERSubjectView subjects={subjects} onAccept={acceptSubject} onReject={rejectSubject}/>],
 		[4, <TERGradeView grades={grades}/>],
 	])
 

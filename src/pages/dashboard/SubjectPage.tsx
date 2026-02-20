@@ -224,7 +224,7 @@ export default function SubjectPage(){
 				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
 				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
 				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
-				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
+				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvé" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
 			</div>
 
 			{filteredSubjects.map((sub, index) => (
