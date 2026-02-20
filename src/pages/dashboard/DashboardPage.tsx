@@ -5,7 +5,7 @@ import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
 import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
-import NotificationWidget from "../../components/ui/NotificationWidget.tsx";
+import NotificationWidget, { Notification } from "../../components/ui/NotificationWidget.tsx";
 
 import { useState, ReactNode, useRef, useEffect } from "react";
 import { Outlet } from "react-router-dom";
@@ -23,6 +23,8 @@ import { MdNotificationsNone } from "react-icons/md"
 
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
+import { subscribeToNotifications } from "../../services/NotificationService.ts";
+
 
 import "./DashboardPage.css"
 
@@ -33,18 +35,17 @@ interface DashboardPageProps {
 export default function DashboardPage({ children }: DashboardPageProps) {
 	const notificationRef = useRef<HTMLDivElement>(null);
 	const [showNotifications, setShowNotifications] = useState(false);
-	const [notifications, setNotifications] = useState([
+	const [notifications, setNotifications] = useState<Notification[]>([
 		{ id: 1, title: 'Nouveau message', description: 'Vincent vous a envoyé un message', time: '2 min', isRead: false },
 		{ id: 2, title: 'TER Validé', description: 'Votre sujet a été approuvé', time: '1 heure ', isRead: false },
 		{ id: 3, title: 'Soutenance', description: 'Date fixée au 15 Juin', time: 'Hier', isRead: false },
 	])
 	const unreadCount = notifications.filter(n => !n.isRead).length;
 	const markAsRead = (id: number) => {
-		setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n)
-		)
+		setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n));
 	}
 	const markAllAsRead = () => {
-		setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+		setNotifications(prevNotifications => prevNotifications.map(n => ({ ...n, isRead: true })));
 	};
 	//const { user } = useAuth();
 	const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
@@ -77,7 +78,14 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [setShowNotifications]);
+	}, []);
+
+	useEffect(() => {
+		const unsubscribe = subscribeToNotifications((newNotif) => {
+			setNotifications(prevNotifications => [newNotif, ...prevNotifications]);
+		});
+		return () => unsubscribe();
+	}, []);
 
 	return (
 		<div className="dashboard-content">
