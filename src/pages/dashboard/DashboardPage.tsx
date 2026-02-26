@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState, ReactNode, useRef, useEffect } from "react";
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import axios from "axios";
+
 import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
@@ -7,8 +10,7 @@ import UserAvatar from "../../components/ui/UserAvatar.tsx";
 import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
 import NotificationWidget, { Notification } from "../../components/ui/NotificationWidget.tsx";
 
-import { useState, ReactNode, useRef, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+
 import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -21,12 +23,14 @@ import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
 import { MdNotificationsNone } from "react-icons/md"
 
-import { useNavigate, useLocation } from "react-router-dom";
+
 import { useAuth } from "../../context/AuthContext.tsx";
 import { subscribeToNotifications } from "../../services/NotificationService.ts";
 
 
 import "./DashboardPage.css"
+
+const API_URL = (import.meta as any).env.VITE_API_URL || "http://localhost:8000";
 
 interface DashboardPageProps {
 	children?: ReactNode;
@@ -35,18 +39,9 @@ interface DashboardPageProps {
 export default function DashboardPage({ children }: DashboardPageProps) {
 	const notificationRef = useRef<HTMLDivElement>(null);
 	const [showNotifications, setShowNotifications] = useState(false);
-	const [notifications, setNotifications] = useState<Notification[]>([
-		{ id: 1, title: 'Nouveau message', description: 'Vincent vous a envoyé un message', time: '2 min', isRead: false },
-		{ id: 2, title: 'TER Validé', description: 'Votre sujet a été approuvé', time: '1 heure ', isRead: false },
-		{ id: 3, title: 'Soutenance', description: 'Date fixée au 15 Juin', time: 'Hier', isRead: false },
-	])
+	const [notifications, setNotifications] = useState<Notification[]>([]);
 	const unreadCount = notifications.filter(n => !n.isRead).length;
-	const markAsRead = (id: number) => {
-		setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n));
-	}
-	const markAllAsRead = () => {
-		setNotifications(prevNotifications => prevNotifications.map(n => ({ ...n, isRead: true })));
-	};
+
 	const { user } = useAuth();
 	const { logout } = useAuth();
 
@@ -58,7 +53,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			await logout();
 			navigate("/");
 		} catch (err) {
-			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			console.error("Erreur markAllAsRead:", err);
 		}
 	}
 
@@ -80,11 +75,44 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	}, []);
 
 	useEffect(() => {
+		const fetchHistory = async () => {
+			try {
+				const response = await axios.get(`${API_URL}/api/notifications/history/`, {
+					withCredentials: true
+				});
+				setNotifications(response.data);
+			} catch (err) {
+				console.error("Erreur lors du chargement de l'historique", err);
+			}
+		};
+		fetchHistory();
+	}, []);
+
+	useEffect(() => {
 		const unsubscribe = subscribeToNotifications((newNotif) => {
 			setNotifications(prevNotifications => [newNotif, ...prevNotifications]);
 		});
 		return () => unsubscribe();
 	}, []);
+
+	const markAsRead = async (id: number) => {
+		try {
+			await axios.patch(`${API_URL}/api/notifications/${id}/read/`, {}, { withCredentials: true });
+			setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+		} catch (err) {
+			console.error("Erreur markAsRead:", err);
+		}
+	}
+
+	const markAllAsRead = async () => {
+		try {
+			await axios.post(`${API_URL}/api/notifications/mark-all-read/`, {}, { withCredentials: true });
+			setNotifications(prevNotifications => prevNotifications.map(n => ({ ...n, isRead: true })));
+		} catch (err) {
+			console.error("Erreur markAllAsRead:", err);
+		}
+	};
+
 
 	return (
 		<div className="dashboard-content">
