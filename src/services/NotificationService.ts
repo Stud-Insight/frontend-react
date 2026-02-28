@@ -1,59 +1,92 @@
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/fr';
-import { Notification } from "../components/ui/NotificationWidget";
+import api from "../api/ApiHandle";
+import { AxiosError } from "axios";
 
-dayjs.extend(relativeTime);
-dayjs.locale('fr');
+export interface Notification {
+    id: number;
+    title: string;
+    message: string;
+    created_at: string;
+    isRead: boolean;
+    type: string;
+}
+class NotificationService {
+    private notifcations: Notification[] = [];
+    private callbacks: Set<NotificationCallback> = new Set ();
+    private eventSource: EventSource | null = null;
 
-const API_URL = (import.meta as any).env.VITE_API_URL || "http://localhost:8000";
+    constructor() {
+        this.fetchHistory();
+    }
 
-export const subscribeToNotifications = (onNotificationReceived: (notif: Notification) => void) => {
-    let eventSource: EventSource | null =null ;
-    let reconnectDelay = 1000;
-    const maxReconnectDelay = 30000;
+    private formatDate(dateString: string): string {
+        const date = new Date(dateString);
+        return `Le ${date.toLocaleDateString()} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
 
-    const connect = () => {
-        console.log("Tentative de connexion au flux SSE...");
-        eventSource= new EventSource(`${API_URL}/api/notifications/stream/`, {withCredentials: true});
-
-    eventSource.onopen = () => {
-        console.log("Connexion SSE établie");
-        reconnectDelay = 1000;
-    };
-
-    eventSource.onmessage =(event) => {
+    public async fetchHistory() {
         try {
+            const response = await api.get<Notification[]>("/notifications/history");
+            this.notifcations = response.data.map ( n => ({...n, created_at: this.formatDate(n.created_at)})).sort((a,b) => b.id -a.id);
+            this.notify();
+        }catch (err) {
+            console.error("Erreur lors du chargement de l'historique:", err);
+        }
+    }
+
+    public subscribe(callback: NotificationCallback) {
+        this.callbacks.add(callback);
+        callback(this.notifcations);
+
+        if(!this.eventSource) {
+            this.connectSSE();
+        }
+
+        return () => {
+            this.callbacks.delete(callback);
+        };
+    }
+
+    private connectSSE() {
+        this.eventSource = new EventSource (`${this.apiUrl}/api/notifications/stream`, {withCredentials: true,});
+
+        this.eventSource.onmessage= (event) => {
             const data = JSON.parse(event.data);
-            const newNotif: Notification ={
-            id: data.id,
-            title: data.title,
-            description: data.message,
-            time: "À l'instant",
-            isRead: false
+            const newNotif: Notification = { ...data, created_at: this.formatDate(data.created_at)};
+
+            this.notifcations = [newNotif, ...this.notifcations];
+            this.notify();
         };
 
-        onNotificationReceived(newNotif);
-        } catch (err) {
-            console.error("Erreur pasing SSE data:", err);
-        }
-    };
-
-    eventSource.onerror = () => {
-        console.error(`❌ Erreur SSE. Reconnexion dans ${reconnectDelay}ms...`);
-        if (eventSource) eventSource.close();
-
-        setTimeout (() => {
-            reconnectDelay = Math.min(reconnectDelay *2, maxReconnectDelay);
-            connect ();
-        }, reconnectDelay);
-    };
-};
-
-    return () => {
-        if (eventSource) {
-            eventSource.close();
-            console.log("Connexion SSE fermée");
-        }
+        this.eventSource.onerror = () => {
+            console.warn("Connexion SSE perdue. Tentative de reconnexion...");
+            this.eventSource?.close();
+            this.eventSource=null;
+            setTimeout(() => this.connectSSE(), 5000);
         };
-    };
+    }
+
+    public async markAsRead(id: number) {
+        try {
+            await api.patch(`/notifications/${id}/read/`);
+            this.notifcations = this.notifcations.map(n => n.id === id? { ...n, isRead: true } : n);
+            this.notify();
+        }catch(err) {
+            console.error("Erreur markAsRead: ", err);
+        }
+    }
+
+    public async markAllAsRead() {
+        try {
+            await api.patch(`/notifications/mark-all-read/`);
+            this.notifcations = this.notifcations.map(n =>  ({ ...n, isRead: true }));
+            this.notify();
+        }catch(err) {
+            console.error("Erreur markAllAsRead: ", err);
+        }
+    }
+
+    private notify() {
+        this.callbacks.forEach(cb => cb([...this.notifcations]));
+    }
+}
+export default new NotificationService();

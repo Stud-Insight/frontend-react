@@ -1,6 +1,5 @@
 import React, { useState, ReactNode, useRef, useEffect } from "react";
-import { useNavigate, useLocation, Outlet } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation, Outlet, data } from "react-router-dom";
 
 import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
@@ -8,7 +7,8 @@ import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
 import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
-import NotificationWidget, { Notification } from "../../components/ui/NotificationWidget.tsx";
+import NotificationWidget from "../../components/ui/NotificationWidget.tsx";
+import RespoDashboard from "./RespoDashboard.tsx";
 
 
 import { FiArchive } from "react-icons/fi";
@@ -25,12 +25,10 @@ import { MdNotificationsNone } from "react-icons/md"
 
 
 import { useAuth } from "../../context/AuthContext.tsx";
-import { subscribeToNotifications } from "../../services/NotificationService.ts";
-
+import NotificationService, { Notification } from "../../services/NotificationService.ts";
 
 import "./DashboardPage.css"
 
-const API_URL = (import.meta as any).env.VITE_API_URL || "http://localhost:8000";
 
 interface DashboardPageProps {
 	children?: ReactNode;
@@ -43,8 +41,8 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const unreadCount = notifications.filter(n => !n.isRead).length;
 
 	const { user } = useAuth();
+	//const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
 	const { logout } = useAuth();
-
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 
@@ -53,7 +51,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			await logout();
 			navigate("/");
 		} catch (err) {
-			console.error("Erreur markAllAsRead:", err);
+			console.error("Erreur déconnexion:", err);
 		}
 	}
 
@@ -68,50 +66,17 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			}
 		}
 		document.addEventListener('mousedown', handleClickOutside);
-
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
 
 	useEffect(() => {
-		const fetchHistory = async () => {
-			try {
-				const response = await axios.get(`${API_URL}/api/notifications/history/`, {
-					withCredentials: true
-				});
-				setNotifications(response.data);
-			} catch (err) {
-				console.error("Erreur lors du chargement de l'historique", err);
-			}
-		};
-		fetchHistory();
-	}, []);
-
-	useEffect(() => {
-		const unsubscribe = subscribeToNotifications((newNotif) => {
-			setNotifications(prevNotifications => [newNotif, ...prevNotifications]);
+		const unsubscribe = NotificationService.subscribe((data) => {
+			setNotifications(data);
 		});
 		return () => unsubscribe();
 	}, []);
-
-	const markAsRead = async (id: number) => {
-		try {
-			await axios.patch(`${API_URL}/api/notifications/${id}/read/`, {}, { withCredentials: true });
-			setNotifications(prevNotifications => prevNotifications.map(n => n.id === id ? { ...n, isRead: true } : n));
-		} catch (err) {
-			console.error("Erreur markAsRead:", err);
-		}
-	}
-
-	const markAllAsRead = async () => {
-		try {
-			await axios.post(`${API_URL}/api/notifications/mark-all-read/`, {}, { withCredentials: true });
-			setNotifications(prevNotifications => prevNotifications.map(n => ({ ...n, isRead: true })));
-		} catch (err) {
-			console.error("Erreur markAllAsRead:", err);
-		}
-	};
 
 
 	return (
@@ -143,17 +108,18 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 
 			<div className="dashboard-rightside-main">
 				<div className="dashboard-header-container">
-					{/* <MdNotificationsNone size={20}/> */}
-					<div
-						ref={notificationRef}
-						style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}>
-						<div onClick={() => {
-							setShowNotifications(!showNotifications);
-						}}>
+					<div ref={notificationRef} style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}>
+						<div onClick={() => setShowNotifications(!showNotifications)}>
 							<MdNotificationsNone size={25} color="#555" />
 							<NotificationBadge count={unreadCount} />
 						</div>
-						{showNotifications && <NotificationWidget notifications={notifications} onNotificationClick={markAsRead} onReadAll={markAllAsRead} />}
+						{showNotifications && (
+							<NotificationWidget
+								notifications={notifications}
+								onNotificationClick={(id) => NotificationService.markAsRead(id)}
+								onReadAll={() => NotificationService.markAllAsRead()}
+							/>
+						)}
 					</div>
 
 					<div className="dashboard-user-container">
@@ -167,7 +133,11 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 				<HorizontalDivider />
 
 				<div className="dashboard-main-container">
-					<Outlet />
+					{pathname === "/dashboard" || pathname === "/dashboard" || pathname === "/dashboard/home" ? (
+						<RespoDashboard />
+					) : (
+						<Outlet />
+					)}
 				</div>
 			</div>
 		</div>
