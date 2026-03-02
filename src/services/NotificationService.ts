@@ -1,5 +1,5 @@
-import api from "../api/ApiHandle";
-import { AxiosError } from "axios";
+import ApiHandle from "../api/ApiHandle";
+
 
 export interface Notification {
     id: number;
@@ -9,84 +9,65 @@ export interface Notification {
     isRead: boolean;
     type: string;
 }
-class NotificationService {
-    private notifcations: Notification[] = [];
-    private callbacks: Set<NotificationCallback> = new Set ();
-    private eventSource: EventSource | null = null;
 
-    constructor() {
-        this.fetchHistory();
-    }
+const API_BASE_URL = ApiHandle.defaults.baseURL || "http://localhost:8000";
 
-    private formatDate(dateString: string): string {
-        const date = new Date(dateString);
-        return `Le ${date.toLocaleDateString()} à ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }
+export const fetchNotifications = async (): Promise<Notification[]> => {
+    const response = await ApiHandle.get<Notification[]>("/notifications/history/");
+    return response.data;
+};
 
-    public async fetchHistory() {
-        try {
-            const response = await api.get<Notification[]>("/notifications/history");
-            this.notifcations = response.data.map ( n => ({...n, created_at: this.formatDate(n.created_at)})).sort((a,b) => b.id -a.id);
-            this.notify();
-        }catch (err) {
-            console.error("Erreur lors du chargement de l'historique:", err);
-        }
-    }
+export const markAsRead = async (id: number): Promise<void> => {
+    await ApiHandle.patch(`/notifications/${id}/read/`);
+};
 
-    public subscribe(callback: NotificationCallback) {
-        this.callbacks.add(callback);
-        callback(this.notifcations);
+export const markAllAsRead = async (): Promise<void> => {
+    await ApiHandle.patch(`/notifications/mark-all-read/`, {});
+};
 
-        if(!this.eventSource) {
-            this.connectSSE();
-        }
+export const subscribeToNotifications = (onNotification: (notification: Notification) => void): (() => void) => {
+    let eventSource: EventSource | null = null;
+    let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
-        return () => {
-            this.callbacks.delete(callback);
-        };
-    }
+    const connect = () => {
+        eventSource = new EventSource(`${API_BASE_URL}/api/notifications/stream`, { withCredentials: true });
 
-    private connectSSE() {
-        this.eventSource = new EventSource (`${this.apiUrl}/api/notifications/stream`, {withCredentials: true,});
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                const notificationWithDate: Notification = { ...data, created_at: data.created_at ||new Date().toISOString()
 
-        this.eventSource.onmessage= (event) => {
-            const data = JSON.parse(event.data);
-            const newNotif: Notification = { ...data, created_at: this.formatDate(data.created_at)};
-
-            this.notifcations = [newNotif, ...this.notifcations];
-            this.notify();
+                };
+                onNotification(notificationWithDate);
+            } catch (err) {
+            console.error("Erreur lors du traitement de la notification SSE:", err);
+            }
         };
 
-        this.eventSource.onerror = () => {
-            console.warn("Connexion SSE perdue. Tentative de reconnexion...");
-            this.eventSource?.close();
-            this.eventSource=null;
-            setTimeout(() => this.connectSSE(), 5000);
+        eventSource.onerror = () => {
+            console.warn("Connexion SSE perdue. Reconnexion dans 5s...");
+            eventSource?.close();
+            reconnectTimeout = setTimeout(connect, 5000);
         };
-    }
+    };
 
-    public async markAsRead(id: number) {
-        try {
-            await api.patch(`/notifications/${id}/read/`);
-            this.notifcations = this.notifcations.map(n => n.id === id? { ...n, isRead: true } : n);
-            this.notify();
-        }catch(err) {
-            console.error("Erreur markAsRead: ", err);
+    connect();  
+
+    return () => {
+        if (eventSource) {
+            eventSource.close();
         }
-    }
-
-    public async markAllAsRead() {
-        try {
-            await api.patch(`/notifications/mark-all-read/`);
-            this.notifcations = this.notifcations.map(n =>  ({ ...n, isRead: true }));
-            this.notify();
-        }catch(err) {
-            console.error("Erreur markAllAsRead: ", err);
+        if (reconnectTimeout) {
+            clearTimeout(reconnectTimeout);
         }
-    }
+    };
+};
 
-    private notify() {
-        this.callbacks.forEach(cb => cb([...this.notifcations]));
-    }
-}
-export default new NotificationService();
+const NotificationService = {
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+    subscribeToNotifications
+};
+
+export default NotificationService;

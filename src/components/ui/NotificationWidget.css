@@ -47,6 +47,8 @@
 .notification-list {
     overflow-y: auto;
     background-color: var(--white-col);
+    max-height: 380px;
+    scrollbar-width: thin;
 }
 
 .notification-item {

@@ -13,7 +13,7 @@ export default function NotificationWidget({ notifications, onNotificationClick,
     return (
         <div className='notification-widget'>
             <div className='notification-header'>
-                <h3>Nptifications</h3>
+                <h3>Notifications</h3>
                 {notifications.length > 0 && (<button onClick={onReadAll} className='read-all-btn'> Tout marquer comme lu </button>)}
             </div>
 

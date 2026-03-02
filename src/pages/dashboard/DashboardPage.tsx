@@ -29,7 +29,6 @@ import NotificationService, { Notification } from "../../services/NotificationSe
 
 import "./DashboardPage.css"
 
-
 interface DashboardPageProps {
 	children?: ReactNode;
 };
@@ -72,10 +71,30 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	}, []);
 
 	useEffect(() => {
-		const unsubscribe = NotificationService.subscribe((data) => {
-			setNotifications(data);
+		let isMounted = true;
+
+		NotificationService.fetchNotifications()
+			.then((data) => {
+				if (isMounted) {
+					setNotifications(data);
+				}
+			})
+			.catch((err) => console.error("Erreur lors du chargement des notifications:", err));
+
+
+		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
+			setNotifications((prev) => {
+				if (prev.some((n) => n.id === notification.id)) {
+					return prev;
+				}
+				return [notification, ...prev];
+			});
 		});
-		return () => unsubscribe();
+
+		return () => {
+			isMounted = false;
+			unsubscribe();
+		};
 	}, []);
 
 
@@ -116,8 +135,14 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 						{showNotifications && (
 							<NotificationWidget
 								notifications={notifications}
-								onNotificationClick={(id) => NotificationService.markAsRead(id)}
-								onReadAll={() => NotificationService.markAllAsRead()}
+								onNotificationClick={(id) => {
+									NotificationService.markAsRead(id);
+									setNotifications((prev) => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+								}}
+								onReadAll={() => {
+									NotificationService.markAllAsRead();
+									setNotifications((prev) => prev.map(n => ({ ...n, isRead: true })));
+								}}
 							/>
 						)}
 					</div>
