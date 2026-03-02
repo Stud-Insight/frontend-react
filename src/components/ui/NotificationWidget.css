@@ -1,8 +1,8 @@
 .notification-widget-dropdown {
     position: absolute;
-    top: 50px;
+    top: 45px;
     right: 0;
-    width: 350px;
+    width: 360px;
     background-color: var(--white-col);
     border: 1px solid var(--gray-border-col);
     border-radius: 8px;
@@ -12,6 +12,7 @@
     flex-direction: column;
     max-height: 500px;
     overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
 }
 
 .notification-header {

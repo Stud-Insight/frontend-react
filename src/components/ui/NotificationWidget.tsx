@@ -11,7 +11,7 @@ interface NotificationWidgetProps {
 
 export default function NotificationWidget({ notifications, onNotificationClick, onReadAll }: NotificationWidgetProps) {
     return (
-        <div className='notification-widget'>
+        <div className='notification-widget-dropdown'>
             <div className='notification-header'>
                 <h3>Notifications</h3>
                 {notifications.length > 0 && (<button onClick={onReadAll} className='read-all-btn'> Tout marquer comme lu </button>)}

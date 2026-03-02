@@ -8,7 +8,7 @@ import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
 import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
 import NotificationWidget from "../../components/ui/NotificationWidget.tsx";
-import RespoDashboard from "./RespoDashboard.tsx";
+//import RespoDashboard from "./RespoDashboard.tsx";
 
 
 import { FiArchive } from "react-icons/fi";
@@ -40,7 +40,6 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const unreadCount = notifications.filter(n => !n.isRead).length;
 
 	const { user } = useAuth();
-	//const user = { first_name: "Maida", last_name: "Test" }; //Juste en attendant pour me connecter 
 	const { logout } = useAuth();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
@@ -83,6 +82,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 
 
 		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
+			console.log("Notification reçue SSE :", notification);
 			setNotifications((prev) => {
 				if (prev.some((n) => n.id === notification.id)) {
 					return prev;
