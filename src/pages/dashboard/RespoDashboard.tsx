@@ -1,123 +1,109 @@
-import React, { useState, useEffect } from 'react';
-import api from '../../api/ApiHandle';
-import './RespoDashboard.css'
-
-interface DashboardData {
-    currentPhase: {
-        label: string;
-        dates: string;
-        progress: number;
-    };
-    metrics: {
-        groupFormed: number;
-        totalGroups: number;
-        solitaires: number;
-        incompleteGroups: number;
-        rankingsCompleted: number;
-        all_subjects_validated: boolean;
-        validatedSubjects: number;
-        totalSubjects: number;
-    };
-}
-
-interface GatingConditions {
-    all_subjects_validated: boolean;
-    missing_subjects_count: number;
-    can_invite_students: boolean;
-}
+import React, { useState, useEffect } from "react";
+import TERService, { TERPeriod, TERPeriodStats } from "../../services/TERService";
+import './RespoDashboard.css';
 
 export default function RespoDashboard() {
-    const [data, setData] = useState<DashboardData | null>(null);
+    const [periods, setPeriods] = useState<TERPeriod | null>(null);
+    const [stats, setStats] = useState<TERPeriodStats | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        let isMounted = true;
+        const id = "current";
+
+        const loadInitialData = async () => {
             try {
-                const response = await api.get<DashboardData>("ter/dashboard-metrics/");
-                setData(response.data);
+                const [fetchedPeriods, fetchedStats] = await Promise.all([
+                    TERService.getPeriod(id),
+                    TERService.getPeriodStats(id)
+                ]);
+                if (isMounted) {
+                    setPeriods(fetchedPeriods);
+                    setStats(fetchedStats);
+                }
             } catch (err) {
-                console.error("Erreur lors du chargement du dashboard:", err);
-                setError("Impossible de charger les données du dashboard.");
+                console.error("Erreur lors du chargement des données du dashboard:", err);
             } finally {
-                setLoading(false);
+                if (isMounted) setLoading(false);
             }
         };
-        fetchData();
 
-        const apiUrl = process.env.API_URL || "http://localhost:8000";
-        const eventSource = new EventSource(`${apiUrl}/api/ter/stats-stream`, { withCredentials: true });
+        loadInitialData();
 
-        eventSource.onmessage = (event) => {
-            const updatedMetrics = JSON.parse(event.data);
-            setData(prevData => prevData ? { ...prevData, metrics: { ...prevData.metrics, ...updatedMetrics } } : null);
+        const unsubscribe = TERService.subscribeToStats(id, (updatedStats) => {
+            if (!isMounted) return;
+            setStats(prev => prev ? { ...prev, ...updatedStats } : null);
+        });
+
+        return () => {
+            isMounted = false;
+            unsubscribe();
         };
-
-        return () => eventSource.close();
     }, []);
 
+    if (loading) return <div className="dashboard-loading"><p>Chargement des indicateurs...</p></div>;
+    if (!stats || !periods) return null;
 
-    if (loading) {
-        return <div className='dashboard-container'>Chargement...</div>;
-    }
-    if (error) {
-        return <div className='dashboard-container error'>{error}</div>;
-    }
-
-    if (!data) return null;
+    const progress = (() => {
+        const startDate = new Date(periods.group_formation_start).getTime();
+        const endDate = new Date(periods.group_formation_end).getTime();
+        const now = new Date().getTime();
+        if (now < startDate) return 0;
+        if (now > endDate) return 100;
+        return Math.round(((now - startDate) / (endDate - startDate)) * 100);
+    })();
 
     return (
-        <div className='dashboard-container'>
+        <div className="respo-dashboard-content">
             <h2>Dashboard Responsable</h2>
-            {!data.metrics.all_subjects_validated && (
-                <div className='gating-warning-banner'>
-                    <div className='warning-icon'>⚠️</div>
-                    <div className='warning-content'>
-                        <h4>Action bloquée: Invitation des étudiants</h4>
-                        <p>Vous ne pouvez pas inviter d'étudiants tant que tous les sujets ne sont pas validés ({data.metrics.validatedSubjects}/{data.metrics.totalSubjects}).</p>
+
+            {stats.subjects_validated < stats.subjects_total && (
+                <div className="validation-warning">
+                    <span className="warning-icon">⚠️</span>
+                    <div className="text">
+                        <h4>Invitation étudiants bloquée</h4>
+                        <p>Il reste des sujets à valider ({stats.subjects_validated} / {stats.subjects_total}).</p>
                     </div>
                 </div>
             )}
-            <div className='current-phase'>
-                <h3>Phase actuelle: {data?.currentPhase.label}</h3>
-                <p>{data?.currentPhase.dates}</p>
-                <div className='progress-bar'>
-                    <div className='progress' style={{ width: `${data?.currentPhase.progress}%` }}></div>
+
+            <div className="phase-card">
+                <div className="phase-info">
+                    <h3>Phase actuelle : {periods?.name || "Formation des groupes"}</h3>
+                    <span className="progress-text">{progress}%</span>
+                </div>
+                <p className="dates">Du {new Date(periods.group_formation_start).toLocaleDateString()} au {new Date(periods.group_formation_end).toLocaleDateString()}</p>
+                <div className="progress-bar-bg">
+                    <div className="progress-fill" style={{ width: `${progress}%` }}></div>
                 </div>
             </div>
-            <div className='metrics'>
-                <div className={`metric-card ${data.metrics.solitaires > 0 ? 'urgent' : ''}`}>
+
+            <div className="metrics-grid">
+                <div className="metric-card">
+                    <h4>Étudiants inscrits</h4>
+                    <p className="value">{stats.students_enrolled}</p>
+                </div>
+
+                <div className={`metric-card ${stats.students_solitaires > 0 ? 'alert' : ''}`}>
                     <h4>Solitaires</h4>
-                    <p>{data?.metrics.solitaires}</p>
-                    {data.metrics.solitaires > 0 && <span className='warning-label'>Attention: {data.metrics.solitaires} solitaires!</span>}
+                    <p className="value">{stats.students_solitaires}</p>
                 </div>
-                <div className={`metric-card ${data.metrics.incompleteGroups > 0 ? 'warning' : ''}`}>
-                    <h4>Groupes incomplets</h4>
-                    <p>{data?.metrics.incompleteGroups}</p>
-                    {data.metrics.incompleteGroups > 0 && <span className='warning-label'>Il y a {data.metrics.incompleteGroups} groupes incomplets.</span>}
+
+                <div className="metric-card">
+                    <h4>Groupes Formés</h4>
+                    <p className="value">{stats.groups_total}</p>
                 </div>
-                <div className='metric-card'>
-                    <h4>Groupes formés</h4>
-                    <p>{data?.metrics.groupFormed}</p>
+
+                <div className="metric-card">
+                    <h4>Groupes Complets</h4>
+                    <p className="value">{stats.groups_complete}</p>
                 </div>
-                <div className='metric-card'>
-                    <h4>Total groupes</h4>
-                    <p>{data?.metrics.totalGroups}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Solitaires</h4>
-                    <p>{data?.metrics.solitaires}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Groupes incomplets</h4>
-                    <p>{data?.metrics.incompleteGroups}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Classements complétés</h4>
-                    <p>{data?.metrics.rankingsCompleted}</p>
+
+                <div className="metric-card">
+                    <h4>Sujets Validés</h4>
+                    <p className="value">{stats.subjects_validated} / {stats.subjects_total}</p>
                 </div>
             </div>
         </div>
     );
 }
-

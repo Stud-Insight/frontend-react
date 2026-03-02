@@ -153,6 +153,36 @@ export default class TERService {
 		}
 	}
 
+	public static subscribeToStats(id: string, onUpdate: (stats: TERPeriodStats) => void): () => void {
+		const API_BASE_URL = api.defaults.baseURL || "http://localhost:8000";
+		let eventSource: EventSource | null = null;
+
+		const connect = () => {
+			eventSource = new EventSource(`${API_BASE_URL}/api/ter/periods/${id}/stats-stream`, { withCredentials: true });
+			eventSource.onmessage = (event) => {
+				try {
+					const updatedMetrics = JSON.parse(event.data);
+					onUpdate(updatedMetrics);
+				} catch (err) {
+					console.error("Erreur lors du traitement des stats SSE:", err);
+				}
+			};
+			eventSource.onerror = (err) => {
+				eventSource?.close();
+				setTimeout
+				console.error("Erreur SSE:", err);
+			};
+		};
+
+		connect();
+
+		return () => {
+			if (eventSource) {
+				eventSource.close();
+			}
+		};
+	}
+
 	public static async getPeriod(id: string): Promise<TERPeriod | null>{
 		try {
 			const res = await api.get<TERPeriod>(`/ter/periods/${id}`);
