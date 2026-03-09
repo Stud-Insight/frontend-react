@@ -7,7 +7,7 @@ import ModalDialog from "../../../components/dialog/ModalDialog"
 import InputField from "../../../components/input/InputField"
 import HorizontalDivider from "../../../components/ui/HorizontalDivider";
 import InputDate from "../../../components/input/InputDate";
-import TERService, { TERPeriod } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatus, TERStatusColor } from "../../../services/TERService";
 import TERWidget from "../../../components/objects/TERWidget";
 import { TbSchool } from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
@@ -116,9 +116,9 @@ export default function PeriodListPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={terList ? terList.length : 0} color="var(--blue-col)"/>
-				<InfoWidget label="TER Active" icon={<TbSchool/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={0} color="var(--purple-col)"/>
+				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={terList ? terList.length : 0} color={TERStatusColor.get(TERStatus.DRAFT)}/>
+				<InfoWidget label="TER Active" icon={<TbSchool/>} info={0} color={TERStatusColor.get(TERStatus.OPEN)}/>
+				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={0} color={TERStatusColor.get(TERStatus.CLOSED)}/>
 			</div>
 
 			{terList && terList.map(ter => (

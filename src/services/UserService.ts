@@ -80,8 +80,8 @@ export default class UserService {
 
 	public static async getAllUsers(): Promise<User[] | null> {
 		try {
-			const response = await api.get<User[]>("/users/");
-        	return response.data;
+			const response = await api.get<{results: User[]}>("/users/");
+        	return response.data.results;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

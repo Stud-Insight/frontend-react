@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel } from "../../services/TERService";
+import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel, TERStatusColor } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
 import Tag from "../../atoms/ui/Tag";
 import Button from "../../atoms/input/Button";
@@ -68,7 +68,7 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 						<span style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
 							{period.name}
 						</span>
-						<Tag label={TERStatusLabel.get(period.status)}/>
+						<Tag label={TERStatusLabel.get(period.status)} color={TERStatusColor.get(period.status)}/>
 					</div>
 					
 					<div className="ter-widget-date-container">
@@ -83,9 +83,7 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 				</div>
 
 				<div className="ter-widget-button-pos">
-					<div>
-						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
-					</div>
+					<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
 				</div>
 			</div>
 		</ContainerWidget>

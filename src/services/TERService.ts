@@ -17,6 +17,14 @@ export const TERStatusLabel: Map<TERStatus, string> = new Map([
 	[TERStatus.ARCHIVED, "Archivé"],
 ]);
 
+export const TERStatusColor: Map<TERStatus, string> = new Map([
+	[TERStatus.DRAFT, "var(--gray1-col)"],
+	[TERStatus.OPEN, "var(--green-col)"],
+	[TERStatus.CLOSED, "var(--blue-col)"],
+	[TERStatus.ARCHIVED, "var(--purple-col)"],
+]);
+
+
 export interface TERNotation {
 	titre: string;
 	max_notation: number;
@@ -130,7 +138,7 @@ export default class TERService {
 
 	public static async getProfessors(period_id: string): Promise<User[]> {
 		try {
-			const res = await api.get<{results: User[]}>(`/ter/periods/${period_id}/professors`);
+			const res = await api.get<{results: User[]}>(`/ter/periods/${period_id}/encadrants`);
 			return res.data.results;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
@@ -139,7 +147,7 @@ export default class TERService {
 
 	public static async addProfessor(period_id: string, professor_id: string): Promise<void> {
 		try {
-			await api.post<{results: User[]}>(`/ter/periods/${period_id}/professors/${professor_id}`);
+			await api.post<{results: User[]}>(`/ter/periods/${period_id}/encadrants/${professor_id}`);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -147,7 +155,7 @@ export default class TERService {
 
 	public static async deleteProfessor(period_id: string, professor_id: string): Promise<void> {
 		try {
-			await api.delete<{results: User[]}>(`/ter/periods/${period_id}/professors/${professor_id}`);
+			await api.delete<{results: User[]}>(`/ter/periods/${period_id}/encadrants/${professor_id}`);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -171,9 +179,9 @@ export default class TERService {
 		}
 	}
 
-	public static async getSubjects(id: string): Promise<Subject[]> {
+	public static async getSubjects(ter_id: string): Promise<Subject[]> {
 		try {
-			const res = await api.get<Subject[]>(`/ter/periods/${id}/subjects`);
+			const res = await api.get<{results: Subject[]}>(`/ter/subjects?ter_period_id=${ter_id}`);
 			return res.data.results;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

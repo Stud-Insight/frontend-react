@@ -10,8 +10,8 @@ import ProgressBar from "../../../components/ui/ProgressBar"
 import InfoBox from "../../../components/ui/InfoBox";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
-import { FiUser } from "react-icons/fi";
-
+import { FaPlus } from "react-icons/fa";
+import Button from "../../../atoms/input/Button";
 import "./TERVotePage.css"
 
 import { useParams } from "react-router-dom";
@@ -73,30 +73,28 @@ export default function TERVotePage(){
 						</div>
 					</div>
 
-					<ProgressBar label={`Phase: vote`} current={0.3} tag={`${3} / 20} jours`} subtext={`Deadline: `}/>
+					<ProgressBar label={`Phase: vote`} current={0.3} tag={`${3} / 20 jours`} subtext={`Deadline: `}/>
 				</>			
 			}
 
 			{error && <InfoBox label={error} type="error"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Etudiants" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
 				<InfoWidget label="Groupes" icon={<FiUsers/>} info={groups.length} color="var(--blue-col)"/>
 				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)"/>
 			</div>
 
-			<div className="ter-list-page-layout">
-				<div className="ter-list-group-layout">
-					{groups && groups.map(group => (
-						<GroupProjectWidget admin={false} key={group.id} group={group}/>
-					))}
+			<div className="dashboard-top-layout">
+				<div/>
+				<div className="dashboard-top-button-layout">
+					<Button icon={<FaPlus/>} label="Créer Groupe"/>
 				</div>
+			</div>
 
-				<div className="ter-list-project-layout">
-					{subjects && subjects.filter(sub => (sub.status == SubjectStatus.VALIDATED)).map(subject => (
-						<SubjectWidget subject={subject} privateMode={false}/>
-					))}
-				</div>
+			<div className="ter-list-group-layout">
+				{groups && groups.map(group => (
+					<GroupProjectWidget admin={false} key={group.id} group={group}/>
+				))}
 			</div>
 		</DashboardPage>
 	)

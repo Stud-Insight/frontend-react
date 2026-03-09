@@ -9,7 +9,7 @@ import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
 import TERSubjectView from "./TERSubjectView";
 
-import TERService, { TERPeriod, TERStatusLabel  } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatusLabel } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
 import GradeService, { Grade } from "../../../services/GradeService";
 import SubjectService, { Subject } from "../../../services/SubjectService";
@@ -288,7 +288,7 @@ export default function TERGestionPage(){
 				<div></div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, projets et participants.</span>
+			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Étudiants" active={view == 0} icon={<FiUser/>} info={students.length} color={`var(--blue-col)`} onClick={() => setView(0)}/>

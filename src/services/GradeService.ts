@@ -16,30 +16,30 @@ export default class GradeService {
 			const mock1: Grade = {
 				ter_period_id: null,
 				id: "1",
-				name: "Final Presentation",
+				name: "Présentation finale",
 				coefficient: 0.4,
 				sub_grades: [
 					{ 
 						id: "11", 
-						name: "Technical Quality", 
+						name: "Qualité technique", 
 						coefficient: 0.4,
 						max: 20
 					},
 					{ 
 						id: "11", 
-						name: "Clarity of Explanation", 
+						name: "Clarté de l'explication", 
 						coefficient: 0.3, 
 						max: 20
 					},
 					{ 
 						id: "11", 
-						name: "Answers to Questions", 
+						name: "Réponses aux questions", 
 						coefficient: 0.2, 
 						max: 20 
 					},
 					{ 
 						id: "11", 
-						name: "Visual Support", 
+						name: "Support visuel", 
 						coefficient: 0.1, 
 						max: 20
 					}
@@ -49,7 +49,7 @@ export default class GradeService {
 			const mock2: Grade = {
 				ter_period_id: null,
 				id: "2",
-				name: "Team Work",
+				name: "Travail en équipe",
 				coefficient: 0.3,
 				sub_grades: [],
 			}
@@ -57,10 +57,9 @@ export default class GradeService {
 			const mock3: Grade = {
 				ter_period_id: null,
 				id: "3",
-				name: "Final Report",
+				name: "Rapport final",
 				coefficient: 0.3,
-				sub_grades: [
-				]
+				sub_grades: []
 			}
 
 			return [mock1, mock2, mock3];

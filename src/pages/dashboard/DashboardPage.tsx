@@ -79,12 +79,15 @@ export default function DashboardPage({children} : DashboardPageProps){
 					
 					{roles.includes(UserRoles.ADMIN) &&
 						<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={pageHandle}/>
+					}	
+
+					{!roles.includes(UserRoles.ETUDIANT) &&
+						<>
+							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
+							<HorizontalDivider/>
+						</>				
 					}
-
-					<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
 					
-					<HorizontalDivider/>
-
 					<NavigationButton label="Aide" icon={<PiQuestionBold/>} id="help" active={isActive("/dashboard/help")}  onClick={pageHandle}/>
 				</div>
 
