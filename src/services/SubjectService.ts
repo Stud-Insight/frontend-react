@@ -98,7 +98,7 @@ export default class SubjectService {
 
 	public static async getUserSubjects(): Promise<Subject[]> {
 		try {
-			const res = await api.get<Subject[]>(`/ter/subjects/me`);
+			const res = await api.get<{results: Subject[]}>(`/ter/subjects/me`);
 			return res.data.results;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

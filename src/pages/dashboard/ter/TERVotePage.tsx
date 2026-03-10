@@ -19,6 +19,7 @@ import { useParams } from "react-router-dom";
 export default function TERVotePage(){
 	const { id } = useParams<{ id: string }>();
 	const [error, setError] = useState<string | null>(null);
+	const [page, setPage] = useState<number>(0);
 	const [period, setPeriod] = useState<TERPeriod | null>();
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -37,21 +38,21 @@ export default function TERVotePage(){
 			}
 		}
 
-		const getPeriod = async () => {
+		const getSubjects = async () => {
 			try {
-				const res = await TERService.getPeriod(id);
-				console.log(res);
-				setPeriod(res);
+				const data = await TERService.getSubjects(id);
+				setSubjects(data);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
 			}
 		}
 
-		const getSubjects = async () => {
+		const getPeriod = async () => {
 			try {
-				const res = await TERService.getSubjects(id);
-				setSubjects(res);
+				const res = await TERService.getPeriod(id);
+				console.log(res);
+				setPeriod(res);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
@@ -80,22 +81,32 @@ export default function TERVotePage(){
 			{error && <InfoBox label={error} type="error"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Groupes" icon={<FiUsers/>} info={groups.length} color="var(--blue-col)"/>
-				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)"/>
+				<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${1} / ${5}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
+				<InfoWidget label="Groupes" icon={<FiUsers/>} info={groups.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
+				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
 			</div>
 
-			<div className="dashboard-top-layout">
-				<div/>
-				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Créer Groupe"/>
-				</div>
-			</div>
+			{page == 1 &&
+				<>
+					<div className="dashboard-top-layout">
+						<div/>
+						<div className="dashboard-top-button-layout">
+							<Button icon={<FaPlus/>} label="Créer Groupe"/>
+						</div>
+					</div>
 
-			<div className="ter-list-group-layout">
-				{groups && groups.map(group => (
-					<GroupProjectWidget admin={false} key={group.id} group={group}/>
-				))}
-			</div>
+					<div className="ter-list-group-layout">
+						{groups && groups.map(group => (
+							<GroupProjectWidget admin={false} key={group.id} group={group}/>
+						))}
+					</div>
+				</>
+			}
+
+			{page == 2 && subjects && subjects.map(subject => (
+				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
+			))}
+
 		</DashboardPage>
 	)
 }

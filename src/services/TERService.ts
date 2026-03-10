@@ -102,15 +102,6 @@ export interface TERPeriodStats {
 }
 
 export default class TERService {
-	public static async getMyPeriods(): Promise<TERPeriod[]> {
-		try {
-			const res = await api.get<TERPeriod[]>(`/ter/periods/me`);
-			return res.data;
-		} catch (error){
-			errorFormat(error as AxiosError<ApiError>);
-		}
-	}
-
 	public static async getStudents(id: string): Promise<User[]> {
 		try {
 			const res = await api.get<{results: User[]}>(`/ter/periods/${id}/students`);
@@ -188,10 +179,10 @@ export default class TERService {
 		}
 	} 
 
-	public static async getUserPeriod(): Promise<TERPeriod>{
+	public static async getMyPeriods(): Promise<TERPeriod[]> {
 		try {
-			const period = await api.get<TERPeriod>("/ter/my");
-			return period.data;
+			const res = await api.get<TERPeriod[]>(`/ter/periods/me`);
+			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

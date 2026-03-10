@@ -131,7 +131,14 @@ export default function TERPage({children}: TERPageProps){
 					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes TER</span>
 				</div>
 			</div>
-			<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>
+			{error 
+				? 
+					<InfoBox label={error} type="error"/>
+				:
+				<>
+					<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>	
+				</>
+			}
 		</DashboardPage>
 	)
 }

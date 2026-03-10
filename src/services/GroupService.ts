@@ -17,9 +17,9 @@ export const GroupStatusLabel: Map<GroupStatus, string> = new Map([
 ]);
 
 export const GroupStatusColor: Map<GroupStatus, string> = new Map([
-	[GroupStatus.OUVERT, "var(--gray1-col)"],
-	[GroupStatus.FORME, "var(--gray1-col)"],
-	[GroupStatus.CLOTURE, "var(--blue-col)"],
+	[GroupStatus.OUVERT, "var(--green-col)"],
+	[GroupStatus.FORME, "var(--blue-col)"],
+	[GroupStatus.CLOTURE, "var(--red-col)"],
 ]);
 
 export enum InvitationStatus {
