@@ -26,7 +26,7 @@ import "./TERGestionPage.css";
 
 export default function TERGestionPage(){
 	const { id } = useParams<{ id: string }>();
-	const [success, setSuccess] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [period, setPeriod] = useState<TERPeriod | null>();
 	const [view, setView] = useState<number>(0);

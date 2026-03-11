@@ -6,7 +6,7 @@ import { FaCrown } from "react-icons/fa";
 import "./UserWidget.css"
 
 interface UserWidgetProps {
-	user: User;
+	user: User | null;
 	crown?: boolean;
 	onClick?: () => void;
 	selected?: boolean;
@@ -24,13 +24,13 @@ export default function UserWidget({user, onClick, selected = false, crown = fal
 
 				<div className="user-widget-right">
 					<div className="user-widget-name">
-						<span style={{fontWeight: "var(--big-bold)"}}>{user.first_name} {user.last_name}</span>
+						<span style={{fontWeight: "var(--big-bold)"}}>{user?.first_name} {user?.last_name}</span>
 						{crown &&
 							<FaCrown color="var(--yellow-col)"/>
 						}
 					</div>
-					<span>#{user.id.slice(0, 8)}</span>
-					<span>{user.email}</span>
+					<span>#{user?.id.slice(0, 8)}</span>
+					<span>{user?.email}</span>
 				</div>
 			</div>
 			

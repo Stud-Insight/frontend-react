@@ -96,6 +96,22 @@ export default class SubjectService {
 		}
 	};
 
+	public static async addFavouriteSubject(subject_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/subjects/${subject_id}/favorite`);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}	
+	}
+
+	public static async removeFavouriteSubject(subject_id: string): Promise<void> {
+		try {
+			await api.delete(`/ter/subjects/${subject_id}/favorite`);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}	
+	}
+
 	public static async getUserSubjects(): Promise<Subject[]> {
 		try {
 			const res = await api.get<{results: Subject[]}>(`/ter/subjects/me`);

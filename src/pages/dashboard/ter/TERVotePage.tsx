@@ -8,36 +8,76 @@ import GroupService, { Group } from "../../../services/GroupService";
 import SubjectWidget from "../../../components/objects/SubjectWidget";
 import ProgressBar from "../../../components/ui/ProgressBar"
 import InfoBox from "../../../components/ui/InfoBox";
+import Button from "../../../atoms/input/Button";
+import ModalDialog from "../../../components/dialog/ModalDialog";
+import InputField from "../../../components/input/InputField";
+import UserWidget from "../../../components/objects/UserWidget";
+import OverflowMenu from "../../../components/input/OverflowMenu";
+import ContainerWidget from "../../../components/ui/ContainerWidget";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
-import Button from "../../../atoms/input/Button";
-import "./TERVotePage.css"
-
 import { useParams } from "react-router-dom";
+import { MdDeleteOutline } from "react-icons/md";
+
+import "./TERVotePage.css"
 
 export default function TERVotePage(){
 	const { id } = useParams<{ id: string }>();
-	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 	const [page, setPage] = useState<number>(0);
-	const [period, setPeriod] = useState<TERPeriod | null>();
+	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
+	const [myGroup, setMyGroup] = useState<Group | null>(null);
+	const [createGroup, setCreateGroup] = useState<boolean>(false);
+	const [nomGroup, setNomGroup] = useState<string>("");
+	const [favouriteProjects, setFavouriteProjects] = useState<Set<string>>(new Set([]));
 
-	useEffect(() => {
-		const getGroups = async () => {
-			try {
-				const res = await GroupService.getGroups(id);
-				res.sort((a, b) => (
-					a.name.localeCompare(b.name)
-				))
-				setGroups(res);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
+	const favouriteHandle = () => {
+
+	};
+
+	const getMyGroup = async () => {
+		try {
+			const res = await GroupService.getMyGroup(id);
+			setMyGroup(res);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const getGroups = async () => {
+		try {
+			const res = await GroupService.getGroups(id);
+			res.sort((a, b) => (
+				a.name.localeCompare(b.name)
+			))
+
+			setGroups(res);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const createGroupHandle = async () => {
+		try {
+			await GroupService.createGroup(id, nomGroup, 0, new Set());
+			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
+			getGroups();
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
 		}
 
+		resetFields();
+	}
+
+	useEffect(() => {
 		const getSubjects = async () => {
 			try {
 				const data = await TERService.getSubjects(id);
@@ -51,7 +91,6 @@ export default function TERVotePage(){
 		const getPeriod = async () => {
 			try {
 				const res = await TERService.getPeriod(id);
-				console.log(res);
 				setPeriod(res);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -60,12 +99,27 @@ export default function TERVotePage(){
 		}
 
 		getSubjects();
-		getGroups();
 		getPeriod();
-	}, []);
-		
+		getGroups();
+		getMyGroup();
+
+		console.log(myGroup);
+	}, [id]);
+
+	const resetFields = () => {
+		setCreateGroup(false);
+		setNomGroup("");
+	}
+
 	return (
 		<DashboardPage>
+			{createGroup &&
+				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
+					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
+					<Button icon={<FaPlus/>} label="Confirmer" onClick={createGroupHandle}/>
+				</ModalDialog>
+			}
+
 			{period &&
 				<>
 					<div className="dashboard-top-layout">
@@ -79,30 +133,60 @@ export default function TERVotePage(){
 			}
 
 			{error && <InfoBox label={error} type="error"/>}
-
+			{success && <InfoBox label={success} type="success"/>}
+			
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${1} / ${5}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
+				{myGroup &&
+					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${5}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
+				}
 				<InfoWidget label="Groupes" icon={<FiUsers/>} info={groups.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
 			</div>
 
+			{page == 0 && myGroup &&
+				<>
+					<div className="dashboard-top-layout">
+						<div/>
+						<div className="dashboard-top-button-layout">
+							<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
+							<Button icon={<FaPlus/>} label="Quitter Groupe" onClick={() => setCreateGroup(true)}/>
+						</div>
+					</div>
+
+					<ContainerWidget>
+						<UserWidget user={myGroup?.leader} crown={true}/>
+						
+						{myGroup.members.map(member => {
+							if (member.id != myGroup.leader?.id){
+								return (
+									<UserWidget key={member.id} user={member}>
+										<OverflowMenu options={[
+											{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
+										]}/>
+									</UserWidget>
+								)
+							}
+						})}
+					</ContainerWidget>
+				</>
+			}
 			{page == 1 &&
 				<>
 					<div className="dashboard-top-layout">
 						<div/>
 						<div className="dashboard-top-button-layout">
-							<Button icon={<FaPlus/>} label="Créer Groupe"/>
+							<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
 						</div>
 					</div>
 
 					<div className="ter-list-group-layout">
 						{groups && groups.map(group => (
-							<GroupProjectWidget admin={false} key={group.id} group={group}/>
+							<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
 						))}
 					</div>
 				</>
 			}
-
+	
 			{page == 2 && subjects && subjects.map(subject => (
 				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
 			))}

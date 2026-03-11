@@ -6,14 +6,14 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
 import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import { useParams } from "react-router-dom";
-import TERPage from "./TERPage";
+import DashboardPage from "../DashboardPage";
 
 import "./TERInfoPage.css"
 
 export default function TERInfoPage(){
+	const { id } = useParams<{ id: string }>();
 	const [error, setError] = useState<string | null>();
 	const [subject, setSubject] = useState<Subject | null>();
-	const { id } = useParams<{ id: string }>();
 
 	useEffect(() => {
 		const getSubject = async () => {
@@ -31,7 +31,7 @@ export default function TERInfoPage(){
 	const jours: number = 103;
 
 	return (
-		<TERPage>
+		<>
 			{/* <div className="dashbord-mini-info-layout">
 				<InfoWidget label="Avancement" icon={<FaArrowTrendUp/>} info={`${0.5 * 100}%`} color="var(--blue-col)"/>
 				<InfoWidget label="Objectifs" icon={<FaRegCheckCircle/>} info={`${1} / ${4}`} color="var(--green-col)"/>
@@ -53,7 +53,6 @@ export default function TERInfoPage(){
 					<ScheduleEventWidget label="Subject Proposal Submission" date="Oct 15, 2025" completed={false}/>
 				</ContainerWidget>
 			</div>
-
-		</TERPage>
+		</>
 	)
 }

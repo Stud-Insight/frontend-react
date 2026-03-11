@@ -2,8 +2,8 @@ import React from "react";
 import { RxCross2 } from "react-icons/rx";
 import "./Tag.css"
 
-interface TagProps {
-	label: string;
+interface TagProps {
+	label: string | undefined;
 	color?: string;
 	className?: string;
 	onDelete?: () => void;

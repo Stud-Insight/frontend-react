@@ -22,6 +22,7 @@ import "./GroupProjectWidget.css"
 interface GroupProjectWidgetProps {
 	group: Group;
 	admin?: boolean;
+	active?: boolean;
 	onEdit?: () => void;
 	onDelete?: () => void;
 	onLeader?: (user: User) => void;
@@ -29,11 +30,11 @@ interface GroupProjectWidgetProps {
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, admin = true, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({group, admin = true, active = false, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(false);
 
 	return (
-		<ContainerWidget>
+		<ContainerWidget active={active}>
 			<div className="group-project-widget-header">
 				<div className="group-project-widget-title">
 					<Icon icon={<FiUsers/>} color="var(--blue-col)"/>
@@ -65,24 +66,31 @@ export default function GroupProjectWidget({group, admin = true, onEdit, onDelet
 
 			{expanded && 
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
-					<UserWidget user={group.leader} selected={false} crown={true}>
-						<OverflowMenu options={[
-							{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
-						]}/>
-					</UserWidget>
+					{group.members &&
+						<>
 
-					{group.members && group.members.map(member => {
-						if (member.id != group.leader.id){
-							return (
-								<UserWidget key={member.id} user={member} selected={false} crown={false}>
+							{group.leader &&
+								<UserWidget user={group.leader} selected={false} crown={true}>
 									<OverflowMenu options={[
-										{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
-										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
+										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
 									]}/>
 								</UserWidget>
-							)
-						}
-					})}
+							}
+							
+							{group.members.map(member => {
+								if (group.leader && member.id != group.leader.id){
+									return (
+										<UserWidget key={member.id} user={member} selected={false} crown={false}>
+											<OverflowMenu options={[
+												{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
+												{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
+											]}/>
+										</UserWidget>
+									)
+								}
+							})}	
+						</>
+					}
 				</div>
 			}
 		</ContainerWidget>

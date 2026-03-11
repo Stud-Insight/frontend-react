@@ -34,7 +34,7 @@ export default function DashboardPage({children} : DashboardPageProps){
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
-	const roles: UserRoles[] = user?.groups.map(role => {
+	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
 		return role.name;
 	});
 	

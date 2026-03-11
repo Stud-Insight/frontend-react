@@ -66,9 +66,18 @@ export interface Group {
 
 export default class GroupService {
 	public static async getGroups(period_id: string): Promise<Group[]> {
-		 try {
+		try {
 			const res = await api.get<{results: Group[]}>("/groups/", {params: {ter_period_id: period_id}});
 			return res.data.results;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getMyGroup(period_id: string) : Promise<Group> {
+		try {
+			const res = await api.get<Group[]>(`/groups/my?ter_period_id=${period_id}`);
+			return res.data[0];
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -129,7 +138,7 @@ export default class GroupService {
 		}
 	}	
 
-	public static async deleteGroup(group_id: string): Promise<void> {
+	public static async deleteGroup(group_id: string | undefined): Promise<void> {
 		try {
 			await api.delete(`/groups/${group_id}`);
 		} catch (error){
@@ -137,7 +146,7 @@ export default class GroupService {
 		}
 	}
 
-	public static async updateGroup(group_id: string, name: string, size: number): Promise<void> {
+	public static async updateGroup(group_id: string | undefined, name: string, size: number): Promise<void> {
 		try {
 			const load: GroupUpdateSchema = {
 				name: name,
