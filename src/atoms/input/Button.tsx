@@ -8,10 +8,11 @@ interface ButtonProps {
 	icon?: ReactNode;
 	width?: number | string;
     style?: "cancel" | "danger";
+	color?: string;
     onClick?: () => void;
 };
 
-export default function Button({icon, label, style, onClick, width}: ButtonProps){
+export default function Button({icon, label, style, onClick, width, color}: ButtonProps){
 	const getApproIcon = () => {
 		if (style == "cancel"){
 			return undefined
@@ -23,7 +24,7 @@ export default function Button({icon, label, style, onClick, width}: ButtonProps
 	};
 
 	return (
-		<button className={`button-style ${label ? style : ""}`} onClick={onClick} style={{width: width ? width : undefined}}>
+		<button className={`button-style ${label ? style : ""}`} onClick={onClick} style={{width: width ? width : undefined, backgroundColor: color}}>
 			{getApproIcon()}
 			<span className="button-label">{label}</span>
 		</button>

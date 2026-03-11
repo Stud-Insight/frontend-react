@@ -8,13 +8,14 @@ import "./UserWidget.css"
 interface UserWidgetProps {
 	user: User | null;
 	crown?: boolean;
-	onClick?: () => void;
+	showId?: boolean;
 	selected?: boolean;
 	children?: ReactNode;
+	onClick?: () => void;
 
 };
 
-export default function UserWidget({user, onClick, selected = false, crown = false, children}: UserWidgetProps){
+export default function UserWidget({user, onClick, selected = false, showId = true, crown = false, children}: UserWidgetProps){
 	return (
 		<div className={`user-widget-wrapper ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="user-widget-layout">
@@ -29,7 +30,9 @@ export default function UserWidget({user, onClick, selected = false, crown = fal
 							<FaCrown color="var(--yellow-col)"/>
 						}
 					</div>
-					<span>#{user?.id.slice(0, 8)}</span>
+					{showId &&
+						<span>#{user?.id.slice(0, 8)}</span>
+					}
 					<span>{user?.email}</span>
 				</div>
 			</div>

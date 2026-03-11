@@ -19,11 +19,13 @@ import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { MdDeleteOutline } from "react-icons/md";
+import { useAuth } from "../../../context/AuthContext";
 
 import "./TERVotePage.css"
 
 export default function TERVotePage(){
 	const { id } = useParams<{ id: string }>();
+	const { user } = useAuth();
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [page, setPage] = useState<number>(0);
@@ -42,6 +44,7 @@ export default function TERVotePage(){
 	const getMyGroup = async () => {
 		try {
 			const res = await GroupService.getMyGroup(id);
+			console.log(res);
 			setMyGroup(res);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -148,18 +151,25 @@ export default function TERVotePage(){
 					<div className="dashboard-top-layout">
 						<div/>
 						<div className="dashboard-top-button-layout">
-							<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
-							<Button icon={<FaPlus/>} label="Quitter Groupe" onClick={() => setCreateGroup(true)}/>
+							{user?.id == myGroup?.leader.id ? 
+								<>
+									<Button icon={<FaPlus/>} label="Modifier Groupe"/>
+									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)"/>
+								</>
+								
+								:
+								<Button icon={<FaPlus/>} label="Quitter Groupe"/>
+							}
 						</div>
 					</div>
-
+					<GroupProjectWidget group={myGroup} admin={false}/>
 					<ContainerWidget>
-						<UserWidget user={myGroup?.leader} crown={true}/>
+						<UserWidget user={myGroup?.leader} crown={true} showId={false}/>
 						
 						{myGroup.members.map(member => {
 							if (member.id != myGroup.leader?.id){
 								return (
-									<UserWidget key={member.id} user={member}>
+									<UserWidget key={member.id} user={member} showId={false}>
 										<OverflowMenu options={[
 											{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
 										]}/>
@@ -172,13 +182,15 @@ export default function TERVotePage(){
 			}
 			{page == 1 &&
 				<>
-					<div className="dashboard-top-layout">
-						<div/>
-						<div className="dashboard-top-button-layout">
-							<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
+					{!myGroup &&
+						<div className="dashboard-top-layout">
+							<div/>
+							<div className="dashboard-top-button-layout">
+								<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
+							</div>
 						</div>
-					</div>
-
+					}
+					
 					<div className="ter-list-group-layout">
 						{groups && groups.map(group => (
 							<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
