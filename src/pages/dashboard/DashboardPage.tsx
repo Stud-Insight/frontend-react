@@ -111,7 +111,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={pageHandle}/>
 					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={pageHandle}/>
 					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={pageHandle}/>
-					<NavigationButton label="Notifications" notification={3} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle}/>
+					<NavigationButton label="Notifications" notification={unreadCount} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle}/>
 					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={pageHandle}/> */}
 					<HorizontalDivider/>
 
@@ -160,21 +160,17 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 					<div className="dashboard-user-container">
 						<span>{user?.first_name} {user?.last_name}</span>
 						<div className="dashboard-avatar-container">
-							<UserAvatar user={user} />
+							<UserAvatar user={user}/>
 						</div>
 					</div> */}
 				</div>
 
-				{/* <HorizontalDivider />
-
-				<div className="dashboard-main-container">
-					{pathname === "/dashboard" || pathname === "/dashboard" || pathname === "/dashboard/home" ? (
-						<RespoDashboard />
-					) : (
-						<Outlet />
-					)}
-				</div> */}
-			</div>
+				<HorizontalDivider/>
+				
+                <div className="dashboard-main-container">
+                    {children}
+                </div>
+            </div>
 		</div>
 	)
 }

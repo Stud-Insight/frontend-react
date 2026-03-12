@@ -26,7 +26,7 @@ export default function NotificationPage() {
 	useEffect(() => {
 		const getNotifs = async () => {
 			try {
-				const res = await NotificationService.getUserNotifications();
+				const res = await NotificationService.fetchNotifications();
 				setNotifList(res);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -45,7 +45,7 @@ export default function NotificationPage() {
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
+			<span style={{color: "var(--gray1-col)"}}>Consultez ici toutes les notifications.</span>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
