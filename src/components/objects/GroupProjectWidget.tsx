@@ -8,6 +8,7 @@ import OverflowMenu from "../input/OverflowMenu";
 import IconButton from "../button/IconButton";
 import UserWidget from "./UserWidget";
 import Tag from "../../atoms/ui/Tag";
+import HorizontalDivider from "../ui/HorizontalDivider";
 
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
@@ -23,6 +24,7 @@ interface GroupProjectWidgetProps {
 	group: Group;
 	admin?: boolean;
 	active?: boolean;
+	forceExpanded?: boolean;
 	onEdit?: () => void;
 	onDelete?: () => void;
 	onLeader?: (user: User) => void;
@@ -30,8 +32,8 @@ interface GroupProjectWidgetProps {
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, admin = true, active = false, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
-	const [expanded, setExpanded] = useState<boolean>(false);
+export default function GroupProjectWidget({group, admin = true, active = false, forceExpanded = false, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
+	const [expanded, setExpanded] = useState<boolean>(forceExpanded);
 
 	return (
 		<ContainerWidget active={active}>
@@ -64,33 +66,28 @@ export default function GroupProjectWidget({group, admin = true, active = false,
 				}
 			</div>
 
-			{expanded && 
+			{expanded && group.members &&
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
-					{group.members &&
-						<>
-
-							{group.leader &&
-								<UserWidget user={group.leader} selected={false} crown={true}>
+					{group.leader &&
+						<UserWidget user={group.leader} selected={false} crown={true}>
+							<OverflowMenu options={[
+								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
+							]}/>
+						</UserWidget>
+					}
+					
+					{group.members.map(member => {
+						if (group.leader && member.id != group.leader.id){
+							return (
+								<UserWidget key={member.id} user={member} selected={false} crown={false}>
 									<OverflowMenu options={[
-										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
+										{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
+										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
 									]}/>
 								</UserWidget>
-							}
-							
-							{group.members.map(member => {
-								if (group.leader && member.id != group.leader.id){
-									return (
-										<UserWidget key={member.id} user={member} selected={false} crown={false}>
-											<OverflowMenu options={[
-												{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
-												{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},
-											]}/>
-										</UserWidget>
-									)
-								}
-							})}	
-						</>
-					}
+							)
+						}
+					})}	
 				</div>
 			}
 		</ContainerWidget>

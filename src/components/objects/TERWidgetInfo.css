@@ -1,0 +1,16 @@
+.ter-widget-info-style {
+	color: var(--gray1-col);
+}
+
+.ter-widget-info-header {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.ter-widget-info-text {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	flex: 1;
+}

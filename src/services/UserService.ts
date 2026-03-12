@@ -87,6 +87,16 @@ export default class UserService {
 		}
 	}
 
+	public static async getAllPublicUsers(search: string = ""): Promise<User[]> {
+		try {
+			const params = search ? { search } : {};
+            const response = await api.get<User[]>("/chat/users", { params });
+            return response.data;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
 	public static async updateUser(id: string, first_name: string, last_name: string, email: string, roles: Set<string>): Promise<void> {
 		try {
 			const load: UpdateUserPayload = {

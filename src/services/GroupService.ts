@@ -34,6 +34,23 @@ export enum ProjectType {
 	STAGE = "Stage"
 }
 
+interface InvitationCreateSchema {
+    invitee_email: string;
+    message: string;
+}
+
+interface GroupInvitation {
+	id: string;
+	group_id: string;
+	group_name: string;
+	invitee: User;
+	invited_by: User;
+	status: InvitationStatus;
+	message: string;
+	created: string;
+	responded_at: string
+}
+
 interface GroupUpdateSchema {
 	name: string | null;
 	max_group_size: number | null;
@@ -65,6 +82,56 @@ export interface Group {
 }
 
 export default class GroupService {
+	public static async getInvitations(): Promise<GroupInvitation[]> {
+		try {
+			const res = await api.get<GroupInvitation[]>(`/groups/invitations/received`);
+			return res.data;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	} 
+
+	public static async getSentInvitations(group_id: string): Promise<GroupInvitation[]> {
+		try {
+			const res = await api.get<GroupInvitation[]>(`/groups/${group_id}/invitations`);
+			return res.data;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	} 
+
+	public static async respondInvitation(invite_id: string): Promise<void>  {
+		try {
+			await api.post(`/groups/invitations/${invite_id}/respond`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async cancelInvitation(invite_id: string): Promise<void>  {
+		try {
+			await api.post(`/groups/invitations/${invite_id}/cancel`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async sendInvitations(group_id: string, users: Set<User>): Promise<void> {
+		try {
+			await Promise.all(
+				Array.from(users).map(user => {
+					const payload: InvitationCreateSchema = {
+						invitee_email: user.email,
+    					message: ""
+					};
+					// return api.post(`/groups/${group_id}/invite`, payload);
+				})
+			);			
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	} 
+
 	public static async getGroups(period_id: string): Promise<Group[]> {
 		try {
 			const res = await api.get<{results: Group[]}>("/groups/", {params: {ter_period_id: period_id}});

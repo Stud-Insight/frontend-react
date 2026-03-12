@@ -4,25 +4,13 @@ import Tag from "../../atoms/ui/Tag";
 import "./ProgressBar.css";
 
 interface ProgressBarProps {
-    label?: string;
     current: number;
-	tag?: string;
-    subtext?: string;
 }
 
-export default function ProgressBar({label, current, tag, subtext}: ProgressBarProps){
+export default function ProgressBar({ current}: ProgressBarProps){
     return ( 
-		<ContainerWidget>
-			 <div className="progress-info">
-                <span className="progress-label">{label}</span>
-				<Tag label={tag} color="var(--gray1-col)"/>
-            </div>
-
-            <div className="progress-bar-bg">
-                <div className="progress-bar-fill" style= {{ width: `${current * 100}%`}}/>
-            </div>
-
-            {subtext && <span className="progress-subtext">{subtext}</span>}
-		</ContainerWidget>
+		<div className="progress-bar-bg">
+			<div className="progress-bar-fill" style= {{ width: `${current * 100}%`}}/>
+		</div>
     );
 }

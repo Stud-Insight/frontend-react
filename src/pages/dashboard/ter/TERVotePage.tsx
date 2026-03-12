@@ -3,17 +3,18 @@ import InfoWidget from "../../../components/ui/InfoWidget";
 import DashboardPage from "../DashboardPage";
 import TERService, { TERPeriod } from "../../../services/TERService";
 import { Subject, SubjectStatus } from "../../../services/SubjectService";
+import { User } from "../../../services/UserService";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import GroupService, { Group } from "../../../services/GroupService";
 import SubjectWidget from "../../../components/objects/SubjectWidget";
-import ProgressBar from "../../../components/ui/ProgressBar"
 import InfoBox from "../../../components/ui/InfoBox";
 import Button from "../../../atoms/input/Button";
 import ModalDialog from "../../../components/dialog/ModalDialog";
 import InputField from "../../../components/input/InputField";
-import UserWidget from "../../../components/objects/UserWidget";
-import OverflowMenu from "../../../components/input/OverflowMenu";
-import ContainerWidget from "../../../components/ui/ContainerWidget";
+import TERWidgetInfo from "../../../components/objects/TERWidgetInfo";
+import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
+
+import { LuSend } from "react-icons/lu";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
@@ -22,6 +23,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
 
 import "./TERVotePage.css"
+import ContainerWidget from "../../../components/ui/ContainerWidget";
 
 export default function TERVotePage(){
 	const { id } = useParams<{ id: string }>();
@@ -34,7 +36,11 @@ export default function TERVotePage(){
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
 	const [createGroup, setCreateGroup] = useState<boolean>(false);
+	const [inviteGroup, setInviteGroup] = useState<boolean>(false);
 	const [nomGroup, setNomGroup] = useState<string>("");
+	const [enrolledStudents, setEnrolledStudents] = useState<User[]>([]);
+	const [invitedStudents, setInvitedStudents] = useState<User[]>([]);
+
 	const [favouriteProjects, setFavouriteProjects] = useState<Set<string>>(new Set([]));
 
 	const favouriteHandle = () => {
@@ -44,12 +50,55 @@ export default function TERVotePage(){
 	const getMyGroup = async () => {
 		try {
 			const res = await GroupService.getMyGroup(id);
-			console.log(res);
 			setMyGroup(res);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
+	}
+
+	const getInvitedStudents = async () => {
+		try {
+			invitedStudents
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const getEnrolledStudents = async () => {
+		try {
+			const [students, group] = await Promise.all([
+				TERService.getStudents(id),
+				GroupService.getMyGroup(id)
+			]);
+
+			const memberIds = new Set(group?.members.map(m => m.id));
+			const filtered = students.filter(stud => !memberIds.has(stud.id));
+
+			setEnrolledStudents(filtered);
+
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
+
+	const inviteStudentsToggle = async () => {
+		await getEnrolledStudents();
+		setInviteGroup(true);
+	}
+
+	const inviteStudentsGroup = async (users: Set<User>) => {
+		try {
+			await GroupService.sendInvitations(myGroup?.id, users);
+			setSuccess(`Inviter ${users.size} étudiant${users.size > 0 ? "s" : ""} au groupe.`)
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setInviteGroup(false);
 	}
 
 	const getGroups = async () => {
@@ -68,8 +117,8 @@ export default function TERVotePage(){
 
 	const createGroupHandle = async () => {
 		try {
-			await GroupService.createGroup(id, nomGroup, 0, new Set());
-			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
+			await GroupService.createGroup(id, myGroup, 0, new Set());
+			setSuccess(`Groupe "${myGroup}" à été crée dans "${period?.name}"`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -105,8 +154,6 @@ export default function TERVotePage(){
 		getPeriod();
 		getGroups();
 		getMyGroup();
-
-		console.log(myGroup);
 	}, [id]);
 
 	const resetFields = () => {
@@ -118,11 +165,18 @@ export default function TERVotePage(){
 		<DashboardPage>
 			{createGroup &&
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
-					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
+					<InputField label="Nom" value={myGroup} onChange={setNomGroup}/>
 					<Button icon={<FaPlus/>} label="Confirmer" onClick={createGroupHandle}/>
 				</ModalDialog>
 			}
 
+			{inviteGroup &&
+				<UserSelectionDialog value={enrolledStudents} label="Invitation Etudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)}/>
+			}
+
+			{error && <InfoBox label={error} type="error"/>}
+			{success && <InfoBox label={success} type="success"/>}
+			
 			{period &&
 				<>
 					<div className="dashboard-top-layout">
@@ -131,18 +185,16 @@ export default function TERVotePage(){
 						</div>
 					</div>
 
-					<ProgressBar label={`Phase: vote`} current={0.3} tag={`${3} / 20 jours`} subtext={`Deadline: `}/>
-				</>			
+					<TERWidgetInfo period={period}/>
+				</>		
 			}
 
-			{error && <InfoBox label={error} type="error"/>}
-			{success && <InfoBox label={success} type="success"/>}
-			
 			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Invitations" icon={<FiUsers/>} info={0} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				{myGroup &&
-					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${5}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
+					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${myGroup.max_group_size}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
 				}
-				<InfoWidget label="Groupes" icon={<FiUsers/>} info={groups.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
+				<InfoWidget label="Groupes" icon={<FaRegFile/>} info={groups.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)}/>
 				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
 			</div>
 
@@ -153,6 +205,7 @@ export default function TERVotePage(){
 						<div className="dashboard-top-button-layout">
 							{user?.id == myGroup?.leader.id ? 
 								<>
+									<Button icon={<LuSend/>} label="Inviter" onClick={inviteStudentsToggle}/>
 									<Button icon={<FaPlus/>} label="Modifier Groupe"/>
 									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)"/>
 								</>
@@ -162,25 +215,16 @@ export default function TERVotePage(){
 							}
 						</div>
 					</div>
-					<GroupProjectWidget group={myGroup} admin={false}/>
+
+					<GroupProjectWidget group={myGroup} admin={false} forceExpanded={true}/>
+				
 					<ContainerWidget>
-						<UserWidget user={myGroup?.leader} crown={true} showId={false}/>
 						
-						{myGroup.members.map(member => {
-							if (member.id != myGroup.leader?.id){
-								return (
-									<UserWidget key={member.id} user={member} showId={false}>
-										<OverflowMenu options={[
-											{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
-										]}/>
-									</UserWidget>
-								)
-							}
-						})}
 					</ContainerWidget>
 				</>
 			}
-			{page == 1 &&
+
+			{page == 1 && myGroup == null &&
 				<>
 					{!myGroup &&
 						<div className="dashboard-top-layout">
@@ -191,18 +235,48 @@ export default function TERVotePage(){
 						</div>
 					}
 					
-					<div className="ter-list-group-layout">
+					{/* <div className="ter-list-group-layout">
 						{groups && groups.map(group => (
 							<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
 						))}
-					</div>
+					</div> */}
 				</>
 			}
-	
+
 			{page == 2 && subjects && subjects.map(subject => (
 				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
 			))}
 
+			{page == 3 &&
+				<>
+					{!myGroup &&
+						<div className="dashboard-top-layout">
+							<div/>
+							<div className="dashboard-top-button-layout">
+								<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
+							</div>
+						</div>
+					}	
+
+					{myGroup ?
+						<div className="ter-list-group-layout">
+							{groups && groups.sort(group => {
+								return (group.id == myGroup.id ? -1 : 1)
+							}).map(group => (
+								<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
+							))}
+						</div>
+
+						:
+
+						<div className="ter-list-group-layout">
+							{groups && groups.map(group => (
+								<GroupProjectWidget admin={false} key={group.id} group={group} active={false}/>
+							))}
+						</div>
+					}
+				</>
+			}
 		</DashboardPage>
 	)
 }
