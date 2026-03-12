@@ -25,6 +25,7 @@ export interface ApiError {
 
 export function errorFormat(error: AxiosError<ApiError>): never {
 	if (error.response) {
+		console.log(error.message);
 		throw new Error(error.message);
 	} else {
 		throw new Error("Erreur de connexion au serveur");

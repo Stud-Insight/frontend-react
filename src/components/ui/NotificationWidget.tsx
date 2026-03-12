@@ -1,5 +1,6 @@
+
 import React from 'react';
-import NotificationService, { Notification } from '../../services/NotificationService';
+import { Notification } from '../../services/NotificationService';
 import './NotificationWidget.css';
 
 interface NotificationWidgetProps {
@@ -8,41 +9,33 @@ interface NotificationWidgetProps {
     onReadAll: () => void;
 }
 
-export default function NotificationWidget({notifications, onNotificationClick, onReadAll}: NotificationWidgetProps){
-	return (
-        <div className="notification-widget-dropdown">
-            <div className="widget-header">
+export default function NotificationWidget({ notifications, onNotificationClick, onReadAll }: NotificationWidgetProps) {
+    return (
+        <div className='notification-widget-dropdown'>
+            <div className='notification-header'>
                 <h3>Notifications</h3>
+                {notifications.length > 0 && (<button onClick={onReadAll} className='read-all-btn'> Tout marquer comme lu </button>)}
             </div>
-            <div className="widget-body">
+
+            <div className='notification-list'>
                 {notifications.length === 0 ? (
-                    <p style={{ padding: '15px', fontSize: '12px' }}>Aucune notification</p>
+                    <div className='empty-msg'>
+                        Aucune notification pour le moment.
+                    </div>
                 ) : (
-                    notifications.map((notif) => (
+                    notifications.map((n) => (
                         <div
-                            key={notif.id}
-                            className={`notification-item ${!notif.isRead ? 'unread' : ''}`}
-                            onClick={() => onNotificationClick(notif.id)}
+                            key={n.id}
+                            className={`notification-item ${!n.isRead ? "unread" : ""}`} onClick={() => onNotificationClick(n.id)}
                         >
-                            <div className="notification-item-content">
-                                <div className="notification-title-row">
-                                    <strong>{notif.title}</strong>
-                                    {!notif.isRead && <span className="unread-dot"></span>}
-                                </div>
-                                <p>{notif.description}</p>
-                                <span className="notification-time">{notif.time}</span>
+                            <div className='notif-content'>
+                                <strong>{n.title}</strong>
+                                <p>{n.message}</p>
+                                <span className='notif-date'>{n.created_at}</span>
                             </div>
                         </div>
                     ))
                 )}
-            </div>
-            <div className='widget-footer'>
-                <button onClick={(e) => {
-                    e.stopPropagation();
-                    onReadAll();
-                }}>
-                    Tout marquer comme lu
-                </button>
             </div>
         </div>
     );

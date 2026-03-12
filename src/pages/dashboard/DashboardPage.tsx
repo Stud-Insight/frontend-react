@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useRef, useEffect } from "react";
 import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
@@ -22,14 +22,20 @@ import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { PiQuestionBold } from "react-icons/pi";
 
+import NotificationService, { Notification } from "../../services/NotificationService.ts";
 import "./DashboardPage.css"
 
 interface DashboardPageProps {
-    children?: ReactNode;
+	children?: ReactNode;
 };
 
-export default function DashboardPage({children} : DashboardPageProps){
-    const { user } = useAuth();
+export default function DashboardPage({ children }: DashboardPageProps) {
+	const notificationRef = useRef<HTMLDivElement>(null);
+	const [showNotifications, setShowNotifications] = useState(false);
+	const [notifications, setNotifications] = useState<Notification[]>([]);
+	const unreadCount = notifications.filter(n => !n.isRead).length;
+
+	const { user } = useAuth();
 	const { logout } = useAuth();
     const { pathname } = useLocation();
     const navigate = useNavigate();
@@ -55,8 +61,48 @@ export default function DashboardPage({children} : DashboardPageProps){
 		return matchPath({ path: pattern, end: false }, pathname) !== null;
 	};
 
-    return (
-        <div className="dashboard-content">
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+				setShowNotifications(false);
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
+
+	useEffect(() => {
+		let isMounted = true;
+
+		NotificationService.fetchNotifications()
+			.then((data) => {
+				if (isMounted) {
+					setNotifications(data);
+				}
+			})
+			.catch((err) => console.error("Erreur lors du chargement des notifications:", err));
+
+
+		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
+			console.log("Notification reçue SSE :", notification);
+			setNotifications((prev) => {
+				if (prev.some((n) => n.id === notification.id)) {
+					return prev;
+				}
+				return [notification, ...prev];
+			});
+		});
+
+		return () => {
+			isMounted = false;
+			unsubscribe();
+		};
+	}, []);
+
+	return (
+		<div className="dashboard-content">
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
 					<Logo large={true}/>
@@ -105,26 +151,30 @@ export default function DashboardPage({children} : DashboardPageProps){
 				</div>
 			</div>
 
-			<VerticalDivider/>
+			<VerticalDivider />
 
-            <div className="dashboard-rightside-main">
+			<div className="dashboard-rightside-main">
 				<div className="dashboard-header-container">
 					{/* <MdNotificationsNone size={20}/>
 
 					<div className="dashboard-user-container">
 						<span>{user?.first_name} {user?.last_name}</span>
 						<div className="dashboard-avatar-container">
-							<UserAvatar user={user}/>
+							<UserAvatar user={user} />
 						</div>
 					</div> */}
 				</div>
 
-				<HorizontalDivider/>
-				
-                <div className="dashboard-main-container">
-                    {children}
-                </div>
-            </div>
-        </div>
-    )
+				{/* <HorizontalDivider />
+
+				<div className="dashboard-main-container">
+					{pathname === "/dashboard" || pathname === "/dashboard" || pathname === "/dashboard/home" ? (
+						<RespoDashboard />
+					) : (
+						<Outlet />
+					)}
+				</div> */}
+			</div>
+		</div>
+	)
 }

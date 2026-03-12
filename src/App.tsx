@@ -22,10 +22,10 @@ import HelpPage from "./pages/dashboard/HelpPage";
 import "./index.css";
 
 interface RouteProps {
-	children: ReactNode;
+    children: ReactNode;
 };
 
-function ProtectedRoute({ children }: RouteProps){
+function ProtectedRoute({ children }: RouteProps) {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -37,13 +37,13 @@ function ProtectedRoute({ children }: RouteProps){
     }
 
     return (
-		<>
-			{children}
-		</>
-	);
+        <>
+            {children}
+        </>
+    );
 }
 
-function PublicRoute({ children }: RouteProps){
+function PublicRoute({ children }: RouteProps) {
     const { isAuthenticated, isLoading } = useAuth();
 
     if (isLoading) {
@@ -55,10 +55,10 @@ function PublicRoute({ children }: RouteProps){
     }
 
     return (
-		<>
-			{children}
-		</>
-	);
+        <>
+            {children}
+        </>
+    );
 }
 
 function RootRedirect() {
@@ -75,9 +75,9 @@ function AppRoutes() {
     return (
         <Routes>
             <Route path="/auth">
-                <Route path="login" element={<PublicRoute><AccountLoginPage/></PublicRoute>}/>
-                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage/></PublicRoute>}/>
-                <Route path="activation" element={<PublicRoute><AccountActivationPage/></PublicRoute>}/>
+                <Route path="login" element={<PublicRoute><AccountLoginPage /></PublicRoute>} />
+                <Route path="recovery" element={<PublicRoute><AccountRecoveryPage /></PublicRoute>} />
+                <Route path="activation" element={<PublicRoute><AccountActivationPage /></PublicRoute>} />
             </Route>
 
             <Route path="/dashboard">
@@ -107,8 +107,8 @@ function AppRoutes() {
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
 			</Route>
 
-            <Route path="/" element={<RootRedirect/>} />
-            <Route path="*" element={<RootRedirect/>} />
+            <Route path="/" element={<RootRedirect />} />
+            <Route path="*" element={<RootRedirect />} />
         </Routes>
     );
 }
@@ -117,7 +117,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <AppRoutes/>
+                <AppRoutes />
             </Router>
         </AuthProvider>
     );
