@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
-import HomePage from "./pages/dashboard/HomePage";
+import HomePage from "./pages/dashboard/home/HomePage";
 import TERVotePage from "./pages/dashboard/ter/TERVotePage";
 import TERInfoPage from "./pages/dashboard/ter/TERInfoPage";
 import TERPage from "./pages/dashboard/ter/TERPage";

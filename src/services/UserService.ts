@@ -141,4 +141,16 @@ export default class UserService {
 			return role.name == UserRoles.ETUDIANT;
 		});
 	}
+
+	public static isRespo(user: User): boolean {
+		return user.groups.some(role => {
+			return (role.name == UserRoles.RESPO_STAGE) || (role.name == UserRoles.RESPO_TER);
+		});
+	}
+	
+	public static isAdmin(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ADMIN;
+		});
+	}
 };
