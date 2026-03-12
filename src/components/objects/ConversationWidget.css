@@ -1,0 +1,29 @@
+.chat-conv-layout {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding: 10px;
+	gap: 20px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: var(--beige-col);
+	background-color: var(--beige-col);
+	box-sizing: border-box;
+	border-radius: 10px;
+	transition: border-color 0.3s;
+	transition: background-color 0.3s;
+	transition: transform 0.15s;
+}
+
+.chat-conv-layout.active {
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+	transform: scale(1.03);
+}
+
+.chat-conv-content-layout {
+	display: flex;
+	color: var(--gray1-col);
+	flex-direction: column;
+	justify-content: space-between;
+}

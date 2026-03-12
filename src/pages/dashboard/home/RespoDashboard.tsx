@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../api/ApiHandle';
+// import api from '../../api/ApiHandle';
 import './RespoDashboard.css'
 
 interface DashboardData {
@@ -31,35 +31,35 @@ export default function RespoDashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await api.get<DashboardData>("ter/dashboard-metrics/");
-                setData(response.data);
-            } catch (err) {
-                console.error("Erreur lors du chargement du dashboard:", err);
-                setError("Impossible de charger les données du dashboard.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await api.get<DashboardData>("ter/dashboard-metrics/");
+    //             setData(response.data);
+    //         } catch (err) {
+    //             console.error("Erreur lors du chargement du dashboard:", err);
+    //             setError("Impossible de charger les données du dashboard.");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchData();
 
-        const apiUrl = process.env.API_URL || "http://localhost:8000";
-        const eventSource = new EventSource(`${apiUrl}/api/ter/stats-stream`, { withCredentials: true });
+    //     const apiUrl = process.env.API_URL || "http://localhost:8000";
+    //     const eventSource = new EventSource(`${apiUrl}/api/ter/stats-stream`, { withCredentials: true });
 
-        eventSource.onmessage = (event) => {
-            const updatedMetrics = JSON.parse(event.data);
-            setData(prevData => prevData ? { ...prevData, metrics: { ...prevData.metrics, ...updatedMetrics } } : null);
-        };
+    //     eventSource.onmessage = (event) => {
+    //         const updatedMetrics = JSON.parse(event.data);
+    //         setData(prevData => prevData ? { ...prevData, metrics: { ...prevData.metrics, ...updatedMetrics } } : null);
+    //     };
 
-        return () => eventSource.close();
-    }, []);
-
+    //     return () => eventSource.close();
+    // }, []);
 
     if (loading) {
         return <div className='dashboard-container'>Chargement...</div>;
     }
+	
     if (error) {
         return <div className='dashboard-container error'>{error}</div>;
     }

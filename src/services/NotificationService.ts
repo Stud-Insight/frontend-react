@@ -63,7 +63,7 @@ export default class NotificationService {
 		let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
 		const connect = () => {
-			eventSource = new EventSource(`${api.defaults.baseURL}/api/notifications/stream`, { withCredentials: true });
+			eventSource = new EventSource(`${api.defaults.baseURL}/notifications/stream`, { withCredentials: true });
 
 			eventSource.onmessage = (event) => {
 				try {
@@ -84,7 +84,7 @@ export default class NotificationService {
 			};
 		};
 
-		connect();  
+		// connect();  
 
 		return () => {
 			if (eventSource) {

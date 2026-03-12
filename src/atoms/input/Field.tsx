@@ -12,11 +12,13 @@ interface FieldProps {
 export default function Field({label, icon, children, onClick, className}: FieldProps){
 	return (
 		<div className="field-layout">
-			<div className="field-label">
-				{icon}
-				{label && <span>{label}</span>}
-			</div>
-
+			{label &&
+				<div className="field-label">
+					{icon}
+					<span>{label}</span>
+				</div>
+			}
+			
 			<div className={`field-content ${className}`} onClick={onClick}>
 				{children}
 			</div>

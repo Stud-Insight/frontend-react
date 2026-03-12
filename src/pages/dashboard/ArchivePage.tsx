@@ -7,7 +7,7 @@ export default function ArchivePage(){
 	return (
 		<DashboardPage>
 			<span style={{fontWeight: 800, fontSize: "25px"}}>Archives</span>
-			<span>Les ter archive</span>
+			<span style={{color: "var(--gray1-col)"}}>Les ter archive</span>
 		</DashboardPage>
 	)
 }

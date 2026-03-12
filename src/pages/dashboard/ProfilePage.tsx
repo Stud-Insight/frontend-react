@@ -14,11 +14,13 @@ import "./ProfilePage.css";
 
 export default function ProfilePage(){
 	const { user } = useAuth();
-	const [nom, setNom] = useState<string>("");
-	const [prenom, setPrenom] = useState<string>("");
-	const [mail, setMail] = useState<string>("");
-	const [mdp, setMdp] = useState<string>("");
+	const [nom, setNom] = useState<string | undefined>("");
+	const [prenom, setPrenom] = useState<string | undefined>("");
+	const [mail, setMail] = useState<string | undefined>("");
+	const [mdp, setMdp] = useState<string | undefined>("");
+
 	const updateAvatarHandle = () => {
+
 
 	};
 
@@ -49,26 +51,28 @@ export default function ProfilePage(){
 
 			<span style={{color: "var(--gray1-col)"}}>Gérez et modifier votre profile.</span>
 
-			<div className="profile-page-wrapper">
-				<div className="profile-page-layout">
-					<ContainerWidget icon={<FiUser/>} label="Avatar" className="profile-page-avatar">
+			<div className="profile-page-layout">
+				<ContainerWidget icon={<FiUser/>} label="Avatar" className="profile-page-left-layout">
+					<div className="profile-page-avatar">
 						<UserAvatar user={user} size={250}/>
 						<InputAttachment accept=".png"/>
-					</ContainerWidget>
+					</div>
+				</ContainerWidget>
 
+				<div className="profile-page-right-layout">
 					<ContainerWidget icon={<FiUser/>} label="Info" className="profile-info-avatar">
 						<InputField label="ID" value={`#${user?.id}`}/>
 						<InputField label="Nom" value={nom}/>
 						<InputField label="Prenom" value={prenom}/>
 						<InputField label="E-Mail" value={mail}/>
 					</ContainerWidget>
-				</div>
 
-				<ContainerWidget icon={<FiUser/>} label="About me" className="profile-info-avatar">
-			
-				</ContainerWidget>
+					<ContainerWidget icon={<FiUser/>} label="About me" className="profile-info-avatar">
+						<span>jsp un about me ici?</span>
+					</ContainerWidget>
+				</div>
 			</div>
-		
+
 		</DashboardPage>
 	)
 }

@@ -1,94 +1,101 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
-import ChatSidebar from "../../components/chat/ChatSidebar";
-import ChatWindow from "../../components/chat/ChatWindow";
-import NewChatDialog from "../../components/chat/NewChatDialog";
-import ChatService, { Conversation, getParticipantName } from "../../services/ChatService";
+import ChatService, { Conversation, ConversationDetail } from "../../services/ChatService";
 import InfoBox from "../../components/ui/InfoBox";
 import InfoWidget from "../../components/ui/InfoWidget";
 import Button from "../../atoms/input/Button";
+import ContainerWidget from "../../components/ui/ContainerWidget";
+import UserSelectionDialog from "../../components/dialog/UserSelectionDialog";
+import ConversationWidget from "../../components/objects/ConversationWidget";
 
 import { useAuth } from "../../context/AuthContext";
 import { FiUser } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
+import { LuSend } from "react-icons/lu";
+
 import { LuMessageSquare } from "react-icons/lu";
+import InputField from "../../components/input/InputField";
 
 import "./ChatPage.css";
 
 export default function ChatPage(){
     const { user } = useAuth();
-
     const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+	const [selectedConv, setSelectedConv] = useState<ConversationDetail | null>(null);
     const [showNewChat, setShowNewChat] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [success, setsuccess] = useState<string | null>(null);
 	
-    const loadConversations = useCallback(async () => {
-        try {
-            const data = await ChatService.listConversations();
-            setConversations(data);
-        } catch (err) {
-            console.error("Error loading conversations:", err);
-			setError(err);
-        }
-    }, []);
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [newMessage, setNewMessage] = useState<string>("");
 
-    useEffect(() => {
-        loadConversations();
+	const createNewConversation = (users: Set<string>) => {
+		console.log(users);
+		setShowNewChat(false);
+	};
 
-        const interval = setInterval(loadConversations, 10000);
-        return () => clearInterval(interval);
-    }, [loadConversations]);
-
-    const handleSelectConversation = (conv: Conversation) => {
-        setSelectedConversation(conv);
-    };
-
-    const handleCreateConversation = async (participantId: string) => {
-        try {
-            const conv = await ChatService.createConversation([participantId]);
-
-            setConversations((prev) => {
-                const existing = prev.find((c) => c.id === conv.id);
-                if (existing) {
-                    return prev;
-                }
-                return [conv, ...prev];
-            });
-
-            setSelectedConversation(conv);
-        } catch (err) {
-            console.error("Error creating conversation:", err);
-			setError(err);
-        }
-    };
-
-    const getConversationName = (conv: Conversation): string => {
-        if (conv.name) {
-			return conv.name;
+	const getConvDetailsHandle = async (conv_id: string) => {
+		try {
+			const res = await ChatService.getConversation(conv_id);
+			setSelectedConv(res);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
 		}
-        const other = conv.participants.find((p) => p.id !== user?.id);
-        return other ? getParticipantName(other) : "Conversation";
-    };
+	}
 
+	const sendMessageHandle = async () => {
+		console.log(newMessage);
+
+		try {
+			if (selectedConv && newMessage != "") {
+				await ChatService.sendMessage(selectedConv?.id, newMessage.trim());
+			}
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		setNewMessage("");
+	}
+
+	useEffect(() => {
+		const getAllConversations = async () => {
+			try {
+				const res = await ChatService.getAllConversations();
+				setConversations(res);
+			} catch (err) {
+				const message = err instanceof Error ? err.message : "Erreur de connexion";
+				setError(message);
+			}
+		}
+
+		getAllConversations();
+
+		if (conversations.length > 0) {
+			getConvDetailsHandle(conversations[0].id);
+		}
+	}, []);
+	
     return (
         <DashboardPage>
+			{showNewChat &&
+				<UserSelectionDialog label="Creation Conversation" onClose={() => setShowNewChat(false)} onConfirm={createNewConversation}/>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Messages</span>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Conversations</span>
 				</div>
 			</div>
 
 			<span style={{color: "var(--gray1-col)"}}>Gérez et modifier votre profile.</span>
 
-
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Conversations" icon={<LuMessageSquare/>} info={0} color="var(--blue-col)"/>
+				{/* <InfoWidget label="Conversations" icon={<LuMessageSquare/>} info={0} color="var(--blue-col)"/> */}
 				<InfoWidget label="Conversation Personelle" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
 				<InfoWidget label="Conversation Groupe" icon={<FiUsers/>} info={0} color="var(--blue-col)"/>
 			</div>
@@ -96,41 +103,36 @@ export default function ChatPage(){
 			<div className="dashboard-top-layout">
 				<div/>
 				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Créer Conversation"/>
+					<Button icon={<FaPlus/>} label="Créer Conversation" onClick={() => setShowNewChat(true)}/>
 				</div>
 			</div>
+		
+			<div className="chat-layout-style">
+				<ContainerWidget className="chat-sidebar-layout">
+					{conversations.map(conv => (
+						<ConversationWidget key={conv.id} active={conv.id == selectedConv?.id} conv={conv} onClick={() => getConvDetailsHandle(conv.id)}/>
+					))}
+				</ContainerWidget>
+				
+				<ContainerWidget className="chat-content-layout">
+					{selectedConv &&
+						<>
+							<div className="chat-content-messages">
+								{selectedConv.messages.map(message => (
+									<div key={message.id} className={`chat-message-style ${message.sender.id == user?.id ? "right" : "left"}`}>
+										{message.content}
+									</div>
+								))}
+							</div>
 
-            <div className="chat-page">
-                <ChatSidebar
-                    conversations={conversations}
-                    selectedId={selectedConversation?.id || null}
-                    onSelect={handleSelectConversation}
-                    onNewChat={() => setShowNewChat(true)}
-                />
-
-                {selectedConversation ? (
-                    <ChatWindow
-                        conversationId={selectedConversation.id}
-                        conversationName={getConversationName(selectedConversation)}
-                        onBack={() => setSelectedConversation(null)}
-                    />
-                ) : (
-                    <div className="chat-placeholder">
-                        <div className="chat-placeholder-content">
-                            <div className="chat-placeholder-icon">💬</div>
-                            <h3>Selectionnez une conversation</h3>
-                            <p>Ou commencez une nouvelle discussion</p>
-                            <button onClick={() => setShowNewChat(true)}>Nouvelle conversation</button>
-                        </div>
-                    </div>
-                )}
-
-                <NewChatDialog
-                    isOpen={showNewChat}
-                    onClose={() => setShowNewChat(false)}
-                    onCreateConversation={handleCreateConversation}
-                />
-            </div>
+							<div className="chat-content-footer">
+								<InputField value={newMessage} onChange={setNewMessage}/>
+								<Button icon={<LuSend/>}label="Envoyer" onClick={sendMessageHandle}/>
+							</div>	
+						</>
+					}
+				</ContainerWidget>
+			</div>
         </DashboardPage>
     );
 }

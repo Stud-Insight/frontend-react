@@ -13,7 +13,6 @@ import { FiHome } from "react-icons/fi";
 import { FaRegFolder } from "react-icons/fa";
 import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
-import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
@@ -30,20 +29,30 @@ interface DashboardPageProps {
 };
 
 export default function DashboardPage({ children }: DashboardPageProps) {
-	const notificationRef = useRef<HTMLDivElement>(null);
-	const [showNotifications, setShowNotifications] = useState(false);
-	const [notifications, setNotifications] = useState<Notification[]>([]);
-	const unreadCount = notifications.filter(n => !n.isRead).length;
-
 	const { user } = useAuth();
 	const { logout } = useAuth();
     const { pathname } = useLocation();
     const navigate = useNavigate();
 
+	const notificationRef = useRef<HTMLDivElement>(null);
+	const [showNotifications, setShowNotifications] = useState(false);
+	const [notifications, setNotifications] = useState<Notification[]>([]);
+	const unreadCount = notifications.filter(n => !n.isRead).length;
+
 	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
 		return role.name;
 	});
-	
+
+	const notification_map: Map<string, number> = new Map([
+		["home", 0],
+		["ter", 0],
+		["stages", 0],
+		["chat", 0],
+		["notification", unreadCount],
+		["sujets", 0],
+		["archive", 0],
+	]);
+
     const logoutHandle = async () => {
         try {
             await logout();
@@ -107,16 +116,15 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 				<div className="dashboard-sidebar-content">
 					<Logo large={true}/>
 					<HorizontalDivider/>
-					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={pageHandle}/>
-					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={pageHandle}/>
-					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={pageHandle}/>
-					<NavigationButton label="Messages" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={pageHandle}/>
-					<NavigationButton label="Notifications" notification={unreadCount} active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle}/>
-					{/* <NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar/>} id="calender" onClick={pageHandle}/> */}
+					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={pageHandle} notifCount={notification_map.get("home")}/>
+					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={pageHandle} notifCount={notification_map.get("ter")}/>
+					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={pageHandle} notifCount={notification_map.get("stages")}/>
+					<NavigationButton label="Conversations" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={pageHandle} notifCount={notification_map.get("chat")}/>
+					<NavigationButton label="Notifications" active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle} notifCount={notification_map.get("notification")}/>
 					<HorizontalDivider/>
 
 					{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) && 
-						<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle}/>
+						<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle} notifCount={notification_map.get("sujets")}/>
 					}
 
 					{(roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN)) && 
@@ -129,7 +137,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 
 					{!roles.includes(UserRoles.ETUDIANT) &&
 						<>
-							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle}/>
+							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle} notifCount={notification_map.get("archive")}/>
 							<HorizontalDivider/>
 						</>				
 					}
@@ -154,19 +162,8 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			<VerticalDivider />
 
 			<div className="dashboard-rightside-main">
-				<div className="dashboard-header-container">
-					{/* <MdNotificationsNone size={20}/>
-
-					<div className="dashboard-user-container">
-						<span>{user?.first_name} {user?.last_name}</span>
-						<div className="dashboard-avatar-container">
-							<UserAvatar user={user}/>
-						</div>
-					</div> */}
-				</div>
-
+				<div className="dashboard-header-container"/>
 				<HorizontalDivider/>
-				
                 <div className="dashboard-main-container">
                     {children}
                 </div>

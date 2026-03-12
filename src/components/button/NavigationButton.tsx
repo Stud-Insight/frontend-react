@@ -8,13 +8,13 @@ interface NavigationButtonProps {
     offset?: number;
     size?: string;
     active?: boolean;
-	notification?: number;
+	notifCount?: number;
 	children?: ReactNode;
 	className?: string;
     onClick?: (id: string) => void;
 };
 
-export default function NavigationButton({label, children, icon, offset = 0, size = "20px", onClick, active = false, id = "", notification = 0, className}: NavigationButtonProps){
+export default function NavigationButton({label, children, icon, offset = 0, size = "20px", onClick, active = false, id = "", notifCount = 0, className}: NavigationButtonProps){
     return (
         <button className={`navigation-button-style ${active ? "active" : ""} ${className}`} onClick={() => onClick?.(id)}>
 			{children == null ? 
@@ -28,9 +28,9 @@ export default function NavigationButton({label, children, icon, offset = 0, siz
 				children
 			}
 				
-			{notification && notification > 0 ?
+			{notifCount && notifCount > 0 ?
 				<div className="navigation-button-notification-style">
-					{notification}
+					{notifCount}
 				</div>
 				:
 				undefined
