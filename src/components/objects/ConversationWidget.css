@@ -1,9 +1,9 @@
-.chat-conv-layout {
+.conv-layout {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 	padding: 10px;
-	gap: 20px;
+	gap: 15px;
 	border-style: solid;
 	border-width: 2px;
 	border-color: var(--beige-col);
@@ -15,15 +15,29 @@
 	transition: transform 0.15s;
 }
 
-.chat-conv-layout.active {
+.conv-name {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+}
+
+.conv-last-message {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	align-items: center;
+	font-size: 13px;
+	color: var(--gray1-col);
+}
+
+.conv-layout.active {
 	border-color: var(--blue-col);
 	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
 	transform: scale(1.03);
 }
 
-.chat-conv-content-layout {
+.conv-content-layout {
 	display: flex;
-	color: var(--gray1-col);
 	flex-direction: column;
 	justify-content: space-between;
 }

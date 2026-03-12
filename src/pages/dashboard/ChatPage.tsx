@@ -7,14 +7,13 @@ import Button from "../../atoms/input/Button";
 import ContainerWidget from "../../components/ui/ContainerWidget";
 import UserSelectionDialog from "../../components/dialog/UserSelectionDialog";
 import ConversationWidget from "../../components/objects/ConversationWidget";
+import MessageWidget from "../../components/objects/MessageWidget";
 
 import { useAuth } from "../../context/AuthContext";
 import { FiUser } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
-
-import { LuMessageSquare } from "react-icons/lu";
 import InputField from "../../components/input/InputField";
 
 import "./ChatPage.css";
@@ -29,8 +28,33 @@ export default function ChatPage(){
 	const [success, setSuccess] = useState<string | null>(null);
 	const [newMessage, setNewMessage] = useState<string>("");
 
-	const createNewConversation = (users: Set<string>) => {
-		console.log(users);
+	const conv_groupe_count = conversations.filter(conv => conv.participants.length > 2).length;
+	const conv_perso_count = conversations.filter(conv => conv.participants.length == 2).length;
+
+	const getAllConversations = async () => {
+		try {
+			const res = await ChatService.getAllConversations();
+
+			if (res.length > 0) {
+				getConvDetailsHandle(res[0].id);
+			}
+
+			setConversations(res);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const createNewConversation = async (users: Set<string>) => {
+		try {
+			await ChatService.createConversation(Array.from(users), "");
+			getAllConversations();
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
 		setShowNewChat(false);
 	};
 
@@ -45,36 +69,20 @@ export default function ChatPage(){
 	}
 
 	const sendMessageHandle = async () => {
-		console.log(newMessage);
-
 		try {
 			if (selectedConv && newMessage != "") {
 				await ChatService.sendMessage(selectedConv?.id, newMessage.trim());
+				getConvDetailsHandle(selectedConv?.id);
+				setNewMessage("");
 			}
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
-
-		setNewMessage("");
 	}
 
 	useEffect(() => {
-		const getAllConversations = async () => {
-			try {
-				const res = await ChatService.getAllConversations();
-				setConversations(res);
-			} catch (err) {
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		}
-
 		getAllConversations();
-
-		if (conversations.length > 0) {
-			getConvDetailsHandle(conversations[0].id);
-		}
 	}, []);
 	
     return (
@@ -96,8 +104,8 @@ export default function ChatPage(){
 
 			<div className="dashbord-mini-info-layout">
 				{/* <InfoWidget label="Conversations" icon={<LuMessageSquare/>} info={0} color="var(--blue-col)"/> */}
-				<InfoWidget label="Conversation Personelle" icon={<FiUser/>} info={0} color="var(--blue-col)"/>
-				<InfoWidget label="Conversation Groupe" icon={<FiUsers/>} info={0} color="var(--blue-col)"/>
+				<InfoWidget label="Conversation Personelle" icon={<FiUser/>} info={conv_perso_count} color="var(--blue-col)"/>
+				<InfoWidget label="Conversation Groupe" icon={<FiUsers/>} info={conv_groupe_count} color="var(--blue-col)"/>
 			</div>
 
 			<div className="dashboard-top-layout">
@@ -119,9 +127,7 @@ export default function ChatPage(){
 						<>
 							<div className="chat-content-messages">
 								{selectedConv.messages.map(message => (
-									<div key={message.id} className={`chat-message-style ${message.sender.id == user?.id ? "right" : "left"}`}>
-										{message.content}
-									</div>
+									<MessageWidget key={message.id} message={message}/>
 								))}
 							</div>
 

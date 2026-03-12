@@ -98,13 +98,13 @@ export default class ChatService {
         }
     }
 
-    public static async sendMessage(conv_id: string, content: string): Promise<void> {
-        try {
-            await api.post<{ success: boolean; message: Message }>(`/chat/conversations/${conv_id}/messages`, { content });
-        } catch (error) {
-            errorFormat(error as AxiosError<ApiError>);
-        }
-    }
+   	public static async sendMessage(conv_id: string, content: string): Promise<void> {
+		try {
+			const response = await api.post(`/chat/conversations/${conv_id}/messages?content=${content}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
 
     // public static async listUsers(search: string = ""): Promise<Participant[]> {
     //     try {

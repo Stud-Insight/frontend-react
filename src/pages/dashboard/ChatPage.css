@@ -17,9 +17,11 @@
 }
 
 .chat-content-messages {
+	display: flex;
+	flex-direction: column;
 	flex: 1;
+	gap: 10px;
 	overflow-y: auto;
-	
 }
 
 .chat-content-footer {
@@ -27,19 +29,4 @@
 	flex-direction: row;
 	align-items: center;
 	gap: 10px;
-}
-
-.chat-message-style {
-	background-color: red;
-	box-sizing: border-box;
-	padding: 10px;
-	border-radius: 10px;
-}
-
-.chat-message-style.left {
-	justify-content: flex-start;
-}
-
-.chat-message-style.right {
-	justify-content: flex-end;
 }

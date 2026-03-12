@@ -24,10 +24,7 @@ export default function NotificationWidget({ notifications, onNotificationClick,
                     </div>
                 ) : (
                     notifications.map((n) => (
-                        <div
-                            key={n.id}
-                            className={`notification-item ${!n.isRead ? "unread" : ""}`} onClick={() => onNotificationClick(n.id)}
-                        >
+                        <div key={n.id} className={`notification-item ${!n.isRead ? "unread" : ""}`} onClick={() => onNotificationClick(n.id)}>
                             <div className='notif-content'>
                                 <strong>{n.title}</strong>
                                 <p>{n.message}</p>
