@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel, TERStatusColor } from "../../services/TERService";
+import TERService, { TERPeriod, TERPeriodStats, TERStatus, TERStatusLabel, TERStatusColor } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
 import Tag from "../../atoms/ui/Tag";
 import Button from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FiArchive } from "react-icons/fi";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { TbSchool } from "react-icons/tb";
 
@@ -20,9 +21,10 @@ interface TERWidgetProps {
 	selected?: boolean;
 	onClick?: () => void;
 	onSelect?: () => void;
+	onArchive?: () => void;
 };
 
-export default function TERWidget({period, onClick, onSelect, selected = false, moreInfo = true }: TERWidgetProps){
+export default function TERWidget({period, onClick, onSelect, onArchive, selected = false, moreInfo = true }: TERWidgetProps){
 	const [stats, setStats] = useState<TERPeriodStats | null>(null);
 	const [professorCount, setProfessorCount] = useState<number>(0);
 
@@ -83,6 +85,9 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 				</div>
 
 				<div className="ter-widget-button-pos">
+					{onArchive && period.status === TERStatus.CLOSED &&
+						<Button icon={<FiArchive/>} label="Archiver" style="danger" onClick={onArchive}/>
+					}
 					<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
 				</div>
 			</div>

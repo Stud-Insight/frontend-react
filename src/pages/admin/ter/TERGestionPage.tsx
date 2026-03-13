@@ -9,15 +9,17 @@ import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
 import TERSubjectView from "./TERSubjectView";
 
-import TERService, { TERPeriod, TERStatusLabel } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatus, TERStatusLabel, TERStatusColor } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
 import GradeService, { Grade } from "../../../services/GradeService";
 import SubjectService, { Subject } from "../../../services/SubjectService";
+import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
+import Button from "../../../atoms/input/Button";
 
 import { GoGear } from "react-icons/go";
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
-import { FiUsers } from "react-icons/fi";
+import { FiUsers, FiArchive } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
@@ -35,6 +37,7 @@ export default function TERGestionPage(){
 	const [groups, setGroup] = useState<Group[]>([]);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [professors, setProfessors] = useState<User[]>([]);
+	const [archiveConfirm, setArchiveConfirm] = useState<boolean>(false);
 
 	const addStudent = async (users: Set<string>) => {
 		try {
@@ -243,7 +246,23 @@ export default function TERGestionPage(){
 			setError(message);
 		}
 	}
-	
+
+	const archivePeriodHandle = async () => {
+		try {
+			await TERService.archivePeriod(id);
+			const data = await TERService.getPeriod(id);
+			setPeriod(data);
+			setSuccess(`TER "${period?.name}" archivé avec succès.`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		setArchiveConfirm(false);
+	}
+
+	const isArchived = period?.status === TERStatus.ARCHIVED;
+
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
@@ -280,13 +299,30 @@ export default function TERGestionPage(){
 
 	return (
 		<DashboardPage>
+			{archiveConfirm &&
+				<ConfirmationDialog
+					label="Archiver ce TER ?"
+					info={`Êtes-vous sûr de vouloir archiver « ${period?.name} » ? Cette action est irréversible. Les données deviendront en lecture seule.`}
+					onCancel={() => setArchiveConfirm(false)}
+					onConfirm={archivePeriodHandle}
+				/>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
 					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
-					<Tag label={TERStatusLabel.get(period?.status)}/>
+					<Tag label={TERStatusLabel.get(period?.status)} color={TERStatusColor.get(period?.status)}/>
 				</div>
-				<div></div>
+				<div>
+					{period?.status === TERStatus.CLOSED &&
+						<Button icon={<FiArchive/>} label="Archiver" style="danger" onClick={() => setArchiveConfirm(true)}/>
+					}
+				</div>
 			</div>
+
+			{isArchived &&
+				<InfoBox label="Cette période est archivée. Les données sont en lecture seule." type="info"/>
+			}
 
 			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>
 
