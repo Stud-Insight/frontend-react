@@ -35,14 +35,16 @@ export default function GradeWidget({grade, onEdit, onDelete}: GradeWidgetProps)
 					</div>
 				</div>
 
-				<div className="grade-widget-buttons-layout"> 
+				<div className="grade-widget-buttons-layout">
 					{grade.sub_grades && grade.sub_grades.length > 0 &&
 						<IconButton size={20} icon={expanded ? <IoIosArrowDown/> : <IoIosArrowUp/>} onClick={() => setExpanded(!expanded)}/>
 					}
-					<OverflowMenu options={[
-						{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit?.()},
-						{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete?.()},
-					]}/>
+					{(onEdit || onDelete) &&
+						<OverflowMenu options={[
+							...(onEdit ? [{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit()}] : []),
+							...(onDelete ? [{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete()}] : []),
+						]}/>
+					}
 				</div>
 			</div>
 				

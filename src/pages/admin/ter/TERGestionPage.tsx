@@ -283,18 +283,18 @@ export default function TERGestionPage(){
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
-		[0, <TERStudentView students={students} onAdd={addStudent} onDelete={deleteStudent}/>],
-		[1, <TERProfessorView professors={professors} onAdd={addProfessors} onDelete={deleteProfessor}/>],
-		[2, <TERGroupView groups={groups} students={students} 
-			onAdd={createGroup} 
+		[0, <TERStudentView students={students} readOnly={isArchived} onAdd={addStudent} onDelete={deleteStudent}/>],
+		[1, <TERProfessorView professors={professors} readOnly={isArchived} onAdd={addProfessors} onDelete={deleteProfessor}/>],
+		[2, <TERGroupView groups={groups} students={students} readOnly={isArchived}
+			onAdd={createGroup}
 			onDelete={deleteGroup}
 			onUpdate={updateGroup}
 			onAddUsers={addStudentGroup}
 			onUserDelete={removeStudentGroup}
 			onChangeLeader={changeGroupLeader}
 			/>],
-		[3, <TERSubjectView subjects={subjects} onAccept={acceptSubject} onReject={rejectSubject}/>],
-		[4, <TERGradeView grades={grades}/>],
+		[3, <TERSubjectView subjects={subjects} readOnly={isArchived} onAccept={acceptSubject} onReject={rejectSubject}/>],
+		[4, <TERGradeView grades={grades} readOnly={isArchived}/>],
 	])
 
 	return (

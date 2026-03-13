@@ -12,12 +12,13 @@ import OverflowMenu from "../../../components/input/OverflowMenu";
 
 interface TERStudentViewProps {
 	students: User[];
+	readOnly?: boolean;
 	onAdd?: (users: Set<string>) => void;
 	onDelete?: (user: User) => void;
 	onContact?: (user: User) => void;
 };
 
-export default function TERStudentView({students, onAdd, onDelete, onContact}: TERStudentViewProps){
+export default function TERStudentView({students, readOnly, onAdd, onDelete, onContact}: TERStudentViewProps){
 	const [addingStudent, setAddingStudent] = useState<boolean>(false);
 	const [deleteStudent, setDeleteStudent] = useState<User | null>(null);
 
@@ -43,13 +44,15 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`}/>
 		}
 		
-		<div className="dashboard-top-layout">
-			<div/>
-			<div className="dashboard-top-button-layout">
-				<ImportCSVButton/>
-				<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+		{!readOnly &&
+			<div className="dashboard-top-layout">
+				<div/>
+				<div className="dashboard-top-button-layout">
+					<ImportCSVButton/>
+					<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+				</div>
 			</div>
-		</div>
+		}
 		
 		{students && students.length > 0 &&
 			<table className="users-table-style">
@@ -74,7 +77,7 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 							<td>
 								<OverflowMenu options={[
 									{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
-									{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}},
+									...(!readOnly ? [{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}}] : []),
 								]}/>
 							</td>
 						</tr>
