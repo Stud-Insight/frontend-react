@@ -1,123 +1,113 @@
 import React, { useState, useEffect } from 'react';
-// import api from '../../api/ApiHandle';
-import './RespoDashboard.css'
-
-interface DashboardData {
-    currentPhase: {
-        label: string;
-        dates: string;
-        progress: number;
-    };
-    metrics: {
-        groupFormed: number;
-        totalGroups: number;
-        solitaires: number;
-        incompleteGroups: number;
-        rankingsCompleted: number;
-        all_subjects_validated: boolean;
-        validatedSubjects: number;
-        totalSubjects: number;
-    };
-}
-
-interface GatingConditions {
-    all_subjects_validated: boolean;
-    missing_subjects_count: number;
-    can_invite_students: boolean;
-}
+import TERService, { TERPeriod, TERPeriodStats, TERStatus, TERStatusColor, AdminSystemStats } from '../../../services/TERService';
+import InfoWidget from '../../../components/ui/InfoWidget';
+import ContainerWidget from '../../../components/ui/ContainerWidget';
+import TERWidget from '../../../components/objects/TERWidget';
+import Button from '../../../atoms/input/Button';
+import Icon from '../../../atoms/ui/Icon';
+import { FiUsers, FiUser } from 'react-icons/fi';
+import { TbSchool } from 'react-icons/tb';
+import { FaRegFile } from 'react-icons/fa';
+import { MdWorkOutline } from 'react-icons/md';
+import { FiDownload } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import './RespoDashboard.css';
 
 export default function RespoDashboard() {
-    const [data, setData] = useState<DashboardData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+	const [periods, setPeriods] = useState<TERPeriod[]>([]);
+	const [activePeriod, setActivePeriod] = useState<TERPeriod | null>(null);
+	const [stats, setStats] = useState<TERPeriodStats | null>(null);
+	const [adminStats, setAdminStats] = useState<AdminSystemStats | null>(null);
+	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await api.get<DashboardData>("ter/dashboard-metrics/");
-    //             setData(response.data);
-    //         } catch (err) {
-    //             console.error("Erreur lors du chargement du dashboard:", err);
-    //             setError("Impossible de charger les données du dashboard.");
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchData();
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const [allPeriods, sysStats] = await Promise.all([
+					TERService.getPeriods(),
+					TERService.getAdminStats(),
+				]);
+				setPeriods(allPeriods);
+				setAdminStats(sysStats);
 
-    //     const apiUrl = process.env.API_URL || "http://localhost:8000";
-    //     const eventSource = new EventSource(`${apiUrl}/api/ter/stats-stream`, { withCredentials: true });
+				const open = allPeriods.find(p => p.status === TERStatus.OPEN);
+				if (open) {
+					setActivePeriod(open);
+					const periodStats = await TERService.getPeriodStats(open.id);
+					setStats(periodStats);
+				}
+			} catch (err) {
+				const message = err instanceof Error ? err.message : "Erreur de connexion";
+				setError(message);
+			}
+		};
+		fetchData();
+	}, []);
 
-    //     eventSource.onmessage = (event) => {
-    //         const updatedMetrics = JSON.parse(event.data);
-    //         setData(prevData => prevData ? { ...prevData, metrics: { ...prevData.metrics, ...updatedMetrics } } : null);
-    //     };
+	if (error) {
+		return <span style={{color: "var(--red-col)"}}>{error}</span>;
+	}
 
-    //     return () => eventSource.close();
-    // }, []);
+	const handleExportCsv = () => {
+		if (activePeriod) {
+			window.open(TERService.exportCsvUrl(activePeriod.id), "_blank");
+		}
+	};
 
-    if (loading) {
-        return <div className='dashboard-container'>Chargement...</div>;
-    }
-	
-    if (error) {
-        return <div className='dashboard-container error'>{error}</div>;
-    }
+	return (
+		<div className="respo-dashboard-layout">
+			{adminStats && (
+				<>
+					<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble du systeme</span>
+					<div className="dashbord-mini-info-layout">
+						<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={adminStats.active_users} color="var(--blue-col)"/>
+						<InfoWidget label="Etudiants" icon={<FiUsers/>} info={adminStats.total_students} color="var(--cyan-col)"/>
+						<InfoWidget label="Encadrants" icon={<TbSchool/>} info={adminStats.total_encadrants} color="var(--purple-col)"/>
+					</div>
+					<div className="dashbord-mini-info-layout">
+						<InfoWidget label="TER Actifs" icon={<TbSchool/>} info={adminStats.active_ter_periods} color={TERStatusColor.get(TERStatus.OPEN)}/>
+						<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={adminStats.draft_ter_periods} color={TERStatusColor.get(TERStatus.DRAFT)}/>
+						<InfoWidget label="Stages Actifs" icon={<MdWorkOutline/>} info={adminStats.active_stage_periods} color="var(--green-col)"/>
+					</div>
+				</>
+			)}
 
-    if (!data) return null;
+			{activePeriod && stats && (
+				<>
+					<div className="dashboard-top-layout" style={{marginTop: "10px"}}>
+						<span style={{fontWeight: 700, fontSize: "18px"}}>
+							{activePeriod.name}
+						</span>
+						<Button icon={<FiDownload/>} label="Exporter CSV" onClick={handleExportCsv}/>
+					</div>
+					<span style={{color: "var(--gray1-col)"}}>Statistiques de la periode TER active</span>
 
-    return (
-        <div className='dashboard-container'>
-            <h2>Dashboard Responsable</h2>
-            {!data.metrics.all_subjects_validated && (
-                <div className='gating-warning-banner'>
-                    <div className='warning-icon'>⚠️</div>
-                    <div className='warning-content'>
-                        <h4>Action bloquée: Invitation des étudiants</h4>
-                        <p>Vous ne pouvez pas inviter d'étudiants tant que tous les sujets ne sont pas validés ({data.metrics.validatedSubjects}/{data.metrics.totalSubjects}).</p>
-                    </div>
-                </div>
-            )}
-            <div className='current-phase'>
-                <h3>Phase actuelle: {data?.currentPhase.label}</h3>
-                <p>{data?.currentPhase.dates}</p>
-                <div className='progress-bar'>
-                    <div className='progress' style={{ width: `${data?.currentPhase.progress}%` }}></div>
-                </div>
-            </div>
-            <div className='metrics'>
-                <div className={`metric-card ${data.metrics.solitaires > 0 ? 'urgent' : ''}`}>
-                    <h4>Solitaires</h4>
-                    <p>{data?.metrics.solitaires}</p>
-                    {data.metrics.solitaires > 0 && <span className='warning-label'>Attention: {data.metrics.solitaires} solitaires!</span>}
-                </div>
-                <div className={`metric-card ${data.metrics.incompleteGroups > 0 ? 'warning' : ''}`}>
-                    <h4>Groupes incomplets</h4>
-                    <p>{data?.metrics.incompleteGroups}</p>
-                    {data.metrics.incompleteGroups > 0 && <span className='warning-label'>Il y a {data.metrics.incompleteGroups} groupes incomplets.</span>}
-                </div>
-                <div className='metric-card'>
-                    <h4>Groupes formés</h4>
-                    <p>{data?.metrics.groupFormed}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Total groupes</h4>
-                    <p>{data?.metrics.totalGroups}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Solitaires</h4>
-                    <p>{data?.metrics.solitaires}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Groupes incomplets</h4>
-                    <p>{data?.metrics.incompleteGroups}</p>
-                </div>
-                <div className='metric-card'>
-                    <h4>Classements complétés</h4>
-                    <p>{data?.metrics.rankingsCompleted}</p>
-                </div>
-            </div>
-        </div>
-    );
+					<div className="dashbord-mini-info-layout">
+						<InfoWidget label="Inscrits" icon={<FiUsers/>} info={stats.students_enrolled} color="var(--blue-col)"
+							onClick={() => navigate(`/dashboard/ter/${activePeriod.id}/admin`)}/>
+						<InfoWidget label="En groupe" icon={<FiUsers/>} info={stats.students_in_groups} color="var(--green-col)"/>
+						<InfoWidget label="Solitaires" icon={<FiUser/>} info={stats.students_solitaires}
+							color={stats.students_solitaires > 0 ? "var(--red-col)" : "var(--green-col)"}/>
+					</div>
+
+					<div className="dashbord-mini-info-layout">
+						<InfoWidget label="Groupes" icon={<FiUsers/>} info={stats.groups_total} color="var(--blue-col)"/>
+						<InfoWidget label="Sujets Valides" icon={<FaRegFile/>} info={stats.subjects_validated} color="var(--orange-col)"/>
+						<InfoWidget label="Affectes" icon={<FaRegFile/>} info={stats.groups_assigned} color="var(--green-col)"/>
+					</div>
+				</>
+			)}
+
+			{!activePeriod && (
+				<ContainerWidget>
+					<div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", padding: "30px"}}>
+						<TbSchool size={40} color="var(--gray1-col)"/>
+						<span style={{fontWeight: 600}}>Aucun TER actif</span>
+						<span style={{color: "var(--gray1-col)"}}>Creez ou ouvrez une periode TER depuis la gestion TER.</span>
+					</div>
+				</ContainerWidget>
+			)}
+		</div>
+	);
 }
-
