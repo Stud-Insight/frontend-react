@@ -101,6 +101,62 @@ export interface TERPeriodStats {
     subjects_assigned: number;
 }
 
+export interface StudentPhase {
+	current_phase: string;
+	current_phase_label: string;
+	next_deadline: string | null;
+	next_deadline_label: string | null;
+	days_remaining: number | null;
+}
+
+export interface StudentDashboard {
+	ter_period_id: string | null;
+	ter_period_name: string | null;
+	status: string;
+	phase: StudentPhase | null;
+	group_name: string | null;
+	group_id: string | null;
+	subject_title: string | null;
+	subject_id: string | null;
+}
+
+export interface EncadrantGroupDeliverable {
+	total: number;
+	submitted: number;
+}
+
+export interface EncadrantGroup {
+	id: string;
+	name: string;
+	members: { id: string; email: string; first_name: string; last_name: string }[];
+	subject_title: string;
+	subject_id: string;
+	deliverables: EncadrantGroupDeliverable;
+	grade_status: string | null;
+	group_grade: number | null;
+}
+
+export interface EncadrantDashboard {
+	ter_period_id: string;
+	ter_period_name: string;
+	groups: EncadrantGroup[];
+	total_groups: number;
+	graded_groups: number;
+	finalized_groups: number;
+}
+
+export interface AdminSystemStats {
+	total_users: number;
+	active_users: number;
+	total_students: number;
+	total_encadrants: number;
+	total_externes: number;
+	active_ter_periods: number;
+	draft_ter_periods: number;
+	archived_ter_periods: number;
+	active_stage_periods: number;
+}
+
 export default class TERService {
 	public static async getStudents(id: string): Promise<User[]> {
 		try {
@@ -212,11 +268,54 @@ export default class TERService {
 				min_group_size: 2,
 				max_group_size: 4,
 			};
-			
+
 			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
 			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
+	}
+
+	public static async getStudentDashboard(periodId?: string): Promise<StudentDashboard> {
+		try {
+			const url = periodId
+				? `/ter/dashboard/student?ter_period_id=${periodId}`
+				: `/ter/dashboard/student`;
+			const res = await api.get<StudentDashboard>(url);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getEncadrantPeriods(): Promise<{id: string; name: string; academic_year: string; status: string}[]> {
+		try {
+			const res = await api.get<{id: string; name: string; academic_year: string; status: string}[]>(`/ter/dashboard/encadrant/periods`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getEncadrantDashboard(periodId: string): Promise<EncadrantDashboard> {
+		try {
+			const res = await api.get<EncadrantDashboard>(`/ter/dashboard/encadrant/${periodId}`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getAdminStats(): Promise<AdminSystemStats> {
+		try {
+			const res = await api.get<AdminSystemStats>(`/ter/dashboard/admin/stats`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static exportCsvUrl(periodId: string): string {
+		return `${api.defaults.baseURL}/ter/dashboard/export/${periodId}/csv`;
 	}
 }
