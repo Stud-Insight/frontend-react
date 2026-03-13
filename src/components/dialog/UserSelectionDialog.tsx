@@ -12,7 +12,7 @@ interface UserSelectionDialogProps {
 	value?: User[];
 	role_filter?: string[];
 	exclude?: string[];
-	button_text: string;
+	button_text?: string;
 	onClose?: () => void;
 	onConfirm?: (users: Set<User>) => void;
 };

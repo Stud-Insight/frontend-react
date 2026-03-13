@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DashboardPage from "./DashboardPage";
+import { User } from "../../services/UserService";
 import ChatService, { Conversation, ConversationDetail } from "../../services/ChatService";
 import InfoBox from "../../components/ui/InfoBox";
 import InfoWidget from "../../components/ui/InfoWidget";
@@ -19,7 +20,6 @@ import InputField from "../../components/input/InputField";
 import "./ChatPage.css";
 
 export default function ChatPage(){
-    const { user } = useAuth();
     const [conversations, setConversations] = useState<Conversation[]>([]);
 	const [selectedConv, setSelectedConv] = useState<ConversationDetail | null>(null);
     const [showNewChat, setShowNewChat] = useState(false);
@@ -46,16 +46,17 @@ export default function ChatPage(){
 		}
 	}
 
-	const createNewConversation = async (users: Set<string>) => {
+	const createNewConversation = async (users: Set<User>) => {
+		setShowNewChat(false);
+		
 		try {
-			await ChatService.createConversation(Array.from(users), "");
+			const ids = Array.from(users).map(user => user.id);
+			await ChatService.createConversation(ids, "");
 			getAllConversations();
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
-
-		setShowNewChat(false);
 	};
 
 	const getConvDetailsHandle = async (conv_id: string) => {

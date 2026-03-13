@@ -77,11 +77,15 @@ export default class ChatService {
 
     public static async createConversation(user_ids: string[], name: string): Promise<Conversation> {
         try {
-            const response = await api.post<Conversation>("/chat/conversations", {
+			const p = {
                 participant_ids: user_ids,
                 name,
                 is_group: user_ids.length > 1,
-            });
+            };
+
+			console.log(p);
+			
+            const response = await api.post<Conversation>("/chat/conversations", p);
             return response.data;
         } catch (error) {
             errorFormat(error as AxiosError<ApiError>);
