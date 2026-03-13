@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import ContainerWidget from "../ui/ContainerWidget";
 import { Group, GroupStatusLabel, GroupStatusColor, GroupStatus } from "../../services/GroupService";
-import { FiUsers } from "react-icons/fi";
-import { User } from "../../services/UserService";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../input/OverflowMenu";
 import IconButton from "../button/IconButton";
@@ -10,6 +8,8 @@ import UserWidget from "./UserWidget";
 import Tag from "../../atoms/ui/Tag";
 import HorizontalDivider from "../ui/HorizontalDivider";
 
+import { FiUsers } from "react-icons/fi";
+import { User } from "../../services/UserService";
 import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
 import { FaCrown } from "react-icons/fa";
@@ -21,9 +21,11 @@ import { IoIosArrowUp } from "react-icons/io";
 import "./GroupProjectWidget.css"
 
 interface GroupProjectWidgetProps {
+	label?: string;
 	group: Group;
 	admin?: boolean;
 	active?: boolean;
+	children?: ReactNode;
 	forceExpanded?: boolean;
 	onEdit?: () => void;
 	onDelete?: () => void;
@@ -32,11 +34,11 @@ interface GroupProjectWidgetProps {
 	onUserDelete?: (user: User) => void;
 };
 
-export default function GroupProjectWidget({group, admin = true, active = false, forceExpanded = false, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
+export default function GroupProjectWidget({label, group, admin = true, active = false, children, forceExpanded = false, onEdit, onDelete, onLeader, onAdd, onUserDelete}: GroupProjectWidgetProps){
 	const [expanded, setExpanded] = useState<boolean>(forceExpanded);
 
 	return (
-		<ContainerWidget active={active}>
+		<ContainerWidget label={label} active={active}>
 			<div className="group-project-widget-header">
 				<div className="group-project-widget-title">
 					<Icon icon={<FiUsers/>} color="var(--blue-col)"/>
@@ -52,6 +54,8 @@ export default function GroupProjectWidget({group, admin = true, active = false,
 					</div>
 				</div>
 
+				{children}
+
 				{admin &&
 					<div className="group-widget-buttons-layout">
 						{group.members && group.members.length > 0 &&
@@ -66,6 +70,7 @@ export default function GroupProjectWidget({group, admin = true, active = false,
 				}
 			</div>
 
+				
 			{expanded && group.members &&
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
 					{group.leader &&
@@ -75,7 +80,7 @@ export default function GroupProjectWidget({group, admin = true, active = false,
 							]}/>
 						</UserWidget>
 					}
-					
+
 					{group.members.map(member => {
 						if (group.leader && member.id != group.leader.id){
 							return (

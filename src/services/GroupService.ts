@@ -12,21 +12,21 @@ export enum GroupStatus {
 
 export const GroupStatusLabel: Map<GroupStatus, string> = new Map([
 	[GroupStatus.OUVERT, "Ouvert"],
-	[GroupStatus.FORME, "En Attente"],
+	[GroupStatus.FORME, "Forme"],
 	[GroupStatus.CLOTURE, "Cloturé"],
 ]);
 
 export const GroupStatusColor: Map<GroupStatus, string> = new Map([
 	[GroupStatus.OUVERT, "var(--green-col)"],
 	[GroupStatus.FORME, "var(--blue-col)"],
-	[GroupStatus.CLOTURE, "var(--red-col)"],
+	[GroupStatus.CLOTURE, "var(--purple-col)"],
 ]);
 
 export enum InvitationStatus {
-  PENDING = "pending",
-  ACCEPTED = "accepted",
-  DECLINED = "declined",
-  CANCELLED = "cancelled",
+	PENDING = "pending",
+	ACCEPTED = "accepted",
+	DECLINED = "declined",
+	CANCELLED = "cancelled",
 }
 
 export enum ProjectType {
@@ -39,7 +39,7 @@ interface InvitationCreateSchema {
     message: string;
 }
 
-interface GroupInvitation {
+export interface GroupInvitation {
 	id: string;
 	group_id: string;
 	group_name: string;
@@ -100,17 +100,19 @@ export default class GroupService {
 		}
 	} 
 
-	public static async respondInvitation(invite_id: string): Promise<void>  {
+	public static async respondInvitation(invite_id: string, accept: boolean): Promise<void>  {
 		try {
-			await api.post(`/groups/invitations/${invite_id}/respond`);
+			await api.post(`/groups/invitations/${invite_id}/respond`, {
+				accept: accept
+			});
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async cancelInvitation(invite_id: string): Promise<void>  {
+	public static async cancelInvitation(group_id: string, invite_id: string): Promise<void>  {
 		try {
-			await api.post(`/groups/invitations/${invite_id}/cancel`);
+			await api.post(`/groups/${group_id}/invitations/${invite_id}/cancel`);
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -124,13 +126,21 @@ export default class GroupService {
 						invitee_email: user.email,
     					message: ""
 					};
-					// return api.post(`/groups/${group_id}/invite`, payload);
+					return api.post(`/groups/${group_id}/invite`, payload);
 				})
 			);			
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	} 
+
+	public static async leaveGroup(group_id: string): Promise<void> {
+		try {
+			await api.post(`/groups/${group_id}/leave`);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
 
 	public static async getGroups(period_id: string): Promise<Group[]> {
 		try {

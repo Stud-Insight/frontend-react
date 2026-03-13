@@ -5,7 +5,7 @@ import TERService, { TERPeriod } from "../../../services/TERService";
 import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import { User } from "../../../services/UserService";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
-import GroupService, { Group } from "../../../services/GroupService";
+import GroupService, { Group, GroupInvitation, InvitationStatus } from "../../../services/GroupService";
 import SubjectWidget from "../../../components/objects/SubjectWidget";
 import InfoBox from "../../../components/ui/InfoBox";
 import Button from "../../../atoms/input/Button";
@@ -13,6 +13,10 @@ import ModalDialog from "../../../components/dialog/ModalDialog";
 import InputField from "../../../components/input/InputField";
 import TERWidgetInfo from "../../../components/objects/TERWidgetInfo";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
+import UserWidget from "../../../components/objects/UserWidget";
+import GroupInvitationWidget from "../../../components/objects/GroupInvitationWidget";
+import ContainerWidget from "../../../components/ui/ContainerWidget";
+import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 
 import { LuSend } from "react-icons/lu";
 import { FaRegFile} from "react-icons/fa";
@@ -23,7 +27,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
 
 import "./TERVotePage.css"
-import ContainerWidget from "../../../components/ui/ContainerWidget";
 
 export default function TERVotePage(){
 	const { id } = useParams<{ id: string }>();
@@ -39,12 +42,39 @@ export default function TERVotePage(){
 	const [inviteGroup, setInviteGroup] = useState<boolean>(false);
 	const [nomGroup, setNomGroup] = useState<string>("");
 	const [enrolledStudents, setEnrolledStudents] = useState<User[]>([]);
-	const [invitedStudents, setInvitedStudents] = useState<User[]>([]);
+	const [sentInvitations, setSentInvitations] = useState<GroupInvitation[]>([]);
+	const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
+	const [leaveGroup, setLeaveGroup] = useState<Group | null>(null);
+	const [deleteGroup, setDeleteGroup] = useState<Group | null>(null);
 
-	const [favouriteProjects, setFavouriteProjects] = useState<Set<string>>(new Set([]));
+	const deleteGroupHandle = async () => {
+		setDeleteGroup(null);
 
-	const favouriteHandle = () => {
+		try {
+			await GroupService.deleteGroup(myGroup.id);
+			setSuccess(`Vous avez supprimé le groupe '${myGroup?.name}' avec succés!`);
+			setTimeout(() => setSuccess(null), 5000);
+			getGroups();
+			getMyGroup();
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
 
+	const leaveGroupHandle = async () => {
+		setLeaveGroup(null);
+
+		try {
+			await GroupService.leaveGroup(myGroup.id);
+			getGroups();
+			getMyGroup();
+			setSuccess(`Vous avez quitter le groupe '${myGroup?.name}' avec succés!`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
 	};
 
 	const getMyGroup = async () => {
@@ -57,9 +87,11 @@ export default function TERVotePage(){
 		}
 	}
 
-	const getInvitedStudents = async () => {
+	const getInvitedStudents = async (groupId: string) => {
 		try {
-			invitedStudents
+			const res = await GroupService.getSentInvitations(groupId);
+			const pending = res.filter(inv => inv.status == InvitationStatus.PENDING);
+			setSentInvitations(pending);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -89,16 +121,51 @@ export default function TERVotePage(){
 		setInviteGroup(true);
 	}
 
-	const inviteStudentsGroup = async (users: Set<User>) => {
+	const getGroupInvitations = async () => {
 		try {
-			await GroupService.sendInvitations(myGroup?.id, users);
-			setSuccess(`Inviter ${users.size} étudiant${users.size > 0 ? "s" : ""} au groupe.`)
+			const res = await GroupService.getInvitations();
+			const pending = res.filter(inv => inv.status == InvitationStatus.PENDING);
+			setInvitations(pending);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
+	}
 
+	const respondInvite = async (inv_id: string, accept: boolean) => {
+		try {
+			await GroupService.respondInvitation(inv_id, accept);
+			getGroupInvitations();
+			getGroups();
+			getMyGroup();
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+ 	}
+
+	const inviteStudentsGroup = async (users: Set<User>) => {
 		setInviteGroup(false);
+
+		try {
+			await GroupService.sendInvitations(myGroup?.id, users);
+			setSuccess(`Inviter ${users.size} étudiant${users.size > 1 ? "s" : ""} au groupe.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getInvitedStudents(myGroup?.id);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const cancelInvitationHandle = async (invi_id: string) => {
+		try {
+			await GroupService.cancelInvitation(myGroup?.id, invi_id);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		getInvitedStudents(myGroup?.id);
 	}
 
 	const getGroups = async () => {
@@ -107,7 +174,6 @@ export default function TERVotePage(){
 			res.sort((a, b) => (
 				a.name.localeCompare(b.name)
 			))
-
 			setGroups(res);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -117,9 +183,12 @@ export default function TERVotePage(){
 
 	const createGroupHandle = async () => {
 		try {
-			await GroupService.createGroup(id, myGroup, 0, new Set());
-			setSuccess(`Groupe "${myGroup}" à été crée dans "${period?.name}"`);
+			const res = await TERService.getPeriod(id);
+
+			await GroupService.createGroup(id, nomGroup, res?.max_group_size, new Set());
+			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
 			getGroups();
+			getMyGroup();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -154,7 +223,19 @@ export default function TERVotePage(){
 		getPeriod();
 		getGroups();
 		getMyGroup();
+		getGroupInvitations();
 	}, [id]);
+
+	useEffect(() => {
+		if (!myGroup?.id) {
+			
+			return;
+		}	
+
+		if (myGroup.leader.id == user.id) {
+			getInvitedStudents(myGroup.id);
+		}
+	}, [myGroup]);
 
 	const resetFields = () => {
 		setCreateGroup(false);
@@ -165,13 +246,31 @@ export default function TERVotePage(){
 		<DashboardPage>
 			{createGroup &&
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
-					<InputField label="Nom" value={myGroup} onChange={setNomGroup}/>
+					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
 					<Button icon={<FaPlus/>} label="Confirmer" onClick={createGroupHandle}/>
 				</ModalDialog>
 			}
 
 			{inviteGroup &&
 				<UserSelectionDialog value={enrolledStudents} label="Invitation Etudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)}/>
+			}
+
+			{leaveGroup &&
+				<ConfirmationDialog 
+					label="Quitter Groupe?" 
+					info={`Etes vous sur de vouloir quitter le groupe '${myGroup?.name}'?`}
+					onCancel={() => setLeaveGroup(null)}
+					onConfirm={leaveGroupHandle}
+				/>
+			}
+
+			{deleteGroup &&
+				<ConfirmationDialog 
+					label="Supprimer Groupe?" 
+					info={`Etes vous sur de vouloir supprimer votre groupe '${myGroup?.name}'?`}
+					onCancel={() => setDeleteGroup(null)}
+					onConfirm={deleteGroupHandle}
+				/>
 			}
 
 			{error && <InfoBox label={error} type="error"/>}
@@ -190,10 +289,10 @@ export default function TERVotePage(){
 			}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Invitations" icon={<FiUsers/>} info={0} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				{myGroup &&
 					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${myGroup.max_group_size}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
 				}
+				<InfoWidget label="Invitations" icon={<FiUsers/>} info={invitations.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				<InfoWidget label="Groupes" icon={<FaRegFile/>} info={groups.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)}/>
 				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
 			</div>
@@ -207,39 +306,37 @@ export default function TERVotePage(){
 								<>
 									<Button icon={<LuSend/>} label="Inviter" onClick={inviteStudentsToggle}/>
 									<Button icon={<FaPlus/>} label="Modifier Groupe"/>
-									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)"/>
+									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)" onClick={() => setDeleteGroup(myGroup)}/>
 								</>
 								
 								:
-								<Button icon={<FaPlus/>} label="Quitter Groupe"/>
+								<Button icon={<FaPlus/>} label="Quitter Groupe" onClick={() => setLeaveGroup(myGroup)}/>
 							}
 						</div>
 					</div>
 
-					<GroupProjectWidget group={myGroup} admin={false} forceExpanded={true}/>
+					<GroupProjectWidget label="Info" group={myGroup} admin={false} forceExpanded={true}/>
 				
-					<ContainerWidget>
-						
-					</ContainerWidget>
+					{sentInvitations.length > 0 &&
+						<ContainerWidget>
+							{sentInvitations && sentInvitations.map(inv => (
+								<UserWidget user={inv.invitee}>
+									<Button icon={<FaPlus/>} label="Annuler Invitation" onClick={() => cancelInvitationHandle(inv.id)}/>
+								</UserWidget>
+							))}
+						</ContainerWidget>
+					}
 				</>
 			}
 
-			{page == 1 && myGroup == null &&
-				<>
-					{!myGroup &&
-						<div className="dashboard-top-layout">
-							<div/>
-							<div className="dashboard-top-button-layout">
-								<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
-							</div>
-						</div>
-					}
-					
-					{/* <div className="ter-list-group-layout">
-						{groups && groups.map(group => (
-							<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
-						))}
-					</div> */}
+			{page == 1 &&
+				<>	
+					<div className="ter-list-group-layout">
+						{invitations && invitations.map(inv => {
+							const group = groups.find(grp => grp.id === inv.group_id);
+							return <GroupInvitationWidget group={group} onAccept={() => respondInvite(inv.id, true)} onReject={() => respondInvite(inv.id, false)}/>
+						})}
+					</div>
 				</>
 			}
 
