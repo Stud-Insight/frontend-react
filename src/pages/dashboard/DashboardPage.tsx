@@ -37,7 +37,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const notificationRef = useRef<HTMLDivElement>(null);
 	const [showNotifications, setShowNotifications] = useState(false);
 	const [notifications, setNotifications] = useState<Notification[]>([]);
-	const unreadCount = notifications.filter(n => !n.isRead).length;
+	const unreadCount = notifications.filter(n => !n.is_read).length;
 
 	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
 		return role.name;

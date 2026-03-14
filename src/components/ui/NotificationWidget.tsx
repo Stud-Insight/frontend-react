@@ -5,7 +5,7 @@ import './NotificationWidget.css';
 
 interface NotificationWidgetProps {
     notifications: Notification[];
-    onNotificationClick: (id: number) => void;
+    onNotificationClick: (id: string) => void;
     onReadAll: () => void;
 }
 
@@ -24,11 +24,11 @@ export default function NotificationWidget({ notifications, onNotificationClick,
                     </div>
                 ) : (
                     notifications.map((n) => (
-                        <div key={n.id} className={`notification-item ${!n.isRead ? "unread" : ""}`} onClick={() => onNotificationClick(n.id)}>
+                        <div key={n.id} className={`notification-item ${!n.is_read ? "unread" : ""}`} onClick={() => onNotificationClick(n.id)}>
                             <div className='notif-content'>
                                 <strong>{n.title}</strong>
                                 <p>{n.message}</p>
-                                <span className='notif-date'>{n.created_at}</span>
+                                <span className='notif-date'>{new Date(n.created).toLocaleString("fr-FR")}</span>
                             </div>
                         </div>
                     ))
