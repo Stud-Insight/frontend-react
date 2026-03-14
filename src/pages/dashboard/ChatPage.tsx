@@ -48,7 +48,7 @@ export default function ChatPage(){
 
 	const createNewConversation = async (users: Set<User>) => {
 		setShowNewChat(false);
-		
+
 		try {
 			const ids = Array.from(users).map(user => user.id);
 			await ChatService.createConversation(ids, "");
@@ -104,7 +104,6 @@ export default function ChatPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				{/* <InfoWidget label="Conversations" icon={<LuMessageSquare/>} info={0} color="var(--blue-col)"/> */}
 				<InfoWidget label="Conversation Personelle" icon={<FiUser/>} info={conv_perso_count} color="var(--blue-col)"/>
 				<InfoWidget label="Conversation Groupe" icon={<FiUsers/>} info={conv_groupe_count} color="var(--blue-col)"/>
 			</div>
@@ -115,31 +114,33 @@ export default function ChatPage(){
 					<Button icon={<FaPlus/>} label="Créer Conversation" onClick={() => setShowNewChat(true)}/>
 				</div>
 			</div>
-		
-			<div className="chat-layout-style">
-				<ContainerWidget className="chat-sidebar-layout">
-					{conversations.map(conv => (
-						<ConversationWidget key={conv.id} active={conv.id == selectedConv?.id} conv={conv} onClick={() => getConvDetailsHandle(conv.id)}/>
-					))}
-				</ContainerWidget>
-				
-				<ContainerWidget className="chat-content-layout">
-					{selectedConv &&
-						<>
-							<div className="chat-content-messages">
-								{selectedConv.messages.map(message => (
-									<MessageWidget key={message.id} message={message}/>
-								))}
-							</div>
+			
+			{conversations.length > 0 &&
+				<div className="chat-layout-style">
+					<ContainerWidget className="chat-sidebar-layout">
+						{conversations.map(conv => (
+							<ConversationWidget key={conv.id} active={conv.id == selectedConv?.id} conv={conv} onClick={() => getConvDetailsHandle(conv.id)}/>
+						))}
+					</ContainerWidget>
+					
+					<ContainerWidget className="chat-content-layout">
+						{selectedConv &&
+							<>
+								<div className="chat-content-messages">
+									{selectedConv.messages.map(message => (
+										<MessageWidget key={message.id} message={message}/>
+									))}
+								</div>
 
-							<div className="chat-content-footer">
-								<InputField value={newMessage} onChange={setNewMessage}/>
-								<Button icon={<LuSend/>}label="Envoyer" onClick={sendMessageHandle}/>
-							</div>	
-						</>
-					}
-				</ContainerWidget>
-			</div>
+								<div className="chat-content-footer">
+									<InputField value={newMessage} onChange={setNewMessage}/>
+									<Button icon={<LuSend/>}label="Envoyer" onClick={sendMessageHandle}/>
+								</div>	
+							</>
+						}
+					</ContainerWidget>
+				</div>
+			}
         </DashboardPage>
     );
 }
