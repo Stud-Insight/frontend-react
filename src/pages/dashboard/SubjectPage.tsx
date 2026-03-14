@@ -13,8 +13,10 @@ import InputArea from "../../components/input/InputArea";
 import InputNumberField from "../../components/input/InputNumberField";
 import InputAttachment from "../../components/input/InputAttachment";
 import TERSelectionDialog from "../../components/dialog/TERSelectionDialog";
-import { TERPeriod } from "../../services/TERService";
 
+import EmptyWidget from "../../components/ui/EmptyWidget";
+
+import { TERPeriod } from "../../services/TERService";
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
 import { MdOutlineEdit } from "react-icons/md";
@@ -225,16 +227,19 @@ export default function SubjectPage(){
 				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
 				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
 				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvé" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
-			</div>
+			</div>	
 
-			{filteredSubjects.map((sub, index) => (
-				<SubjectWidget key={index} subject={sub} 
-				onDelete={() => setDeleteSubject(sub)} 
-				onEdit={() => editHandle(sub)}
-				onPublish={() => setPublishSubject(sub)}
+			{filteredSubjects.length > 0 ? (
+				filteredSubjects.map(sub => (
+				<SubjectWidget key={sub.id} subject={sub} 
+					onDelete={() => setDeleteSubject(sub)} 
+					onEdit={() => editHandle(sub)}
+					onPublish={() => setPublishSubject(sub)}
 				/>
-			))}
-
+			))
+			) : (
+				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet crée pour l'instant."/>
+			)}	
 		</DashboardPage>
 	)
 }

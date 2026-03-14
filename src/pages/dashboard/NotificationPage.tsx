@@ -6,6 +6,8 @@ import InfoBox from "../../components/ui/InfoBox.tsx";
 import ContainerWidget from "../../components/ui/ContainerWidget.tsx";
 import NotificationService, { Notification, NotificationPreferences, getNotificationRoute } from "../../services/NotificationService.ts";
 import NotificationWidget from "../../components/objects/NotificationWidget.tsx";
+import EmptyWidget from "../../components/ui/EmptyWidget.tsx";
+
 import { FaRegBell } from "react-icons/fa6";
 import { FaRegCheckCircle } from "react-icons/fa";
 
@@ -136,18 +138,15 @@ export default function NotificationPage() {
 				</ContainerWidget>
 			)}
 
-			<div className="notif-list">
-				{notifList.length === 0 ? (
-					<div style={{textAlign: "center", padding: "30px", color: "var(--gray1-col)"}}>
-						<FaRegBell size={30}/>
-						<p>Aucune notification pour le moment.</p>
-					</div>
-				) : (
-					notifList.map((notif) => (
+			{notifList.length > 0 ? (
+				<div className="notif-list">
+					{notifList.map((notif) => (
 						<NotificationWidget key={notif.id} notif={notif} onClick={() => notifClickHandle(notif)}/>
-					))
-				)}
-			</div>
+					))}
+				</div>
+			) : (
+				<EmptyWidget icon={<FaRegBell size={30}/>} text="Aucune notification pour le moment."/>
+			)}
 		</DashboardPage>
 	);
 }

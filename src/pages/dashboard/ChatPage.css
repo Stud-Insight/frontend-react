@@ -6,6 +6,7 @@
 }
 
 .chat-sidebar-layout {
+	height: 100%;
 	flex: 1;
 }
 

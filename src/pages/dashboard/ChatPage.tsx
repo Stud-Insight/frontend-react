@@ -9,12 +9,14 @@ import ContainerWidget from "../../components/ui/ContainerWidget";
 import UserSelectionDialog from "../../components/dialog/UserSelectionDialog";
 import ConversationWidget from "../../components/objects/ConversationWidget";
 import MessageWidget from "../../components/objects/MessageWidget";
+import EmptyWidget from "../../components/ui/EmptyWidget";
 
 import { useAuth } from "../../context/AuthContext";
 import { FiUser } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
+import { LuMessageSquare } from "react-icons/lu";
 import InputField from "../../components/input/InputField";
 
 import "./ChatPage.css";
@@ -114,8 +116,8 @@ export default function ChatPage(){
 					<Button icon={<FaPlus/>} label="Créer Conversation" onClick={() => setShowNewChat(true)}/>
 				</div>
 			</div>
-			
-			{conversations.length > 0 &&
+
+			{conversations.length > 0 ? (
 				<div className="chat-layout-style">
 					<ContainerWidget className="chat-sidebar-layout">
 						{conversations.map(conv => (
@@ -140,7 +142,9 @@ export default function ChatPage(){
 						}
 					</ContainerWidget>
 				</div>
-			}
+			) : (
+				<EmptyWidget icon={<LuMessageSquare size={30}/>} text="Aucune conversation pour le moment."/>
+			)}
         </DashboardPage>
     );
 }
