@@ -3,7 +3,7 @@ import DashboardPage from "./DashboardPage";
 import ContainerWidget from "../../components/ui/ContainerWidget";
 import UserAvatar from "../../components/ui/UserAvatar";
 import IconButton from "../../components/button/IconButton";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 
 import { MdOutlineEdit } from "react-icons/md";
 import InputAttachment from "../../components/input/InputAttachment"

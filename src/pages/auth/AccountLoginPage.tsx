@@ -9,7 +9,7 @@ import LinkButton from "../../components/button/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
 import UserService from "../../services/UserService.ts";
-import { useAuth } from "../../context/AuthContext.tsx";
+import { useAuth } from "../../hooks/AuthContext.tsx";
 
 export default function AccountLoginPage() {
     const [email, setEmail] = useState("");

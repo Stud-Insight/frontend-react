@@ -11,7 +11,7 @@ import ConversationWidget from "../../components/objects/ConversationWidget";
 import MessageWidget from "../../components/objects/MessageWidget";
 import EmptyWidget from "../../components/ui/EmptyWidget";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 import { FiUser } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";

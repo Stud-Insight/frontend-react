@@ -7,7 +7,7 @@ import TERWidget from "../../../components/objects/TERWidget.tsx";
 import EmptyWidget from "../../../components/ui/EmptyWidget.tsx";
 
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext.tsx";
+import { useAuth } from "../../../hooks/AuthContext.tsx";
 import { TbSchool } from "react-icons/tb";
 
 import "./TERPage.css";

@@ -1,6 +1,6 @@
 import React from "react";
 import { Message } from "../../services/ChatService";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 import UserAvatar from "../ui/UserAvatar";
 
 import "./MessageWidget.css"

@@ -12,7 +12,7 @@ import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
 import { MdWorkOutline } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 
 import "./HelpPage.css";
 

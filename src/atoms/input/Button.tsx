@@ -6,7 +6,7 @@ import "./Button.css"
 interface ButtonProps {
     label?: string;
 	icon?: ReactNode;
-	height?: string;
+	height?: number | string;
 	width?: number | string;
     style?: "cancel" | "danger";
 	color?: string;
@@ -25,7 +25,7 @@ export default function Button({icon, label, height, style, onClick, width, colo
 	};
 
 	return (
-		<button className={`button-style ${label ? style : ""}`} style={{width: width ? width : undefined, backgroundColor: color, height: height ? height : "100%"}} onClick={onClick}>
+		<button className={`button-style ${label ? style : ""}`} style={{width: width, backgroundColor: color, height: height}} onClick={onClick}>
 			{getApproIcon()}
 			<span className="button-label">{label}</span>
 		</button>

@@ -4,6 +4,7 @@ import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
+import { useNotification } from "../../hooks/UseNotification.tsx";
 
 import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
@@ -18,7 +19,7 @@ import { FaRegBell } from "react-icons/fa6";
 import { FiUser } from "react-icons/fi";
 import { User, UserRoles } from "../../services/UserService.ts";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext.tsx";
+import { useAuth } from "../../hooks/AuthContext.tsx";
 import { PiQuestionBold } from "react-icons/pi";
 
 import NotificationService, { Notification } from "../../services/NotificationService.ts";
@@ -33,12 +34,9 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const { logout } = useAuth();
     const { pathname } = useLocation();
     const navigate = useNavigate();
-
-	const notificationRef = useRef<HTMLDivElement>(null);
-	const [showNotifications, setShowNotifications] = useState(false);
-	const [notifications, setNotifications] = useState<Notification[]>([]);
+	const notifications = useNotification();
 	const unreadCount = notifications.filter(n => !n.is_read).length;
-
+	
 	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
 		return role.name;
 	});
@@ -69,46 +67,6 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const isActive = (pattern: string) => {
 		return matchPath({ path: pattern, end: false }, pathname) !== null;
 	};
-
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-				setShowNotifications(false);
-			}
-		}
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
-
-	useEffect(() => {
-		let isMounted = true;
-
-		NotificationService.fetchNotifications()
-			.then((data) => {
-				if (isMounted) {
-					setNotifications(data);
-				}
-			})
-			.catch((err) => console.error("Erreur lors du chargement des notifications:", err));
-
-
-		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
-			console.log("Notification reçue SSE :", notification);
-			setNotifications((prev) => {
-				if (prev.some((n) => n.id === notification.id)) {
-					return prev;
-				}
-				return [notification, ...prev];
-			});
-		});
-
-		return () => {
-			isMounted = false;
-			unsubscribe();
-		};
-	}, []);
 
 	return (
 		<div className="dashboard-content">

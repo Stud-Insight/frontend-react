@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ChatService, { Conversation, Message } from "../../services/ChatService";
 import UserAvatar from "../ui/UserAvatar";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 import "./ConversationWidget.css";
 
 interface ConversationWidgetProps {

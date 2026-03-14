@@ -16,7 +16,7 @@ import ImportCSVButton from "../../components/button/ImportCSVButton";
 
 import { CgImport } from "react-icons/cg";
 import { IoPricetagOutline } from "react-icons/io5";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/AuthContext";
 import { FaPlus } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineEdit } from "react-icons/md";

@@ -24,7 +24,7 @@ import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { MdDeleteOutline } from "react-icons/md";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../hooks/AuthContext";
 import { MdOutlineEdit } from "react-icons/md";
 
 import "./TERVotePage.css"
@@ -272,14 +272,14 @@ export default function TERVotePage(){
 			{createGroup &&
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
-					<Button icon={<FaPlus/>} label="Confirmer" onClick={createGroupHandle}/>
+					<Button icon={<FaPlus/>} label="Confirmer" height={30} onClick={createGroupHandle}/>
 				</ModalDialog>
 			}	
 
 			{editGroup &&
 				<ModalDialog label="Modifier Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
-					<Button icon={<MdOutlineEdit/>} label="Modifer" onClick={editGroupHandle}/>
+					<Button icon={<MdOutlineEdit/>} label="Modifer" height={30} onClick={editGroupHandle}/>
 				</ModalDialog>
 			}
 
