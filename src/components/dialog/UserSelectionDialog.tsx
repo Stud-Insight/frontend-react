@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ModalDialog from "./ModalDialog";
 import UserService,{ User } from "../../services/UserService"
 import UserWidget from "../objects/UserWidget";
-
+import InputField from "../input/InputField";
 import "./UserSelectionDialog.css"
 import Button from "../../atoms/input/Button";
 import { FaPlus } from "react-icons/fa6";
@@ -20,6 +20,16 @@ interface UserSelectionDialogProps {
 export default function UserSelectionDialog({label, value, role_filter, button_text = "Ajouter", exclude, onClose, onConfirm}: UserSelectionDialogProps) {
 	const [users, setUsers] = useState<User[]>([]);
 	const [selectedUsers, setSelectedUsers] = useState<Set<User>>(new Set());
+	const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+	
+	const onSearchHandle = (text: string) => {
+		let filtered = users.filter(user => {
+			let name = user.last_name + " " + user.first_name
+			return selectedUsers.has(user) || (name.toLowerCase().includes(text.toLowerCase()) || user.email.toLowerCase().includes(text.toLowerCase())) ;
+		});
+
+		setFilteredUsers(filtered);
+	}
 
 	const userSelectionHandle = (user: User) => {
 		setSelectedUsers(prev => {
@@ -69,17 +79,23 @@ export default function UserSelectionDialog({label, value, role_filter, button_t
 
 	}, [role_filter]);
 
+	useEffect(() => (
+		onSearchHandle("")
+	), [users]);
 	return (
 		<ModalDialog label={label} onClose={onClose} className="user-list-dialog-content">
+			<div className="user-select-search">
+				<InputField onChange={onSearchHandle}/>
+			</div>
 			<div className="user-list-layout">
-				{users.map(user => (
+				{filteredUsers.map(user => (
 					<UserWidget key={user.id} showId={false} showRoles={true} user={user} selected={Array.from(selectedUsers).some(g => user.id == g.id)} onClick={() => userSelectionHandle(user)}/>
 				))}
 			</div>
 
 			<div className="user-list-buttons">
-				<Button label="Annuler" style="cancel" width={`${100}%`} onClick={onClose}/>
-				<Button icon={<FaPlus/>} label={`${button_text} ${selectionString()}`} width={`${100}%`} onClick={() => onConfirm?.(selectedUsers)}/>
+				<Button label="Annuler" style="cancel" width="100%" height="100%" onClick={onClose}/>
+				<Button icon={<FaPlus/>} label={`${button_text} ${selectionString()}`} width="100%" height="100%" onClick={() => onConfirm?.(selectedUsers)}/>
 			</div>
 		</ModalDialog>
 	);

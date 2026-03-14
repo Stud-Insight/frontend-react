@@ -1,6 +1,7 @@
 .user-list-layout {
 	display: flex;
 	flex-direction: column;
+	flex: 1;
 	gap: 10px;
 	width: 100%;
 	overflow-y: auto; 
@@ -15,4 +16,8 @@
 
 .user-list-dialog-content #content {
 	height: 600px;
+}
+
+.user-select-search {
+	height: 30px;
 }

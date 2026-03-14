@@ -53,8 +53,8 @@ export default function TERSelectionDialog({label, maxSelection = 1, onClose, on
 			</div>
 
 			<div className="user-list-buttons">
-				<Button label="Annuler" style="cancel" width={`${100}%`} onClick={onClose}/>
-				<Button label={`Publier (${selected.size})`} width={`${100}%`} onClick={() => onConfirm?.(selected)}/>
+				<Button label="Annuler" style="cancel" width="100%" onClick={onClose}/>
+				<Button label={`Publier (${selected.size})`} width="100%" onClick={() => onConfirm?.(selected)}/>
 			</div>
 		</ModalDialog>
 	)
