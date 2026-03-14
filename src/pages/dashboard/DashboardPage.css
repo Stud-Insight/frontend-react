@@ -92,7 +92,7 @@
 }
 
 .dashboard-top-button-layout {
-	height: 80%;
+	height: 30px;
 	display: flex;
 	flex-direction: row;
 	justify-items: center;

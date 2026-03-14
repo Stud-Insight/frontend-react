@@ -84,12 +84,11 @@ export default function SubjectWidget({subject, privateMode = true, adminMode = 
 					</div>
 					<div className="subject-widget-expand-button">
 						{adminMode && subject.status == SubjectStatus.SUBMITTED &&
-							<>
+							<div className="subject-widget-expand-button-layout">
 								<Button label="Rejeter" onClick={onReject}/>
 								<Button label="Accepter" onClick={onAccept}/>
-							</>
+							</div>
 						}
-
 						
 						{children}
 						

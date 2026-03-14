@@ -9,8 +9,6 @@ import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";
 import AuthService from "../../services/AuthService.ts";
 
-import "./LoginPage.css";
-
 export default function AccountRecoveryPage() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -44,8 +42,14 @@ export default function AccountRecoveryPage() {
 
                 <InputField label="E-Mail" type="email" icon={<IoMail />} value={email} onChange={setEmail}/>
                 <HorizontalDivider />
-                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}/>
-                <LinkButton label="Retour a la page de connexion" redirection="/auth/login"/>
+
+				<div className="login-page-buttons-layout">
+					<Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"} width="100%"/>	
+				</div>
+            
+				<div className="login-page-link center">
+					<LinkButton label="Retour a la page de connexion" redirection="/auth/login"/>
+				</div>
             </form>
         </LoginPage>
     );

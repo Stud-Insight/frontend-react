@@ -6,13 +6,14 @@ import "./Button.css"
 interface ButtonProps {
     label?: string;
 	icon?: ReactNode;
+	height?: string;
 	width?: number | string;
     style?: "cancel" | "danger";
 	color?: string;
     onClick?: () => void;
 };
 
-export default function Button({icon, label, style, onClick, width, color}: ButtonProps){
+export default function Button({icon, label, height, style, onClick, width, color}: ButtonProps){
 	const getApproIcon = () => {
 		if (style == "cancel"){
 			return undefined
@@ -24,7 +25,7 @@ export default function Button({icon, label, style, onClick, width, color}: Butt
 	};
 
 	return (
-		<button className={`button-style ${label ? style : ""}`} onClick={onClick} style={{width: width ? width : undefined, backgroundColor: color}}>
+		<button className={`button-style ${label ? style : ""}`} style={{width: width ? width : undefined, backgroundColor: color, height: height ? height : "100%"}} onClick={onClick}>
 			{getApproIcon()}
 			<span className="button-label">{label}</span>
 		</button>

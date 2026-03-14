@@ -3,9 +3,12 @@ import DashboardPage from "../DashboardPage";
 import TERService, { TERPeriod } from "../../../services/TERService";
 import InfoBox from "../../../components/ui/InfoBox";
 import UserService from "../../../services/UserService.ts";
+import TERWidget from "../../../components/objects/TERWidget.tsx";
+import EmptyWidget from "../../../components/ui/EmptyWidget.tsx";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext.tsx";
-import TERWidget from "../../../components/objects/TERWidget.tsx";
+import { TbSchool } from "react-icons/tb";
 
 import "./TERPage.css";
 
@@ -17,7 +20,6 @@ export default function TERPage({children}: TERPageProps){
 	const { user } = useAuth();
 	const [error, setError] = useState<string | null>();
 	const [periods, setPeriods] = useState<TERPeriod[]>([]);
-
 	const navigate = useNavigate();
 
 	const selectPeriod = (period_id: string) => {
@@ -70,15 +72,15 @@ export default function TERPage({children}: TERPageProps){
 				<div className="dashboard-top-title-layout">
 					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes TER</span>
 				</div>
-			</div>
-			{error 
-				? 
-					<InfoBox label={error} type="error"/>
-				:
-				<>
-					<InfoBox type="info" label="Vous n’êtes actuellement inscrit à aucun TER."/>	
-				</>
-			}
+			</div>	
+
+			<span style={{color: "var(--gray1-col)"}}>Détaile et information sur vos TER.</span>
+
+			{error ?  (
+				<InfoBox label={error} type="error"/>
+			) : (
+				<EmptyWidget icon={<TbSchool size={30}/>} text="Vous êtes inscris à aucun TER pour le moment."/>
+			)}
 		</DashboardPage>
 	)
 }

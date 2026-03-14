@@ -9,6 +9,7 @@
 .user-list-buttons {
 	display: flex;
 	flex-direction: row;
+	height: 30px;
 	gap: 20px;
 }
 

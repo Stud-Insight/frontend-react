@@ -10,8 +10,6 @@ import InfoBox from "../../components/ui/InfoBox.tsx";
 import LinkButton from "../../components/button/LinkButton.tsx";
 import LoginPage from "./LoginPage.tsx";
 
-import "./LoginPage.css"
-
 export default function AccountActivationPage(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

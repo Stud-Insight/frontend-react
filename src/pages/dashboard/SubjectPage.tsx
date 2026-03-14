@@ -238,7 +238,7 @@ export default function SubjectPage(){
 				/>
 			))
 			) : (
-				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet crée pour l'instant."/>
+				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet crée pour le moment."/>
 			)}	
 		</DashboardPage>
 	)

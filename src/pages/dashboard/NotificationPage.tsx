@@ -7,11 +7,13 @@ import ContainerWidget from "../../components/ui/ContainerWidget.tsx";
 import NotificationService, { Notification, NotificationPreferences, getNotificationRoute } from "../../services/NotificationService.ts";
 import NotificationWidget from "../../components/objects/NotificationWidget.tsx";
 import EmptyWidget from "../../components/ui/EmptyWidget.tsx";
+import Button from "../../atoms/input/Button.tsx";
 
 import { FaRegBell } from "react-icons/fa6";
 import { FaRegCheckCircle } from "react-icons/fa";
 
 import "./NotificationPage.css";
+import InputCheckbox from "../../components/input/InputCheckbox.tsx";
 
 const PreferenceLabels: Record<keyof NotificationPreferences, string> = {
 	email_messages: "Messages",
@@ -99,6 +101,12 @@ export default function NotificationPage() {
 				<div className="dashboard-top-title-layout">
 					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Notifications</span>
 				</div>
+
+				{notifNonlu > 0 &&
+					<div className="dashboard-top-button-layout">
+						<Button icon={<FaRegBell/>} label="Tout marquer comme lu" onClick={markAllHandle}/>
+					</div>
+				}
 			</div>
 
 			<span style={{color: "var(--gray1-col)"}}>Consultez ici toutes les notifications.</span>
@@ -106,16 +114,10 @@ export default function NotificationPage() {
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
 
-			<div className="dashbord-mini-info-layout">
+			{/* <div className="dashbord-mini-info-layout">
 				<InfoWidget label="Non lues" icon={<FaRegBell/>} info={notifNonlu} color="var(--blue-col)"/>
 				<InfoWidget label="Lues" icon={<FaRegCheckCircle/>} info={notifLu} color="var(--green-col)"/>
-			</div>
-
-			{notifNonlu > 0 && (
-				<button className="mark-all-read-btn" onClick={markAllHandle}>
-					Tout marquer comme lu
-				</button>
-			)}
+			</div> */}
 
 			{preferences && (
 				<ContainerWidget>

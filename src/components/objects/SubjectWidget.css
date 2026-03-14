@@ -12,6 +12,13 @@
 	gap: 20px;
 }
 
+.subject-widget-expand-button-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	height: 30px;
+}
+
 .subject-widget-title-right {
 	display: flex;
 	flex-direction: column;

@@ -14,7 +14,8 @@ import SubjectPage from "./pages/dashboard/SubjectPage";
 import TERGestionPage from "./pages/admin/ter/TERGestionPage";
 import UsersPage from "./pages/admin/UsersPage";
 import ArchivePage from "./pages/dashboard/ArchivePage";
-import StagePage from "./pages/dashboard/StagePage";
+import StagePage from "./pages/dashboard/stage/StagePage";
+import StageOfferListPage from "./pages/dashboard/stage/StageOfferListPage";
 import NotificationPage from "./pages/dashboard/NotificationPage";
 import ProfilePage from "./pages/dashboard/ProfilePage";
 import HelpPage from "./pages/dashboard/HelpPage";
@@ -84,7 +85,6 @@ function AppRoutes() {
                 <Route path="home" element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
                	<Route path="users" element={<ProtectedRoute><UsersPage/></ProtectedRoute>}/>
                 <Route path="chat" element={<ProtectedRoute><ChatPage/></ProtectedRoute>}/>
-				<Route path="stages" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
                 <Route path="archive" element={<ProtectedRoute><ArchivePage/></ProtectedRoute>}/>
 				<Route path="subjects" element={<ProtectedRoute><SubjectPage/></ProtectedRoute>}/>
 				<Route path="notification" element={<ProtectedRoute><NotificationPage/></ProtectedRoute>}/>
@@ -94,6 +94,14 @@ function AppRoutes() {
 					<Route path=":id" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>}/>
 				</Route>
             </Route>
+
+			<Route path="/dashboard/stages">
+				<Route path="" element={<ProtectedRoute><StagePage/></ProtectedRoute>}/>
+
+				<Route path=":period_id">
+					<Route path="list" element={<ProtectedRoute><StageOfferListPage/></ProtectedRoute>}/>
+				</Route>
+			</Route>
 
 			<Route path="/dashboard/ter">
 				<Route path="" element={<ProtectedRoute><TERPage/></ProtectedRoute>}/>

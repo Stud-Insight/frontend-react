@@ -131,8 +131,6 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 				info={`Etes vous sur de vouloir supprimer "${deleteUser.user.first_name} ${deleteUser.user.last_name}" du groupe "${deleteUser.group.name}"?`}/>
 			}
 
-			{}
-
 			{deleteGroup &&
 				<ConfirmationDialog 
 				label="Supprimer Groupe" 

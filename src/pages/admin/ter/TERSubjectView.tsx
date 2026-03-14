@@ -16,9 +16,9 @@ export default function TERSubjectView({subjects, onAccept, onReject}: TERSubjec
 		<>
 			{reject &&
 				<ConfirmationDialog label="Rejeter Sujet?" 
-				onCancel={() => setReject(null)} 
-				onConfirm={() => onReject?.(reject)}
-				info={`Etes vous sur de vouloir rejeter le sujet "${reject.title}"`}
+					onCancel={() => setReject(null)} 
+					onConfirm={() => onReject?.(reject)}
+					info={`Etes vous sur de vouloir rejeter le sujet "${reject.title}"`}
 				>
 					
 				</ConfirmationDialog>
@@ -26,9 +26,8 @@ export default function TERSubjectView({subjects, onAccept, onReject}: TERSubjec
 
 			{subjects && subjects.map(subject => (
 				<SubjectWidget subject={subject} adminMode={true} 
-				onAccept={() => onAccept?.(subject)}
-				onReject={() => setReject(subject)}
-				
+					onAccept={() => onAccept?.(subject)}
+					onReject={() => setReject(subject)}
 				/>
 			))}
 		</>
