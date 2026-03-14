@@ -1,7 +1,7 @@
 import React from "react";
 import DashboardPage from "./DashboardPage";
 import HelpContainerWidget from "../../components/ui/HelpContainerWidget";
-
+import { UserRoles } from "../../services/UserService";
 import { FiArchive } from "react-icons/fi";
 import { AiOutlineAppstore } from "react-icons/ai";
 import { FiUser } from "react-icons/fi";
@@ -12,10 +12,17 @@ import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
 import { MdWorkOutline } from "react-icons/md";
 import { FaRegBell } from "react-icons/fa6";
+import { useAuth } from "../../context/AuthContext";
 
 import "./HelpPage.css";
 
 export default function HelpPage(){
+	const { user } = useAuth();
+
+	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
+		return role.name;
+	});
+	
 	return (
 		<DashboardPage>
 			<div className="dashboard-top-layout">
@@ -38,18 +45,31 @@ export default function HelpPage(){
 				<HelpContainerWidget icon={<FaRegBell/>} color="var(--blue-col)" title="Notifications" 
 					desc="Recevez des alertes importantes concernant vos invitations, messages, projets et autres activités."
 				/>
-				<HelpContainerWidget icon={<TbSchool/>} color="var(--blue-col)" title="Sujet TER" 
-					desc="Parcourez les sujets de TER proposés par les enseignants et ajoutez-les à vos favoris pour votre groupe."
-				/>
-				<HelpContainerWidget icon={<FiArchive/>} color="var(--blue-col)" title="Gestion TER" 
-					desc="Espace réservé aux enseignants pour gérer les périodes TER, les groupes, les sujets et le déroulement du projet."
-				/>
-				<HelpContainerWidget icon={<FiUsers/>} color="var(--blue-col)" title="Gestion Utilisateurs" 
-					desc="Administration des comptes utilisateurs : création, modification des rôles et gestion des accès."
-				/>
-				<HelpContainerWidget icon={<FiArchive/>} color="var(--blue-col)" title="Archives" 
-					desc="Consultez les anciens TER, sujets, groupes et projets archivés des années précédentes."
-				/>
+
+				{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) && 
+					<HelpContainerWidget icon={<TbSchool/>} color="var(--blue-col)" title="Sujet TER" 
+						desc="Parcourez les sujets de TER proposés par les enseignants et ajoutez-les à vos favoris pour votre groupe."
+					/>
+				}
+
+				{(roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN)) && 
+					<HelpContainerWidget icon={<FiArchive/>} color="var(--blue-col)" title="Gestion TER" 
+						desc="Espace réservé aux enseignants pour gérer les périodes TER, les groupes, les sujets et le déroulement du projet."
+					/>
+				}
+				
+				{roles.includes(UserRoles.ADMIN) &&
+					<HelpContainerWidget icon={<FiUsers/>} color="var(--blue-col)" title="Gestion Utilisateurs" 
+						desc="Administration des comptes utilisateurs : création, modification des rôles et gestion des accès."
+					/>
+				}
+
+				{!roles.includes(UserRoles.ETUDIANT) &&
+					<HelpContainerWidget icon={<FiArchive/>} color="var(--blue-col)" title="Archives" 
+						desc="Consultez les anciens TER, sujets, groupes et projets archivés des années précédentes."
+					/>
+				}
+				
 				<HelpContainerWidget icon={<FiUser/>} color="var(--blue-col)" title="Profile" 
 					desc="Gérez vos informations personnelles, votre email, votre mot de passe et vos préférences de compte."
 				/>

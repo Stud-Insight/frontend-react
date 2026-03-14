@@ -1,6 +1,7 @@
 import React, {ReactNode} from "react";
 import UserAvatar from "../ui/UserAvatar";
-import { User } from "../../services/UserService";
+import Tag from "../../atoms/ui/Tag";
+import { User, UserRolesColors, UserRolesLabels } from "../../services/UserService";
 import { MdDone } from "react-icons/md";
 import { FaCrown } from "react-icons/fa";
 import "./UserWidget.css"
@@ -9,13 +10,13 @@ interface UserWidgetProps {
 	user: User | null;
 	crown?: boolean;
 	showId?: boolean;
+	showRoles?: boolean;
 	selected?: boolean;
 	children?: ReactNode;
 	onClick?: () => void;
-
 };
 
-export default function UserWidget({user, onClick, selected = false, showId = true, crown = false, children}: UserWidgetProps){
+export default function UserWidget({user, onClick, selected = false, showRoles = false, showId = true, crown = false, children}: UserWidgetProps){
 	return (
 		<div className={`user-widget-wrapper ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="user-widget-layout">
@@ -29,6 +30,9 @@ export default function UserWidget({user, onClick, selected = false, showId = tr
 						{crown &&
 							<FaCrown color="var(--yellow-col)"/>
 						}
+						{/* {showRoles && user && user.groups.map(role => 
+							<Tag label={UserRolesLabels.get(role.name)} color={UserRolesColors.get(role.name)}/>
+						)} */}
 					</div>
 					{showId &&
 						<span>#{user?.id.slice(0, 8)}</span>
