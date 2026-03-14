@@ -158,11 +158,11 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 
 			{sortedGroups.map(group => (
 				<GroupProjectWidget key={group.id} group={group} 
-				onDelete={() => setDeleteGroup(group)}
-				onEdit={() => editHandle(group)} 
-				onUserDelete={user => setDeleteUser({user: user, group: group})}
-				onLeader={user => setLeader({user: user, group: group})}
-				onAdd={() => addUserHandlePre(group)}
+					onDelete={() => setDeleteGroup(group)}
+					onEdit={() => editHandle(group)} 
+					onUserDelete={user => setDeleteUser({user: user, group: group})}
+					onLeader={user => setLeader({user: user, group: group})}
+					onAdd={() => addUserHandlePre(group)}
 				/>
 			))}
 		</>

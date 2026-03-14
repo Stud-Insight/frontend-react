@@ -9,18 +9,21 @@ import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
 import TERSubjectView from "./TERSubjectView";
 
-import TERService, { TERPeriod, TERStatusLabel } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatusColor, TERStatusLabel } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
 import GradeService, { Grade } from "../../../services/GradeService";
 import SubjectService, { Subject } from "../../../services/SubjectService";
 
 import { GoGear } from "react-icons/go";
 import { TbSchool } from "react-icons/tb";
-import { FaRegFile } from "react-icons/fa";
+import { FaPlus, FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
+import { FiDownload } from 'react-icons/fi';
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
+import Button from "../../../atoms/input/Button";
+
 
 import "./TERGestionPage.css";
 
@@ -283,9 +286,12 @@ export default function TERGestionPage(){
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
 					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
-					<Tag label={TERStatusLabel.get(period?.status)}/>
+					<Tag label={TERStatusLabel.get(period?.status)} color={TERStatusColor.get(period?.status)}/>
 				</div>
-				<div></div>
+
+				<div className="dashboard-top-button-layout">
+					<Button icon={<FiDownload/>} label="Exporter CSV"/>
+				</div>
 			</div>
 
 			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>

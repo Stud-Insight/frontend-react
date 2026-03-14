@@ -62,7 +62,7 @@ export default function RespoDashboard() {
 					<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble du systeme</span>
 					<div className="dashbord-mini-info-layout">
 						<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={adminStats.active_users} color="var(--blue-col)"/>
-						<InfoWidget label="Etudiants" icon={<FiUsers/>} info={adminStats.total_students} color="var(--cyan-col)"/>
+						<InfoWidget label="Etudiants" icon={<FiUsers/>} info={adminStats.total_students} color="var(--blue-col)"/>
 						<InfoWidget label="Encadrants" icon={<TbSchool/>} info={adminStats.total_encadrants} color="var(--purple-col)"/>
 					</div>
 					<div className="dashbord-mini-info-layout">
@@ -73,7 +73,7 @@ export default function RespoDashboard() {
 				</>
 			)}
 
-			{activePeriod && stats && (
+			{/* {activePeriod && stats && (
 				<>
 					<div className="dashboard-top-layout" style={{marginTop: "10px"}}>
 						<span style={{fontWeight: 700, fontSize: "18px"}}>
@@ -107,7 +107,7 @@ export default function RespoDashboard() {
 						<span style={{color: "var(--gray1-col)"}}>Creez ou ouvrez une periode TER depuis la gestion TER.</span>
 					</div>
 				</ContainerWidget>
-			)}
+			)} */}
 		</div>
 	);
 }
