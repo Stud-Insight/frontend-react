@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { Subject, SubjectStatus, SubjectStatusLabel, SubjectStatusColor } from "../../services/SubjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
@@ -22,7 +22,7 @@ interface SubjectWidgetProps {
 	subject: Subject;
 	privateMode?: boolean;
 	adminMode?: boolean;
-	isFavourite?: boolean;
+	children?: ReactNode
 	onFavourite?: () => void;
 	onDownload?: () => void;
 	onDelete?: () => void;
@@ -33,7 +33,7 @@ interface SubjectWidgetProps {
 	onReject?: () => void;
 };
 
-export default function SubjectWidget({subject, privateMode = true, adminMode = false, isFavourite = true, onFavourite, onDelete, onEdit, onDownload, onPublish, onExport, onAccept, onReject}: SubjectWidgetProps){
+export default function SubjectWidget({subject, privateMode = true, adminMode = false, children, onFavourite, onDelete, onEdit, onDownload, onPublish, onExport, onAccept, onReject}: SubjectWidgetProps){
 	const [expand, setExpand] = useState<boolean>(false);
 
 	let options = [
@@ -90,9 +90,9 @@ export default function SubjectWidget({subject, privateMode = true, adminMode = 
 							</>
 						}
 
-						{!privateMode &&
-							<IconButton icon={isFavourite ? <FaHeart/> : <FaRegHeart/>} onClick={onFavourite}/>
-						}
+						
+						{children}
+						
 						<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
 						{privateMode &&
 							<OverflowMenu options={options}/>

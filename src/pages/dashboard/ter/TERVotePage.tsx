@@ -25,6 +25,7 @@ import { FaPlus } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { MdDeleteOutline } from "react-icons/md";
 import { useAuth } from "../../../context/AuthContext";
+import { MdOutlineEdit } from "react-icons/md";
 
 import "./TERVotePage.css"
 
@@ -46,6 +47,7 @@ export default function TERVotePage(){
 	const [invitations, setInvitations] = useState<GroupInvitation[]>([]);
 	const [leaveGroup, setLeaveGroup] = useState<Group | null>(null);
 	const [deleteGroup, setDeleteGroup] = useState<Group | null>(null);
+	const [editGroup, setEditGroup] = useState<Group | null>(null);
 
 	const deleteGroupHandle = async () => {
 		setDeleteGroup(null);
@@ -57,6 +59,28 @@ export default function TERVotePage(){
 			getGroups();
 			getMyGroup();
 		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const preEditGroup = () => {
+		if (myGroup) {
+			setEditGroup(myGroup);
+			setNomGroup(myGroup?.name);
+		}
+	}
+
+	const editGroupHandle = async () => {
+		resetFields();
+
+		try {
+			await GroupService.updateGroup(myGroup?.id, nomGroup, myGroup?.max_group_size);
+			getGroups();
+			getMyGroup();
+			setSuccess(`Groupe '${myGroup?.name}' modifié avec succés!`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -238,6 +262,7 @@ export default function TERVotePage(){
 	}, [myGroup]);
 
 	const resetFields = () => {
+		setEditGroup(null);
 		setCreateGroup(false);
 		setNomGroup("");
 	}
@@ -248,6 +273,13 @@ export default function TERVotePage(){
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
 					<Button icon={<FaPlus/>} label="Confirmer" onClick={createGroupHandle}/>
+				</ModalDialog>
+			}	
+
+			{editGroup &&
+				<ModalDialog label="Modifier Groupe" onClose={resetFields} className="group-view-selection-modal">
+					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
+					<Button icon={<MdOutlineEdit/>} label="Modifer" onClick={editGroupHandle}/>
 				</ModalDialog>
 			}
 
@@ -305,7 +337,7 @@ export default function TERVotePage(){
 							{user?.id == myGroup?.leader.id ? 
 								<>
 									<Button icon={<LuSend/>} label="Inviter" onClick={inviteStudentsToggle}/>
-									<Button icon={<FaPlus/>} label="Modifier Groupe"/>
+									<Button icon={<MdOutlineEdit/>} label="Modifier Groupe" onClick={preEditGroup}/>
 									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)" onClick={() => setDeleteGroup(myGroup)}/>
 								</>
 								

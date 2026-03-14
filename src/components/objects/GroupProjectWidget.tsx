@@ -70,11 +70,10 @@ export default function GroupProjectWidget({label, group, admin = true, active =
 				}
 			</div>
 
-				
 			{expanded && group.members &&
 				<div className={`group-content ${expanded ? "expanded" : ""}`}>
 					{group.leader &&
-						<UserWidget user={group.leader} selected={false} crown={true}>
+						<UserWidget user={group.leader} selected={false} crown={true} showId={admin}>
 							<OverflowMenu options={[
 								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
 							]}/>
