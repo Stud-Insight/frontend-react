@@ -227,7 +227,7 @@ export default class TERService {
 				const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
 
 				return {
-					phase: phase.phase,
+					phase: TERPhase.SELECTION,
 					deadline: phase.end,
 					progress: progress,
 					daysLeft: daysLeft,
@@ -357,7 +357,7 @@ export default class TERService {
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string, min_groupe: number, max_groupe: number): Promise<TERPeriod[] | null> {
 		try {
 			const load: TERPeriodCreatePayload = {
 				name: title,

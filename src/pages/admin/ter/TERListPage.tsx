@@ -43,10 +43,6 @@ export default function PeriodListPage(){
 
     const navigate = useNavigate();
 
-	const draftPeriods = terList?.filter(period => period.status == TERStatus.DRAFT).length;
-	const openPeriods = terList?.filter(period => period.status == TERStatus.OPEN).length;
-	const closePeriods = terList?.filter(period => period.status == TERStatus.CLOSED).length;
-
 	const getAllTer = async () => {
 		try {
 			const data = await TERService.getPeriods();
@@ -76,7 +72,7 @@ export default function PeriodListPage(){
 
 	const createPeriodHandle = async () => {
 		try {
-			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate);
+			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate, minGroup, maxGroup);
 			setSuccess(`TER "${title}" ajouté au système.`);
 			getAllTer();
 		} catch(err){
@@ -158,7 +154,7 @@ export default function PeriodListPage(){
 			</div>
 
 			{activeTerList.map(ter => (
-				<TERWidget key={ter.id} period={ter} onClick={() => clickHandle(ter.id)} moreInfo={true} onArchive={() => setArchiveConfirm(ter)}/>
+				<TERWidget key={ter.id} period={ter} onClick={() => clickHandle(ter.id)} onArchive={() => setArchiveConfirm(ter)}/>
 			))}
 		</DashboardPage>
 	)

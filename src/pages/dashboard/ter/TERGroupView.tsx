@@ -29,12 +29,12 @@ import "./TERGroupView.css"
 
 interface TERGroupViewProps {
 	period: TERPeriod;
+	setError: (error: string) => void;
+	setSuccess: (success: string) => void;
 };
 
-export default function TERGroupView({period}: TERGroupViewProps){
+export default function TERGroupView({period, setError, setSuccess}: TERGroupViewProps){
 	const { user } = useAuth();
-	const [success, setSuccess] = useState<string | null>(null);
-	const [error, setError] = useState<string | null>(null);
 	const [page, setPage] = useState<number>(0);
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
@@ -279,9 +279,6 @@ export default function TERGroupView({period}: TERGroupViewProps){
 					onConfirm={deleteGroupHandle}
 				/>
 			}
-
-			{error && <InfoBox label={error} type="error"/>}
-			{success && <InfoBox label={success} type="success"/>}
 			
 			<div className="dashbord-mini-info-layout">
 				{myGroup &&

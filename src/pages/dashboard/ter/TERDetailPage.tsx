@@ -14,18 +14,16 @@ export default function TERDetailPage(){
 	const { id } = useParams<{ id: string }>();
 	const [error, setError] = useState<string | null>();
 	const [success, setSuccess] = useState<string | null>();
-	const [subject, setSubject] = useState<Subject | null>();
 	const [period, setPeriod] = useState<TERPeriod | null>(null);
-	const [phase, setPhase] = useState<TERPhase>();
 	
 	const viewHandler = (phase: TERPhase) => {
 		switch (phase) {
 			case TERPhase.FORMATION: {
-				return <TERGroupView period={period}/>
+				return <TERGroupView period={period} setError={setError} setSuccess={setSuccess}/>
 			}
 
 			case TERPhase.SELECTION: {
-				return <TERGroupView period={period}/>
+				return <TERSubjectView period={period} setError={setError} setSuccess={setSuccess}/>
 			}
 		}
 	}
@@ -59,7 +57,7 @@ export default function TERDetailPage(){
 					{error && <InfoBox label={error} type="error"/>}
 					{success && <InfoBox label={success} type="success"/>}
 
-					{viewHandler(TERPhase.FORMATION)}
+					{viewHandler(TERPhase.SELECTION)}
 				</>
 			}
 		</DashboardPage>

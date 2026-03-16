@@ -14,11 +14,11 @@ import "./TERSubjectView.css"
 
 interface TERSubjectViewProps {
 	period : TERPeriod;
+	setError: (error: string) => void;
+	setSuccess: (success: string) => void;
 };
 
-export default function TERSubjectView({period}: TERSubjectViewProps){
-	const [success, setSuccess] = useState<string | null>(null);
-	const [error, setError] = useState<string | null>(null);
+export default function TERSubjectView({period, setError, setSuccess}: TERSubjectViewProps){
 	const [page, setPage] = useState<number>(0);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	
@@ -32,27 +32,12 @@ export default function TERSubjectView({period}: TERSubjectViewProps){
 				setError(message);
 			}
 		}
-
+		
 		getSubjects();
 	}, []);
 
 	return (
-		<DashboardPage>
-			{error && <InfoBox label={error} type="error"/>}
-			{success && <InfoBox label={success} type="success"/>}
-			
-			{period &&
-				<>
-					<div className="dashboard-top-layout">
-						<div className="dashboard-top-title-layout">
-							<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>{period.academic_year} / {period.name}</span>
-						</div>
-					</div>
-
-					<TERWidgetInfo period={period}/>
-				</>		
-			}
-
+		<>
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Classement" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
@@ -61,6 +46,6 @@ export default function TERSubjectView({period}: TERSubjectViewProps){
 			{page == 2 && subjects && subjects.map(subject => (
 				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
 			))}
-		</DashboardPage>
+		</>
 	)
 }
