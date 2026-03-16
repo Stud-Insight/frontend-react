@@ -1,7 +1,7 @@
 import React from 'react';
 import DashboardPage from "../DashboardPage.tsx";
 import { useAuth } from "../../../context/AuthContext.tsx";
-import { UserRoles } from "../../../services/UserService.ts";
+import UserService from "../../../services/UserService.ts";
 import StudentHomePage from './StudentHomePage.tsx';
 import RespoDashboard from './RespoDashboard.tsx';
 import EncadrantDashboard from './EncadrantDashboard.tsx';
@@ -10,11 +10,9 @@ import "./HomePage.css"
 export default function HomePage(){
 	const { user } = useAuth();
 
-	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => role.name);
-
-	const isRespo = roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN);
-	const isEncadrant = roles.includes(UserRoles.ENCADRANT);
-	const isStudent = roles.includes(UserRoles.ETUDIANT);
+	const isRespo = user ? (UserService.isRespo(user) || UserService.isAdmin(user)) : false;
+	const isEncadrant = user ? UserService.isProfessor(user) : false;
+	const isStudent = user ? UserService.isStudent(user) : false;
 
 	return (
 		<DashboardPage>

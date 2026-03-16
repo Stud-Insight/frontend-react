@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import TERService, { TERStatus, EncadrantDashboard as EncadrantData, EncadrantGroup } from "../../../services/TERService";
+import { GradeStatusLabel, GradeStatusColor } from "../../../services/GradeService";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import Icon from "../../../atoms/ui/Icon";
@@ -9,18 +10,6 @@ import { FiUsers } from "react-icons/fi";
 import { TbSchool } from "react-icons/tb";
 import { FaRegFile, FaRegCheckCircle } from "react-icons/fa";
 import "./EncadrantDashboard.css";
-
-const GradeStatusLabel: Record<string, string> = {
-	draft: "Brouillon",
-	submitted: "Soumis",
-	finalized: "Finalise",
-};
-
-const GradeStatusColor: Record<string, string> = {
-	draft: "var(--gray1-col)",
-	submitted: "var(--orange-col)",
-	finalized: "var(--green-col)",
-};
 
 export default function EncadrantDashboard() {
 	const [dashboard, setDashboard] = useState<EncadrantData | null>(null);
