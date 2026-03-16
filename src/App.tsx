@@ -123,7 +123,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <AppRoutes />
+                <AppRoutes/>
             </Router>
         </AuthProvider>
     );

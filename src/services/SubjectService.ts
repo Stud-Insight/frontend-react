@@ -87,8 +87,8 @@ export default class SubjectService {
 				ter_period_id: null,
 				title: title, 
 				description: desc,
-				domain: "TEST",
-				prerequisites: "TEST",
+				domain: "",
+				prerequisites: "",
 				max_groups: 1,
 				min_group_size: min_group,
 				max_group_size: max_group,
@@ -166,7 +166,7 @@ export default class SubjectService {
 	public static async getGroupSubjectRanking(group_id: string): Promise<SubjectRank[]>{
 		try {
 			const res = await api.get(`ter/rankings/${group_id}`);
-			return res.data;
+			return res.data.rankings;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -174,7 +174,9 @@ export default class SubjectService {
 
 	public static async submitMemberSubjectRanking(group_id: string, ranks: SubjectRank[]): Promise<void>{
 		try {
-			await api.post(`ter/rankings/${group_id}/individual`, ranks);
+			await api.post(`ter/rankings/${group_id}/individual`, {
+				rankings: ranks
+			});
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
@@ -183,7 +185,7 @@ export default class SubjectService {
 	public static async getMemberSubjectRanking(group_id: string): Promise<SubjectRank[]>{
 		try {
 			const res = await api.get(`ter/rankings/${group_id}/individual`);
-			return res.data;
+			return res.data.members_rankings[0].rankings;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

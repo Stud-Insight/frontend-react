@@ -48,9 +48,9 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		setDeleteGroup(null);
 
 		try {
-			await GroupService.deleteGroup(myGroup.id);
+			await GroupService.deleteGroup(myGroup!.id);
 			setSuccess(`Vous avez supprimé le groupe '${myGroup?.name}' avec succés!`);
-			setTimeout(() => setSuccess(null), 5000);
+			setTimeout(() => setSuccess(""), 5000);
 			getGroups();
 			getMyGroup();
 		} catch (err){
@@ -70,11 +70,11 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		resetFields();
 
 		try {
-			await GroupService.updateGroup(myGroup?.id, nomGroup, myGroup?.max_group_size);
+			await GroupService.updateGroup(myGroup?.id, nomGroup, myGroup!.max_group_size);
 			getGroups();
 			getMyGroup();
 			setSuccess(`Groupe '${myGroup?.name}' modifié avec succés!`);
-			setTimeout(() => setSuccess(null), 5000);
+			setTimeout(() => setSuccess(""), 5000);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -85,11 +85,11 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		setLeaveGroup(null);
 
 		try {
-			await GroupService.leaveGroup(myGroup.id);
+			await GroupService.leaveGroup(myGroup!.id);
 			getGroups();
 			getMyGroup();
 			setSuccess(`Vous avez quitter le groupe '${myGroup?.name}' avec succés!`);
-			setTimeout(() => setSuccess(null), 5000);
+			setTimeout(() => setSuccess(""), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -167,10 +167,10 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		setInviteGroup(false);
 
 		try {
-			await GroupService.sendInvitations(myGroup?.id, users);
+			await GroupService.sendInvitations(myGroup!.id, users);
 			setSuccess(`Inviter ${users.size} étudiant${users.size > 1 ? "s" : ""} au groupe.`);
-			setTimeout(() => setSuccess(null), 5000);
-			getInvitedStudents(myGroup?.id);
+			setTimeout(() => setSuccess(""), 5000);
+			getInvitedStudents(myGroup!.id);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -179,12 +179,12 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 
 	const cancelInvitationHandle = async (invi_id: string) => {
 		try {
-			await GroupService.cancelInvitation(myGroup?.id, invi_id);
+			await GroupService.cancelInvitation(myGroup!.id, invi_id);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
-		getInvitedStudents(myGroup?.id);
+		getInvitedStudents(myGroup!.id);
 	}
 
 	const getGroups = async () => {
@@ -206,7 +206,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
 			getGroups();
 			getMyGroup();
-			setTimeout(() => setSuccess(null), 5000);
+			setTimeout(() => setSuccess(""), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -227,7 +227,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			return;
 		}	
 
-		if (myGroup.leader.id == user.id) {
+		if (myGroup.leader!.id == user!.id) {
 			getInvitedStudents(myGroup.id);
 		}
 	}, [myGroup]);
@@ -289,7 +289,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 					<div className="dashboard-top-layout">
 						<div/>
 						<div className="dashboard-top-button-layout">
-							{user?.id == myGroup?.leader.id ? 
+							{user?.id == myGroup.leader!.id ? 
 								<>
 									<Button icon={<LuSend/>} label="Inviter" onClick={inviteStudentsToggle}/>
 									<Button icon={<MdOutlineEdit/>} label="Modifier Groupe" onClick={preEditGroup}/>

@@ -105,6 +105,7 @@
 .subject-widget-expand-button {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	gap: 10px;
 }
 .subject-widget-state-style.submitted {

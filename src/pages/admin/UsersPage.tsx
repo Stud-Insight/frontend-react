@@ -94,19 +94,19 @@ export default function UsersPage(){
 		}
 	}
 
-	const userSelectionHandle = (id: string) => {
-		setSelectedUsers(prev => {
-			const newSet = new Set(prev);
+	// const userSelectionHandle = (id: string) => {
+	// 	setSelectedUsers(prev => {
+	// 		const newSet = new Set(prev);
 
-			if (newSet.has(id)) {
-				newSet.delete(id);
-			} else {
-				newSet.add(id);
-			}
+	// 		if (newSet.has(id)) {
+	// 			newSet.delete(id);
+	// 		} else {
+	// 			newSet.add(id);
+	// 		}
 
-			return newSet;
-		});
-	};
+	// 		return newSet;
+	// 	});
+	// };
 
 	const deleteHandle = async () => {
 		try {
@@ -152,7 +152,7 @@ export default function UsersPage(){
 
 	const editHandle = async () => {
 		try {
-			await UserService.updateUser(editUser?.id, prenom, nom, mail, roles);
+			await UserService.updateUser(editUser!.id, prenom, nom, mail, roles);
 			setSuccess(`Utilisateur "${prenom} ${nom}" a été modifié.`);
 		
 			if (editUser?.id == g?.id) {
@@ -226,7 +226,7 @@ export default function UsersPage(){
 					<InputField value={prenom} icon={<FiUser/>} label="Prénom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
-					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
+					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={new Set(userRoles)} onSelect={addRole} onDelete={removeRole}/>
 					<Button icon={<FaPlus/>} label="Créer" onClick={createHandle}/>
 				</ModalDialog>
 			}
@@ -235,7 +235,7 @@ export default function UsersPage(){
 				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} >
 					<InputField value={prenom} icon={<FiUser/>} label="Prénom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
-					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
+					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={new Set(userRoles)} onSelect={addRole} onDelete={removeRole}/>
 					<Button icon={<MdOutlineEdit/>} label="Modifier" onClick={editHandle}/>
 				</ModalDialog>
 			}
@@ -327,7 +327,7 @@ export default function UsersPage(){
 									<span>{user.first_name} {user.last_name}</span>
 								</td>
 								<td>{user.email}</td>
-								<td>{dateFormat(user.date_joined)}</td>
+								<td>{dateFormat(user.date_joined!)}</td>
 								<td>{user.last_login ? dateFormat(user.last_login): "?"}</td>
 								<td>
 									<div className="users-table-tag-layout">

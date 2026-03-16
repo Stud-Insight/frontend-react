@@ -32,7 +32,7 @@ export default function TERGestionPage(){
 	const { id } = useParams<{ id: string }>();
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const [period, setPeriod] = useState<TERPeriod | null>();
+	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	const [view, setView] = useState<number>(0);
 	const [students, setStudents] = useState<User[]>([]);
 	const [grades, setGrades] = useState<Grade[]>([]);
@@ -319,17 +319,19 @@ export default function TERGestionPage(){
 				/>
 			}
 
-			<div className="dashboard-top-layout">
-				<div className="ter-admin-selected-ter-title">
-					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
-					<Tag label={TERStatusLabel.get(period?.status)} color={TERStatusColor.get(period?.status)}/>
-				</div>
+			{period &&
+				<div className="dashboard-top-layout">
+					<div className="ter-admin-selected-ter-title">
+						<span style={{fontWeight: 800, fontSize: "25px"}}>{period.name}</span>
+						<Tag label={TERStatusLabel.get(period.status)} color={TERStatusColor.get(period.status)}/>
+					</div>
 
-				<div className="dashboard-top-button-layout">
-					<Button icon={<FiDownload/>} label="Exporter CSV" onClick={exportPeriodHandle}/>
-				</div>
-			</div>
-
+					<div className="dashboard-top-button-layout">
+						<Button icon={<FiDownload/>} label="Exporter CSV" onClick={exportPeriodHandle}/>
+					</div>
+				</div>	
+			}
+		
 			{isArchived &&
 				<InfoBox label="Cette période est archivée. Les données sont en lecture seule." type="info"/>
 			}

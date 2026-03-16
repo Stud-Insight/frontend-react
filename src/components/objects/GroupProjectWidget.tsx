@@ -78,7 +78,7 @@ export default function GroupProjectWidget({label, group, admin = true, active =
 					{group.leader &&
 						<UserWidget user={group.leader} selected={false} crown={true} showId={admin}>
 							<OverflowMenu options={[
-								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader)},
+								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(group.leader!)},
 							]}/>
 						</UserWidget>
 					}

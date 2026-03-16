@@ -4,7 +4,10 @@ import GroupService, { Group } from "../../../services/GroupService";
 import TERService, { TERPeriod } from "../../../services/TERService";
 import SubjectService, { Subject, SubjectRank } from "../../../services/SubjectService";
 import SubjectWidget from "../../../components/objects/SubjectWidget";
-
+import InputNumberField from "../../../components/input/InputNumberField";
+import Button from "../../../atoms/input/Button";
+import SubjectRankWidget from "../../../components/objects/SubjectRankWidget";
+import { LuSend } from "react-icons/lu";
 import { FaRegFile} from "react-icons/fa";
 
 import "./TERSubjectView.css"
@@ -20,16 +23,54 @@ export default function TERSubjectView({period, setError, setSuccess}: TERSubjec
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
 	const [ranks, setRanks] = useState<SubjectRank[]>([]);
+	const [groupRanks, setGroupRanks] = useState<SubjectRank[]>([]);
+	const [myRanks, setMyRanks] = useState<Map<string, number>>(new Map());
+
+	const updateRankHandle = (subject_id: string, rank: number) => {
+		setMyRanks(prev => {
+			const newMap = new Map(prev);
+			newMap.set(subject_id, rank);
+			return newMap;
+		});
+	};
 
 	const getRankings = async () => {
 		try {
-			const res = await SubjectService.getMemberSubjectRanking(myGroup.id);
+			const res = await SubjectService.getMemberSubjectRanking(myGroup!.id);
 			setRanks(res);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
 	}
+
+	const sendRankingsHandle = async () => {
+		try {
+			const arr: SubjectRank[] = Array.from(myRanks.entries()).map(([subject_id, rank]) => ({
+					subject_id,
+					subject_title: "",
+					rank
+				})
+			);
+			await SubjectService.submitMemberSubjectRanking(myGroup!.id, arr);
+			getRankings();
+			setSuccess(`Vos classement on êtes envoyé avec succès!`);
+			setTimeout(() => setSuccess(""), 5000);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const getGroupRanks = async () => {
+		try {
+			const res = await SubjectService.getGroupSubjectRanking(myGroup!.id);
+			setGroupRanks(res);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	};
 
 	useEffect(() => {
 		const getSubjects = async () => {
@@ -59,18 +100,56 @@ export default function TERSubjectView({period, setError, setSuccess}: TERSubjec
 	useEffect(() => {
 		if (myGroup) {
 			getRankings();
+			getGroupRanks();
 		}
-	}, [myGroup])
+
+	}, [myGroup]);
+
+	useEffect(() => {
+		const map = new Map(ranks.map(rank => [rank.subject_id, rank.rank]));
+		setMyRanks(map);
+	}, [ranks]);
+
 	return (
 		<>
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="Classement" icon={<FaRegFile/>} info={0} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
-				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
+				{groupRanks &&
+					<InfoWidget label="Classement Groupe" icon={<FaRegFile/>} info={groupRanks.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
+				}
+				
+				{subjects &&
+					<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)}/>
+				}
 			</div>
+			
+			{page == 1 && groupRanks &&
+				<>
+					<div className="subject-classement-layout">
+						{groupRanks.map(rank => (
+							<SubjectRankWidget data={rank}/>
+						))}
+					</div>
+				</>
+			}
 
-			{page == 2 && subjects && subjects.map(subject => (
-				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
-			))}
+			{page == 3 && 
+				<>	
+					<div className="subject-send-button">
+						<Button icon={<LuSend/>} label="Envoyer Classement" onClick={sendRankingsHandle}/>
+					</div>
+					
+					<div className="subject-classement-layout">
+						{subjects.map(subject => (
+							<SubjectWidget key={subject.id} subject={subject} adminMode={false} privateMode={false}>
+								<InputNumberField 
+									value={myRanks.get(subject.id) ?? 0}
+									onChange={(value:number) => updateRankHandle(subject.id, value)}
+								/>
+							</SubjectWidget>
+						))}
+					</div>
+				</>
+			}
 		</>
 	)
 }

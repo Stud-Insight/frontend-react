@@ -30,7 +30,7 @@ export default function TERDetailPage(){
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
-				const res = await TERService.getPeriod(id);
+				const res = await TERService.getPeriod(id!);
 				setPeriod(res);
 			} catch (err){
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
