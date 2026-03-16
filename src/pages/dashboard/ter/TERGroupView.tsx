@@ -21,20 +21,21 @@ import { LuSend } from "react-icons/lu";
 import { FaRegFile} from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
-import { useParams } from "react-router-dom";
 import { MdDeleteOutline } from "react-icons/md";
 import { useAuth } from "../../../hooks/AuthContext";
 import { MdOutlineEdit } from "react-icons/md";
 
-import "./TERGroupPage.css"
+import "./TERGroupView.css"
 
-export default function TERGroupPage(){
-	const { id } = useParams<{ id: string }>();
+interface TERGroupViewProps {
+	period: TERPeriod;
+};
+
+export default function TERGroupView({period}: TERGroupViewProps){
 	const { user } = useAuth();
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [page, setPage] = useState<number>(0);
-	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
 	const [createGroup, setCreateGroup] = useState<boolean>(false);
@@ -101,7 +102,7 @@ export default function TERGroupPage(){
 
 	const getMyGroup = async () => {
 		try {
-			const res = await GroupService.getMyGroup(id);
+			const res = await GroupService.getMyGroup(period.id);
 			setMyGroup(res);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -123,8 +124,8 @@ export default function TERGroupPage(){
 	const getEnrolledStudents = async () => {
 		try {
 			const [students, group] = await Promise.all([
-				TERService.getStudents(id),
-				GroupService.getMyGroup(id)
+				TERService.getStudents(period.id),
+				GroupService.getMyGroup(period.id)
 			]);
 
 			const memberIds = new Set(group?.members.map(m => m.id));
@@ -192,7 +193,7 @@ export default function TERGroupPage(){
 
 	const getGroups = async () => {
 		try {
-			const res = await GroupService.getGroups(id);
+			const res = await GroupService.getGroups(period.id);
 			res.sort((a, b) => (
 				a.name.localeCompare(b.name)
 			))
@@ -205,9 +206,7 @@ export default function TERGroupPage(){
 
 	const createGroupHandle = async () => {
 		try {
-			const res = await TERService.getPeriod(id);
-
-			await GroupService.createGroup(id, nomGroup, res?.max_group_size, new Set());
+			await GroupService.createGroup(period.id, nomGroup, period.max_group_size, new Set());
 			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
 			getGroups();
 			getMyGroup();
@@ -221,21 +220,10 @@ export default function TERGroupPage(){
 	}
 
 	useEffect(() => {
-		const getPeriod = async () => {
-			try {
-				const res = await TERService.getPeriod(id);
-				setPeriod(res);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		}
-
-		getPeriod();
 		getGroups();
 		getMyGroup();
 		getGroupInvitations();
-	}, [id]);
+	}, []);
 
 	useEffect(() => {
 		if (!myGroup?.id) {
@@ -255,7 +243,7 @@ export default function TERGroupPage(){
 	}
 
 	return (
-		<DashboardPage>
+		<>
 			{createGroup &&
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
 					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
@@ -295,18 +283,6 @@ export default function TERGroupPage(){
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}
 			
-			{period &&
-				<>
-					<div className="dashboard-top-layout">
-						<div className="dashboard-top-title-layout">
-							<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>{period.academic_year} / {period.name}</span>
-						</div>
-					</div>
-
-					<TERWidgetInfo period={period}/>
-				</>		
-			}
-
 			<div className="dashbord-mini-info-layout">
 				{myGroup &&
 					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${myGroup.max_group_size}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
@@ -388,6 +364,6 @@ export default function TERGroupPage(){
 					}
 				</>
 			}
-		</DashboardPage>
+		</>
 	)
 }

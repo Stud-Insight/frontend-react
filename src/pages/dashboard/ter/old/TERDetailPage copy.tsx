@@ -8,9 +8,9 @@ import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import { useParams } from "react-router-dom";
 import DashboardPage from "../DashboardPage";
 
-import "./TERInfoPage.css"
+import "./TERDetailPage.css"
 
-export default function TERInfoPage(){
+export default function TERDetailPage(){
 	const { id } = useParams<{ id: string }>();
 	const [error, setError] = useState<string | null>();
 	const [subject, setSubject] = useState<Subject | null>();

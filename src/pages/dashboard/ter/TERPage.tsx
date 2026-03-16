@@ -12,20 +12,11 @@ import { TbSchool } from "react-icons/tb";
 
 import "./TERPage.css";
 
-interface TERPageProps {
-	children?: ReactNode;
-};
-
-export default function TERPage({children}: TERPageProps){
+export default function TERPage(){
 	const { user } = useAuth();
 	const [error, setError] = useState<string | null>();
 	const [periods, setPeriods] = useState<TERPeriod[]>([]);
 	const navigate = useNavigate();
-
-	const selectPeriod = (period_id: string) => {
-		// navigate(`/dashboard/ter/${period_id}/group_formation`);
-		navigate(`/dashboard/ter/${period_id}/subject_vote`);
-	}
 
 	useEffect(() => {
 		const getPeriods = async () => {
@@ -42,9 +33,8 @@ export default function TERPage({children}: TERPageProps){
 	}, [navigate]);
 
 	if (periods.length > 0){
-		//Un etudiant est associé à un seul TER à un moment t
 		if (UserService.isStudent(user)){
-			selectPeriod(periods[0].id);
+			navigate(`/dashboard/ter/${periods[0].id}`);
 		}
 
 		//un prof peut être associé à plusieur TER en même temps
@@ -57,10 +47,10 @@ export default function TERPage({children}: TERPageProps){
 						</div>
 					</div>
 
-					<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
+					<span style={{color: "var(--gray1-col)"}}>Détaile et information sur vos TER.</span>
 
 					{periods && periods.map(per => (
-						<TERWidget key={per.id} period={per} onClick={() => selectPeriod(per.id)}/>
+						<TERWidget key={per.id} period={per} onClick={() => navigate(`/dashboard/ter/${per.id}`)}/>
 					))}
 				</DashboardPage>
 			)		
