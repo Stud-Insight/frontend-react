@@ -5,11 +5,12 @@ import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 
 interface TERSubjectViewProps {
 	subjects: Subject[];
+	readOnly?: boolean;
 	onAccept?: (subject: Subject) => void;
 	onReject?: (subject: Subject) => void;
 };
 
-export default function TERSubjectView({subjects, onAccept, onReject}: TERSubjectViewProps){
+export default function TERSubjectView({subjects, readOnly, onAccept, onReject}: TERSubjectViewProps){
 	const [reject, setReject] = useState<Subject | null>(null);
 
 	return (
@@ -25,9 +26,9 @@ export default function TERSubjectView({subjects, onAccept, onReject}: TERSubjec
 			}
 
 			{subjects && subjects.map(subject => (
-				<SubjectWidget subject={subject} adminMode={true} 
-					onAccept={() => onAccept?.(subject)}
-					onReject={() => setReject(subject)}
+				<SubjectWidget key={subject.id} subject={subject} adminMode={!readOnly}
+				onAccept={!readOnly ? () => onAccept?.(subject) : undefined}
+				onReject={!readOnly ? () => setReject(subject) : undefined}
 				/>
 			))}
 		</>

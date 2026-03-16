@@ -9,6 +9,7 @@ import InputDate from "../../../components/input/InputDate";
 import InputNumberField from "../../../components/input/InputNumberField"
 import TERService, { TERPeriod, TERStatus, TERStatusColor } from "../../../services/TERService";
 import TERWidget from "../../../components/objects/TERWidget";
+import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 import { TbSchool } from "react-icons/tb";
 import { FaPlus } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ export default function PeriodListPage(){
 	const [success, setSuccess] = useState<string | null>(null);
 	const [terList, setTerList] = useState<TERPeriod[] | null>(null);
 	const [createPeriod, setCreatePeriod] = useState<boolean>(false);
+	const [archiveConfirm, setArchiveConfirm] = useState<TERPeriod | null>(null);
 	const [year, setYear] = useState<number>(new Date().getFullYear());
 	const [title, setTitle] = useState<string>("");
 	const [groupStartDate, setGroupStartDate] = useState<string>(addDays(0));
@@ -59,6 +61,19 @@ export default function PeriodListPage(){
 		navigate(`/dashboard/ter/${id}/admin`);
 	}
 
+	const archivePeriodHandle = async (ter: TERPeriod) => {
+		try {
+			await TERService.archivePeriod(ter.id);
+			setSuccess(`TER "${ter.name}" archivé avec succès.`);
+			setTimeout(() => setSuccess(null), 5000);
+			getAllTer();
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		setArchiveConfirm(null);
+	}
+
 	const createPeriodHandle = async () => {
 		try {
 			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate);
@@ -80,10 +95,22 @@ export default function PeriodListPage(){
 		getAllTer();
 	}, []);
 
+	const countByStatus = (status: TERStatus) => terList ? terList.filter(t => t.status === status).length : 0;
+	const activeTerList = terList?.filter(t => t.status !== TERStatus.ARCHIVED) ?? [];
+
 	return (
 		<DashboardPage>
-			{createPeriod && 
-				<ModalDialog label="Creation TER" onClose={() => setCreatePeriod(false)} className="ter-list-modal-style">
+			{archiveConfirm &&
+				<ConfirmationDialog
+					label="Archiver ce TER ?"
+					info={`Êtes-vous sûr de vouloir archiver « ${archiveConfirm.name} » ? Cette action est irréversible. Les données deviendront en lecture seule.`}
+					onCancel={() => setArchiveConfirm(null)}
+					onConfirm={() => archivePeriodHandle(archiveConfirm)}
+				/>
+			}
+
+			{createPeriod &&
+				<ModalDialog label="Creation TER" onClose={() => setCreatePeriod(false)} className="ter-list-modal-style ">
 					<InputField label="Titre" value={title} onChange={setTitle}/>
 
 					<InputDate label="Groupe Formation" start={groupStartDate} end={groupEndDate} onChange={(s, e) => {
@@ -125,13 +152,13 @@ export default function PeriodListPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={draftPeriods} color={TERStatusColor.get(TERStatus.DRAFT)}/>
-				<InfoWidget label="TER Active" icon={<TbSchool/>} info={openPeriods} color={TERStatusColor.get(TERStatus.OPEN)}/>
-				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={closePeriods} color={TERStatusColor.get(TERStatus.CLOSED)}/>
+				<InfoWidget label="TER Brouillon" icon={<TbSchool/>} info={countByStatus(TERStatus.DRAFT)} color={TERStatusColor.get(TERStatus.DRAFT)}/>
+				<InfoWidget label="TER Active" icon={<TbSchool/>} info={countByStatus(TERStatus.OPEN)} color={TERStatusColor.get(TERStatus.OPEN)}/>
+				<InfoWidget label="TER Terminé" icon={<TbSchool/>} info={countByStatus(TERStatus.CLOSED)} color={TERStatusColor.get(TERStatus.CLOSED)}/>
 			</div>
 
-			{terList && terList.map(ter => (
-				<TERWidget key={ter.id} period={ter} onClick={() => clickHandle(ter.id)} moreInfo={true}/>
+			{activeTerList.map(ter => (
+				<TERWidget key={ter.id} period={ter} onClick={() => clickHandle(ter.id)} moreInfo={true} onArchive={() => setArchiveConfirm(ter)}/>
 			))}
 		</DashboardPage>
 	)

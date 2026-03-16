@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel, TERStatusColor } from "../../services/TERService";
+import TERService, { TERPeriod, TERPeriodStats, TERStatus, TERStatusLabel, TERStatusColor } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
 import Tag from "../../atoms/ui/Tag";
 import Button from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FiArchive } from "react-icons/fi";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { TbSchool } from "react-icons/tb";
 
@@ -16,45 +17,19 @@ import "./TERWidget.css";
 
 interface TERWidgetProps {
 	period: TERPeriod;
-	moreInfo?: boolean;
 	selected?: boolean;
 	onClick?: () => void;
 	onSelect?: () => void;
+	onArchive?: () => void;
 };
 
-export default function TERWidget({period, onClick, onSelect, selected = false, moreInfo = true }: TERWidgetProps){
-	const [stats, setStats] = useState<TERPeriodStats | null>(null);
-	const [professorCount, setProfessorCount] = useState<number>(0);
-
+export default function TERWidget({period, onClick, onSelect, onArchive, selected = false}: TERWidgetProps){
 	const dateFormat = (dateString: string) =>
 		new Date(dateString).toLocaleDateString("fr-FR", {
 		day: "2-digit",
 		month: "2-digit",
 		year: "numeric",
 	});
-
-	useEffect(() => {
-		const getTerData = async () => {
-			try {
-				const g = await TERService.getPeriodStats(period.id);
-				setStats(g);
-			} catch (err){
-				console.log("Erreur TER Widget");
-			}
-		}
-
-		const getProfessors = async () => {
-			try {
-				const g = await TERService.getProfessors(period.id);
-				setProfessorCount(g.length);
-			} catch (err){
-				console.log("Erreur TER Widget");
-			}
-		}
-		
-		getTerData();
-		getProfessors();
-	}, []);
 
 	return (
 		<ContainerWidget className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
@@ -83,56 +58,12 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 				</div>
 
 				<div className="ter-widget-button-pos">
-					<Button icon={<FaArrowLeftLong/>} label="Voir Détails" onClick={onClick}/>
+					{onArchive && period.status === TERStatus.CLOSED &&
+						<Button icon={<FiArchive/>} label="Archiver" style="danger" onClick={onArchive}/>
+					}
+					<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
 				</div>
 			</div>
 		</ContainerWidget>
-
-		// <div className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
-			
-		// 	</div>
-		
-		// 	{/* {moreInfo &&
-		// 		<>
-		// 			<HorizontalDivider/>
-
-		// 			<div className="ter-widget-info-layout">
-		// 				<div className="ter-widget-info-layout-container">
-		// 					<span style={{ color: "var(--gray1-col)" }}>Etudiants</span>
-		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-		// 						{stats?.students_enrolled}
-		// 					</span>
-		// 				</div>
-
-		// 				<div className="ter-widget-info-layout-container">
-		// 					<span style={{ color: "var(--gray1-col)" }}>Professeurs</span>
-		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-		// 						{professorCount}
-		// 					</span>
-		// 				</div>
-
-		// 				<div className="ter-widget-info-layout-container">
-		// 					<span style={{ color: "var(--gray1-col)" }}>Groupes</span>
-		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-		// 						{stats?.groups_total}
-		// 					</span>
-		// 				</div>
-
-		// 				<div className="ter-widget-info-layout-container">
-		// 					<span style={{ color: "var(--gray1-col)" }}>Sujets</span>
-		// 					<span style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-		// 						{stats?.subjects_total}
-		// 					</span>
-		// 				</div>
-		// 			</div>
-		// 		</>
-		// 	} */}
-			
-		// 	{onSelect &&
-		// 		<div className={`ter-widget-tick ${selected ? "selected" : ""}`}>
-		// 			<MdDone/>
-		// 		</div>
-		// 	}
-		// </div>
 	);
 }

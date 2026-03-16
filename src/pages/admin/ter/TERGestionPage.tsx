@@ -9,14 +9,15 @@ import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
 import TERSubjectView from "./TERSubjectView";
 
-import TERService, { TERPeriod, TERStatusColor, TERStatusLabel } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatusColor, TERStatus, TERStatusLabel } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
 import GradeService, { Grade } from "../../../services/GradeService";
 import SubjectService, { Subject } from "../../../services/SubjectService";
+import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 
 import { GoGear } from "react-icons/go";
 import { TbSchool } from "react-icons/tb";
-import { FaPlus, FaRegFile } from "react-icons/fa";
+import { FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { FiDownload } from 'react-icons/fi';
@@ -38,6 +39,7 @@ export default function TERGestionPage(){
 	const [groups, setGroup] = useState<Group[]>([]);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [professors, setProfessors] = useState<User[]>([]);
+	const [archiveConfirm, setArchiveConfirm] = useState<boolean>(false);
 
 	const addStudent = async (users: Set<string>) => {
 		try {
@@ -246,7 +248,32 @@ export default function TERGestionPage(){
 			setError(message);
 		}
 	}
-	
+
+	const archivePeriodHandle = async () => {
+		try {
+			await TERService.archivePeriod(id);
+			const data = await TERService.getPeriod(id);
+			setPeriod(data);
+			setSuccess(`TER "${period?.name}" archivé avec succès.`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch (err){
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+		setArchiveConfirm(false);
+	}
+
+	const exportPeriodHandle = async () => {
+		try {
+			await TERService.exportCsvUrl(id);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+	}
+
+	const isArchived = period?.status === TERStatus.ARCHIVED;
+
 	useEffect(() => {
 		const getPeriod = async () => {
 			try {
@@ -267,22 +294,31 @@ export default function TERGestionPage(){
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
-		[0, <TERStudentView students={students} onAdd={addStudent} onDelete={deleteStudent}/>],
-		[1, <TERProfessorView professors={professors} onAdd={addProfessors} onDelete={deleteProfessor}/>],
-		[2, <TERGroupView groups={groups} students={students} 
-			onAdd={createGroup} 
+		[0, <TERStudentView students={students} readOnly={isArchived} onAdd={addStudent} onDelete={deleteStudent}/>],
+		[1, <TERProfessorView professors={professors} readOnly={isArchived} onAdd={addProfessors} onDelete={deleteProfessor}/>],
+		[2, <TERGroupView groups={groups} students={students} readOnly={isArchived}
+			onAdd={createGroup}
 			onDelete={deleteGroup}
 			onUpdate={updateGroup}
 			onAddUsers={addStudentGroup}
 			onUserDelete={removeStudentGroup}
 			onChangeLeader={changeGroupLeader}
 			/>],
-		[3, <TERSubjectView subjects={subjects} onAccept={acceptSubject} onReject={rejectSubject}/>],
-		[4, <TERGradeView grades={grades}/>],
+		[3, <TERSubjectView subjects={subjects} readOnly={isArchived} onAccept={acceptSubject} onReject={rejectSubject}/>],
+		[4, <TERGradeView grades={grades} readOnly={isArchived}/>],
 	])
 
 	return (
 		<DashboardPage>
+			{archiveConfirm &&
+				<ConfirmationDialog
+					label="Archiver ce TER ?"
+					info={`Êtes-vous sûr de vouloir archiver « ${period?.name} » ? Cette action est irréversible. Les données deviendront en lecture seule.`}
+					onCancel={() => setArchiveConfirm(false)}
+					onConfirm={archivePeriodHandle}
+				/>
+			}
+
 			<div className="dashboard-top-layout">
 				<div className="ter-admin-selected-ter-title">
 					<span style={{fontWeight: 800, fontSize: "25px"}}>{period?.name}</span>
@@ -290,9 +326,13 @@ export default function TERGestionPage(){
 				</div>
 
 				<div className="dashboard-top-button-layout">
-					<Button icon={<FiDownload/>} label="Exporter CSV"/>
+					<Button icon={<FiDownload/>} label="Exporter CSV" onClick={exportPeriodHandle}/>
 				</div>
 			</div>
+
+			{isArchived &&
+				<InfoBox label="Cette période est archivée. Les données sont en lecture seule." type="info"/>
+			}
 
 			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>
 

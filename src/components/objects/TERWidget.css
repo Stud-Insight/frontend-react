@@ -72,9 +72,11 @@
 }
 
 .ter-widget-button-pos {
-	height: 30px;
 	position: absolute;
 	right: 10px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
 }
 
 .ter-widget-tick {

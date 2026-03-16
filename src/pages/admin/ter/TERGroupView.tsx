@@ -15,6 +15,7 @@ import { MdOutlineEdit } from "react-icons/md";
 interface TERGroupViewProps {
 	groups: Group[];
 	students: User[];
+	readOnly?: boolean;
 	onAdd?: (nom: string, size: number) => void;
 	onDelete?: (group: Group) => void;
 	onUpdate?: (group: Group, name: string, size: number) => void;
@@ -28,7 +29,7 @@ interface DeleteUserGroup {
 	group: Group;
 };
 
-export default function TERGroupView({groups, students, onAdd, onDelete, onAddUsers, onChangeLeader, onUserDelete, onUpdate}: TERGroupViewProps){
+export default function TERGroupView({groups, students, readOnly, onAdd, onDelete, onAddUsers, onChangeLeader, onUserDelete, onUpdate}: TERGroupViewProps){
 	const [addingGroup, setAddingGroup] = useState<boolean>(false);
 	const [addingUser, setAddingUser] = useState<Group | null>(null);
 	const [editGroup, setEditGroup] = useState<Group | null>(null);
@@ -147,20 +148,22 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 				info={`Êtes-vous sûr de vouloir changer "${leader.user.first_name} ${leader.user.last_name}" en responsable du groupe "${leader.group.name}"?`}/>
 			}
 
-			<div className="dashboard-top-layout">
-				<div/>
-				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setAddingGroup(true)}/>
+			{!readOnly &&
+				<div className="dashboard-top-layout">
+					<div/>
+					<div className="dashboard-top-button-layout">
+						<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setAddingGroup(true)}/>
+					</div>
 				</div>
-			</div>
+			}
 
 			{sortedGroups.map(group => (
-				<GroupProjectWidget key={group.id} group={group} 
-					onDelete={() => setDeleteGroup(group)}
-					onEdit={() => editHandle(group)} 
-					onUserDelete={user => setDeleteUser({user: user, group: group})}
-					onLeader={user => setLeader({user: user, group: group})}
-					onAdd={() => addUserHandlePre(group)}
+				<GroupProjectWidget key={group.id} group={group}
+				onDelete={!readOnly ? () => setDeleteGroup(group) : undefined}
+				onEdit={!readOnly ? () => editHandle(group) : undefined}
+				onUserDelete={!readOnly ? (user => setDeleteUser({user: user, group: group})) : undefined}
+				onLeader={!readOnly ? (user => setLeader({user: user, group: group})) : undefined}
+				onAdd={!readOnly ? () => addUserHandlePre(group) : undefined}
 				/>
 			))}
 		</>

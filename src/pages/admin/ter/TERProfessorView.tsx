@@ -13,12 +13,13 @@ import { FaPlus } from "react-icons/fa";
 
 interface TERProfessorViewProps {
 	professors: User[];
+	readOnly?: boolean;
 	onAdd?: (users: Set<string>) => void;
 	onDelete?: (user: User) => void;
 	onContact?: (user: User) => void;
 };
 
-export default function TERProfessorView({professors, onAdd, onDelete, onContact}: TERProfessorViewProps){
+export default function TERProfessorView({professors, readOnly, onAdd, onDelete, onContact}: TERProfessorViewProps){
 	const [addingProfesssor, setAddingProfesssor] = useState<boolean>(false);
 	const [deleteProfessor, setDeleteProfessor] = useState<User | null>(null);
 
@@ -43,16 +44,15 @@ export default function TERProfessorView({professors, onAdd, onDelete, onContact
 				}} info={`Enseignant "${deleteProfessor.first_name} ${deleteProfessor.last_name}" sera supprimé du TER.`}/>
 			}
 			
-			<div className="dashboard-top-layout">
-				<div>
-
+			{!readOnly &&
+				<div className="dashboard-top-layout">
+					<div/>
+					<div className="dashboard-top-button-layout">
+						<ImportCSVButton/>
+						<Button icon={<FaPlus/>} label="Ajouter Professeur" onClick={() => setAddingProfesssor(true)}/>
+					</div>
 				</div>
-
-				<div className="dashboard-top-button-layout">
-					<ImportCSVButton/>
-					<Button icon={<FaPlus/>} label="Ajouter Professeur" onClick={() => setAddingProfesssor(true)}/>
-				</div>
-			</div>
+			}
 
 			{professors && professors.length > 0 &&
 				<table className="users-table-style">
@@ -77,7 +77,7 @@ export default function TERProfessorView({professors, onAdd, onDelete, onContact
 								<td>
 									<OverflowMenu options={[
 										{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
-										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteProfessor(user)}},
+										...(!readOnly ? [{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteProfessor(user)}}] : []),
 									]}/>
 								</td>
 							</tr>

@@ -14,12 +14,13 @@ import "./TERGroupView.css"
 
 interface TERGradeViewProps {
 	grades: Grade[];
+	readOnly?: boolean;
 	onAdd?: (grade: Grade) => void;
 	onEdit?: (grade: Grade) => void;
 	onDelete?: (grade: Grade) => void;
 };
 
-export default function TERGradeView({grades, onAdd, onEdit, onDelete}: TERGradeViewProps){
+export default function TERGradeView({grades, readOnly, onAdd, onEdit, onDelete}: TERGradeViewProps){
 	const [addingGrade, setAddingGrade] = useState<boolean>(false);
 	const [deleteGrade, setDeleteGrade] = useState<Grade | null>(null);
 	const [editGrade, setEditGrade] = useState<Grade | null>(null);
@@ -81,15 +82,19 @@ export default function TERGradeView({grades, onAdd, onEdit, onDelete}: TERGrade
 				</ModalDialog>
 			}
 
-			<div className="dashboard-top-layout">
-				<div/>
-				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Ajouter Note" onClick={() => addGradeHandle()}/>
+			{!readOnly &&
+				<div className="dashboard-top-layout">
+					<div/>
+					<div className="dashboard-top-button-layout">
+						<Button icon={<FaPlus/>} label="Ajouter Note" onClick={() => addGradeHandle()}/>
+					</div>
 				</div>
-			</div>
+			}
 
 			{grades && grades.map(grade => (
-				<GradeWidget grade={grade} onDelete={() => setDeleteGrade(grade)} onEdit={() => editGradeHandle(grade)}/>
+				<GradeWidget key={grade.id} grade={grade}
+				onDelete={!readOnly ? () => setDeleteGrade(grade) : undefined}
+				onEdit={!readOnly ? () => editGradeHandle(grade) : undefined}/>
 			))}
 		</>
 	)

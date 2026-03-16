@@ -333,7 +333,31 @@ export default class TERService {
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string, min_groupe: number, max_groupe: number): Promise<TERPeriod[] | null> {
+	public static async openPeriod(period_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/periods/${period_id}/open`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async closePeriod(period_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/periods/${period_id}/close`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async archivePeriod(period_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/periods/${period_id}/archive`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
 		try {
 			const load: TERPeriodCreatePayload = {
 				name: title,
