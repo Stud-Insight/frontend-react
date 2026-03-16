@@ -83,7 +83,7 @@ export default function TERWidget({period, onClick, onSelect, selected = false, 
 				</div>
 
 				<div className="ter-widget-button-pos">
-					<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
+					<Button icon={<FaArrowLeftLong/>} label="Voir Détails" onClick={onClick}/>
 				</div>
 			</div>
 		</ContainerWidget>

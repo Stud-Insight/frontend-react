@@ -97,7 +97,7 @@ export default function ChatPage(){
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Gérez et modifier votre profile.</span>
+			<span style={{color: "var(--gray1-col)"}}>Gérez et modifiez votre profil.</span>
 
 			{error && <InfoBox label={error} type="error"/>}
 			{success && <InfoBox label={success} type="success"/>}

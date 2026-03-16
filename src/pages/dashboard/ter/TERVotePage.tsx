@@ -69,7 +69,7 @@ export default function TERVotePage(){
 	const createGroupHandle = async () => {
 		try {
 			await GroupService.createGroup(id, nomGroup, 0, new Set());
-			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
+			setSuccess(`Groupe "${nomGroup}" a été créé dans "${period?.name}"`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){

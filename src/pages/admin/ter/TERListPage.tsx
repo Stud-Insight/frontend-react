@@ -56,7 +56,7 @@ export default function PeriodListPage(){
 	const createPeriodHandle = async () => {
 		try {
 			await TERService.createPeriod(title, `${year - 1}-${year}`, startDate, endDate, groupStartDate, groupEndDate, projectStartDate, projectEndDate, assignmentDate);
-			setSuccess(`TER "${title}" ajouté au systéme.`);
+			setSuccess(`TER "${title}" ajouté au système.`);
 			getAllTer();
 		} catch(err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";

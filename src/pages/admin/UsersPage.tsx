@@ -223,7 +223,7 @@ export default function UsersPage(){
 		<DashboardPage>
 			{createUser && 
 				<ModalDialog label="Creation Utilisateur" onClose={() => setCreateUser(false)}>
-					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={prenom} icon={<FiUser/>} label="Prénom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputField value={mail} icon={<FiMail/>} label="E-Mail" type="email" onChange={setMail}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
@@ -233,7 +233,7 @@ export default function UsersPage(){
 
 			{editUser && 
 				<ModalDialog label="Modification Utilisateur" onClose={() => setEditUser(null)} >
-					<InputField value={prenom} icon={<FiUser/>} label="Prenom" onChange={setPrenom}/>
+					<InputField value={prenom} icon={<FiUser/>} label="Prénom" onChange={setPrenom}/>
 					<InputField value={nom} icon={<FiUser/>} label="Nom" onChange={setNom}/>
 					<InputTagSelection label="Rôles" icon={<IoPricetagOutline/>} alwaysShow={true} tags={roles} options={userRoles} onSelect={addRole} onDelete={removeRole}/>
 					<Button icon={<MdOutlineEdit/>} label="Modifier" onClick={editHandle}/>
@@ -252,7 +252,7 @@ export default function UsersPage(){
 			{deleteUser &&
 				<ConfirmationDialog 
 					label="Supprimer cet utilisateur?" 
-					info={`L'utilisateur "${deleteUser.first_name} ${deleteUser.last_name}" sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
+					info={`L'utilisateur "${deleteUser.first_name} ${deleteUser.last_name}" sera supprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
 					onCancel={() => setDeleteUser(null)} 
 					onConfirm={deleteHandle}
 				/>
@@ -290,7 +290,7 @@ export default function UsersPage(){
 
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Professeurs" icon={<FiUser/>} active={page == UserRoles.ENCADRANT} info={getCountData().get(UserRoles.ENCADRANT)} color="var(--purple-col)" onClick={() => setPage(UserRoles.ENCADRANT)}/>
-				<InfoWidget label="Résponsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
+				<InfoWidget label="Responsables" icon={<FiUser/>} active={page == UserRoles.RESPO_STAGE || page == UserRoles.RESPO_TER} info={getCountData().get(UserRoles.RESPO_STAGE) + getCountData().get(UserRoles.RESPO_TER)} color="var(--purple-col)" onClick={() => setPage(UserRoles.RESPO_TER)}/>
 				<InfoWidget label="Administrateurs" icon={<FiUser/>} active={page == UserRoles.ADMIN} info={getCountData().get(UserRoles.ADMIN)} color="var(--red-col)" onClick={() => setPage(UserRoles.ADMIN)}/>
 			</div>
 			
@@ -299,12 +299,12 @@ export default function UsersPage(){
 					<thead>
 						<tr>
 							<th><InputCheckbox/></th>
-							<th>Profile</th>
+							<th>Profil</th>
 							<th>ID</th>
 							<th>Nom</th>
 							<th>E-Mail</th>
-							<th>Dâte Activation</th>
-							<th>Dâte Connexion</th>
+							<th>Date Activation</th>
+							<th>Date Connexion</th>
 							<th>Rôle</th>
 							<th></th>
 						</tr>

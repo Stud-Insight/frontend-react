@@ -103,7 +103,7 @@ export default function SubjectPage(){
 	const confirmCreationHandle = async () => {
 		try {
 			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
-			setSuccess(`Sujet "${title}" à été créée!`);
+			setSuccess(`Sujet "${title}" a été créé!`);
 			getSubjects();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -150,7 +150,7 @@ export default function SubjectPage(){
 
 			await SubjectService.publishSubject(new Set(g), publishSubject?.id);
 			getSubjects();
-			setSuccess(`Sujet "${publishSubject?.title}" à été soumis à "${p.name}"`);
+			setSuccess(`Sujet "${publishSubject?.title}" a été soumis à "${p.name}"`);
 			setTimeout(() => setSuccess(null), 5000);
 		} catch(err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -193,7 +193,7 @@ export default function SubjectPage(){
 			{deleteSubject &&
 				<ConfirmationDialog 
 					label="Supprimer ce sujet?" 
-					info="Ce sujet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
+					info="Ce sujet sera supprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
 					onCancel={() => setDeleteSubject(null)} 
 					onConfirm={deleteHandle}
 				/>

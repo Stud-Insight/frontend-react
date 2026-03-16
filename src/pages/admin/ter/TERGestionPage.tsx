@@ -55,7 +55,7 @@ export default function TERGestionPage(){
 	const deleteStudent = async (user: User) => {
 		try {
 			await TERService.deleteStudent(id, user.id);
-			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé de "${period?.name}".`);
+			setSuccess(`Étudiant "${user.first_name} ${user.last_name}" supprimé de "${period?.name}".`);
 			getStudents();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -126,7 +126,7 @@ export default function TERGestionPage(){
 	const updateGroup = async (group: Group, name: string, size: number) => {
 		try {
 			await GroupService.updateGroup(group.id, name, size);
-			setSuccess(`Groupe "${group.name}" à été modifié avec succés.`);
+			setSuccess(`Groupe "${group.name}" a été modifié avec succès.`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -138,7 +138,7 @@ export default function TERGestionPage(){
 	const removeStudentGroup = async (group: Group, user: User) => {
 		try {
 			await GroupService.removeMember(group.id, user.id);
-			setSuccess(`Etudiant "${user.first_name} ${user.last_name}" supprimé du groupe "${group.name}".`);
+			setSuccess(`Étudiant "${user.first_name} ${user.last_name}" supprimé du groupe "${group.name}".`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -155,7 +155,7 @@ export default function TERGestionPage(){
 				))
 			);
 
-			setSuccess(`${users.size} Etudiant(s) ajouté au groupe "${group.name}".`);
+			setSuccess(`${users.size} Étudiant(s) ajouté(s) au groupe "${group.name}".`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -167,7 +167,7 @@ export default function TERGestionPage(){
 	const createGroup = async (nom: string, taille: number) => {
 		try {
 			await GroupService.createGroup(id, nom, taille, new Set());
-			setSuccess(`Groupe "${nom}" à été crée dans "${period?.name}"`);
+			setSuccess(`Groupe "${nom}" a été créé dans "${period?.name}"`);
 			getGroups();
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
@@ -192,7 +192,7 @@ export default function TERGestionPage(){
 		try {
 			await GroupService.deleteGroup(group.id);
 			getGroups();
-			setSuccess(`Groupe "${group.name}" à été supprimé de "${period?.name}".`);
+			setSuccess(`Groupe "${group.name}" a été supprimé de "${period?.name}".`);
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -224,7 +224,7 @@ export default function TERGestionPage(){
 		try {
 			await SubjectService.acceptSubject(subject.id);
 			getSubjects();
-			setSuccess(`Sujet "${subject.title}" à été accepté avec succés.`);
+			setSuccess(`Sujet "${subject.title}" a été accepté avec succès.`);
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -236,7 +236,7 @@ export default function TERGestionPage(){
 		try {
 			await SubjectService.rejectSubject(subject.id);
 			getSubjects();
-			setSuccess(`Sujet "${subject.title}" à été rejeté avec succés.`);
+			setSuccess(`Sujet "${subject.title}" a été rejeté avec succès.`);
 			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -299,7 +299,7 @@ export default function TERGestionPage(){
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Sujets" active={view == 3} icon={<FaRegFile/>} info={subjects.length} color="var(--orange-col)" onClick={() => setView(3)}/>
 				<InfoWidget label="Notations" active={view == 4} icon={<TbSchool/>} info={grades.length} color="var(--orange-col)" onClick={() => setView(4)}/>
-				<InfoWidget label="Paramêtres" active={view == 5} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(5)}/>
+				<InfoWidget label="Paramètres" active={view == 5} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(5)}/>
 			</div>
 
 			{success && <InfoBox label={success} type="success"/>}

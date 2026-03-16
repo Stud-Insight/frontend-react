@@ -147,7 +147,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 
 				<div className="dashboard-sidebar-content">
 					<HorizontalDivider/>
-					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={pageHandle}>
+					<NavigationButton className="dashboard-profile-wrapper" label="Profil" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={pageHandle}>
 						<UserAvatar user={user} size={50}/>
 						<div className="dashboard-profile-text">
 							<span style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</span>

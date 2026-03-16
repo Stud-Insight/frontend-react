@@ -47,7 +47,7 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 			<div/>
 			<div className="dashboard-top-button-layout">
 				<ImportCSVButton/>
-				<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+				<Button icon={<FaPlus/>} label="Ajouter Étudiant" onClick={() => setAddingStudent(true)}/>
 			</div>
 		</div>
 		
@@ -55,7 +55,7 @@ export default function TERStudentView({students, onAdd, onDelete, onContact}: T
 			<table className="users-table-style">
 				<thead>
 					<tr>
-						<th>Profile</th>
+						<th>Profil</th>
 						<th>Nom</th>
 						<th>E-Mail</th>	
 						<th></th>
