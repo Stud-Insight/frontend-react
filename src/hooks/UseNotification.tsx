@@ -17,7 +17,6 @@ export function useNotification() {
 
 
 		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
-			console.log("Notification reçue SSE :", notification);
 			setNotifications((prev) => {
 				if (prev.some((n) => n.id === notification.id)) {
 					return prev;

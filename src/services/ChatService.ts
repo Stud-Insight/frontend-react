@@ -82,8 +82,6 @@ export default class ChatService {
                 name,
                 is_group: user_ids.length > 1,
             };
-
-			console.log(p);
 			
             const response = await api.post<Conversation>("/chat/conversations", p);
             return response.data;
