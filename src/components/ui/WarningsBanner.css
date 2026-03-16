@@ -1,0 +1,72 @@
+.warnings-banner {
+	width: 100%;
+	border: 2px solid var(--gray2-col);
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-family: var(--main-font);
+	overflow: hidden;
+}
+
+.warnings-banner-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 14px;
+	cursor: pointer;
+	background-color: var(--gray2-col);
+	user-select: none;
+	color: var(--gray1-col);
+}
+
+.warnings-banner-header:hover {
+	opacity: 0.85;
+}
+
+.warnings-banner-summary {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.warnings-badge {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.3px;
+}
+
+.warnings-badge.error {
+	color: var(--red-col);
+}
+
+.warnings-badge.warning {
+	color: var(--orange-col);
+}
+
+.warnings-banner-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+}
+
+.warnings-banner-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 14px;
+	font-size: 13px;
+	letter-spacing: 0.4px;
+	border-top: 1px solid var(--gray2-col);
+}
+
+.warnings-banner-item.error {
+	color: color-mix(in srgb, var(--red-col) 90%, transparent);
+	background-color: color-mix(in srgb, var(--red-col) 8%, transparent);
+}
+
+.warnings-banner-item.warning {
+	color: color-mix(in srgb, var(--orange-col) 90%, transparent);
+	background-color: color-mix(in srgb, var(--orange-col) 6%, transparent);
+}

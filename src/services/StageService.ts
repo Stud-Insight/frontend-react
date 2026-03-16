@@ -224,4 +224,31 @@ export default class StageService {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
+
+	public static async exportCsv(periodId: string): Promise<void> {
+		try {
+			const res = await api.get(`/stages/dashboard/export/${periodId}/csv`, {
+				responseType: 'blob',
+			});
+			const url = window.URL.createObjectURL(new Blob([res.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `export_stages_${periodId}.csv`);
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+			window.URL.revokeObjectURL(url);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getWarnings(periodId: string): Promise<import('./TERService').WorkflowWarningsResponse> {
+		try {
+			const res = await api.get<import('./TERService').WorkflowWarningsResponse>(`/stages/dashboard/warnings/${periodId}`);
+			return res.data;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
 }

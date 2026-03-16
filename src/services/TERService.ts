@@ -186,6 +186,21 @@ export interface AdminSystemStats {
 	active_stage_periods: number;
 }
 
+export interface WorkflowWarning {
+	level: "error" | "warning";
+	phase: string;
+	message: string;
+	count: number | null;
+	total: number | null;
+}
+
+export interface WorkflowWarningsResponse {
+	period_id: string;
+	period_name: string;
+	current_phase: string;
+	warnings: WorkflowWarning[];
+}
+
 export const PhaseColors: Record<string, string> = {
 	formation: "var(--blue-col)",
 	selection: "var(--orange-col)",
@@ -419,9 +434,27 @@ export default class TERService {
 		}
 	}
 
-	public static async exportCsvUrl(periodId: string): Promise<void> {
+	public static async exportCsv(periodId: string): Promise<void> {
 		try {
-			const res = await api.get(`/ter/dashboard/export/${periodId}/csv`)
+			const res = await api.get(`/ter/dashboard/export/${periodId}/csv`, {
+				responseType: 'blob',
+			});
+			const url = window.URL.createObjectURL(new Blob([res.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `export_ter_${periodId}.csv`);
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+			window.URL.revokeObjectURL(url);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getWarnings(periodId: string): Promise<WorkflowWarningsResponse> {
+		try {
+			const res = await api.get<WorkflowWarningsResponse>(`/ter/dashboard/warnings/${periodId}`);
 			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

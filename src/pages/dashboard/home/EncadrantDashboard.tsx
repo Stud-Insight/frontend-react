@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import TERService, { TERStatus, EncadrantDashboard as EncadrantData, EncadrantGroup } from "../../../services/TERService";
+import TERService, { TERStatus, EncadrantDashboard as EncadrantData, EncadrantGroup, WorkflowWarning } from "../../../services/TERService";
+import WarningsBanner from "../../../components/ui/WarningsBanner";
 import { GradeStatusLabel, GradeStatusColor } from "../../../services/GradeService";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import InfoWidget from "../../../components/ui/InfoWidget";
@@ -13,6 +14,7 @@ import "./EncadrantDashboard.css";
 
 export default function EncadrantDashboard() {
 	const [dashboard, setDashboard] = useState<EncadrantData | null>(null);
+	const [warnings, setWarnings] = useState<WorkflowWarning[]>([]);
 	const [loaded, setLoaded] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -22,8 +24,12 @@ export default function EncadrantDashboard() {
 				const encPeriods = await TERService.getEncadrantPeriods();
 				const open = encPeriods.find(p => p.status === TERStatus.OPEN);
 				if (open) {
-					const data = await TERService.getEncadrantDashboard(open.id);
+					const [data, warningsData] = await Promise.all([
+						TERService.getEncadrantDashboard(open.id),
+						TERService.getWarnings(open.id).catch(() => null),
+					]);
 					setDashboard(data);
+					if (warningsData) setWarnings(warningsData.warnings);
 				}
 			} catch (err) {
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -67,6 +73,8 @@ export default function EncadrantDashboard() {
 				<InfoWidget label="Notes" icon={<TbSchool/>} info={dashboard.graded_groups} color="var(--orange-col)"/>
 				<InfoWidget label="Finalises" icon={<FaRegCheckCircle/>} info={dashboard.finalized_groups} color="var(--green-col)"/>
 			</div>
+
+			<WarningsBanner warnings={warnings}/>
 
 			{dashboard.groups.map((group: EncadrantGroup) => (
 				<ContainerWidget key={group.id}>
