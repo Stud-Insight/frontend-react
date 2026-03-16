@@ -23,7 +23,8 @@ export default function TERPage({children}: TERPageProps){
 	const navigate = useNavigate();
 
 	const selectPeriod = (period_id: string) => {
-		navigate(`/dashboard/ter/${period_id}/vote`);
+		// navigate(`/dashboard/ter/${period_id}/group_formation`);
+		navigate(`/dashboard/ter/${period_id}/subject_vote`);
 	}
 
 	useEffect(() => {

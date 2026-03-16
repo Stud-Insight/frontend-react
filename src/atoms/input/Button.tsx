@@ -13,7 +13,7 @@ interface ButtonProps {
     onClick?: () => void;
 };
 
-export default function Button({icon, label, height, style, onClick, width, color}: ButtonProps){
+export default function Button({icon, label, height = "30px", style, onClick, width, color}: ButtonProps){
 	const getApproIcon = () => {
 		if (style == "cancel"){
 			return undefined

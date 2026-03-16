@@ -6,7 +6,6 @@ import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import { User } from "../../../services/UserService";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import GroupService, { Group, GroupInvitation, InvitationStatus } from "../../../services/GroupService";
-import SubjectWidget from "../../../components/objects/SubjectWidget";
 import InfoBox from "../../../components/ui/InfoBox";
 import Button from "../../../atoms/input/Button";
 import ModalDialog from "../../../components/dialog/ModalDialog";
@@ -27,9 +26,9 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useAuth } from "../../../hooks/AuthContext";
 import { MdOutlineEdit } from "react-icons/md";
 
-import "./TERVotePage.css"
+import "./TERGroupPage.css"
 
-export default function TERVotePage(){
+export default function TERGroupPage(){
 	const { id } = useParams<{ id: string }>();
 	const { user } = useAuth();
 	const [success, setSuccess] = useState<string | null>(null);
@@ -37,7 +36,6 @@ export default function TERVotePage(){
 	const [page, setPage] = useState<number>(0);
 	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	const [groups, setGroups] = useState<Group[]>([]);
-	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
 	const [createGroup, setCreateGroup] = useState<boolean>(false);
 	const [inviteGroup, setInviteGroup] = useState<boolean>(false);
@@ -223,16 +221,6 @@ export default function TERVotePage(){
 	}
 
 	useEffect(() => {
-		const getSubjects = async () => {
-			try {
-				const data = await TERService.getSubjects(id);
-				setSubjects(data);
-			} catch (err){
-				const message = err instanceof Error ? err.message : "Erreur de connexion";
-				setError(message);
-			}
-		}
-
 		const getPeriod = async () => {
 			try {
 				const res = await TERService.getPeriod(id);
@@ -243,7 +231,6 @@ export default function TERVotePage(){
 			}
 		}
 
-		getSubjects();
 		getPeriod();
 		getGroups();
 		getMyGroup();
@@ -326,7 +313,6 @@ export default function TERVotePage(){
 				}
 				<InfoWidget label="Invitations" icon={<FiUsers/>} info={invitations.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
 				<InfoWidget label="Groupes" icon={<FaRegFile/>} info={groups.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)}/>
-				<InfoWidget label="Sujets" icon={<FaRegFile/>} info={subjects.length} color="var(--blue-col)" active={page == 2} onClick={() => setPage(2)}/>
 			</div>
 
 			{page == 0 && myGroup &&
@@ -371,10 +357,6 @@ export default function TERVotePage(){
 					</div>
 				</>
 			}
-
-			{page == 2 && subjects && subjects.map(subject => (
-				<SubjectWidget subject={subject} adminMode={false} privateMode={false}/>
-			))}
 
 			{page == 3 &&
 				<>

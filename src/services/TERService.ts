@@ -10,6 +10,36 @@ export enum TERStatus {
 	ARCHIVED = "archived"
 };
 
+export enum TERPhase {
+	FORMATION = "formation",
+	SELECTION = "selection",
+	ASSIGNMENT = "assignment",
+	EXECUTION = "execution",
+	FINISHED = "finished",
+	UPCOMING = "upcoming",
+	UNKNOWN = "unknown",
+};
+
+export const TERPhaseLabel: Map<TERPhase, string> = new Map([
+	[TERPhase.FORMATION, "Formation des groupes"],
+	[TERPhase.SELECTION, "Vote des sujets"],
+	[TERPhase.ASSIGNMENT, "Assignement des sujets au groupe"],
+	[TERPhase.EXECUTION, "Réalisation du projet assigné"],
+	[TERPhase.FINISHED, "Projet terminé"],
+	[TERPhase.UPCOMING, "Phase à venir, préparation nécessaire"],
+	[TERPhase.UNKNOWN, "Statut inconnu ou non défini"],
+]);
+
+export const TERPhaseColor: Map<TERPhase, string> = new Map([
+	[TERPhase.FORMATION, "var(--blue-col)"],
+	[TERPhase.SELECTION, "var(--blue-col)"],
+	[TERPhase.ASSIGNMENT, "var(--blue-col)"],
+	[TERPhase.EXECUTION, "var(--blue-col)"],
+	[TERPhase.FINISHED, "var(--blue-col)"],
+	[TERPhase.UPCOMING, "var(--blue-col)"],
+	[TERPhase.UNKNOWN, "var(--blue-col)"],
+]);
+
 export const TERStatusLabel: Map<TERStatus, string> = new Map([
 	[TERStatus.DRAFT, "Brouillon"],
 	[TERStatus.OPEN, "En Cours"],
@@ -23,7 +53,6 @@ export const TERStatusColor: Map<TERStatus, string> = new Map([
 	[TERStatus.CLOSED, "var(--blue-col)"],
 	[TERStatus.ARCHIVED, "var(--purple-col)"],
 ]);
-
 
 export interface TERNotation {
 	titre: string;
@@ -158,6 +187,47 @@ export interface AdminSystemStats {
 }
 
 export default class TERService {
+	public static getPeriodPhase(period: TERPeriod) {
+		const now = new Date();
+
+		const phases = [
+			{
+				phase: TERPhase.FORMATION,
+				start: new Date(period.group_formation_start),
+				end: new Date(period.group_formation_end),
+			},
+			{
+				phase: TERPhase.SELECTION,
+				start: new Date(period.subject_selection_start!),
+				end: new Date(period.subject_selection_end!),
+			},
+			{
+				phase: TERPhase.EXECUTION,
+				start: new Date(period.project_start!),
+				end: new Date(period.project_end!),
+			}
+		];
+
+		for (let i = 0; i < phases.length; i++) {
+			const phase = phases[i];
+
+			if (now >= phase.start && now <= phase.end) {
+				const progress = (now.getTime() - phase.start.getTime()) / (phase.end.getTime() - phase.start.getTime());
+				const msLeft = phase.end.getTime() - now.getTime();
+				const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+
+				return {
+					phase: phase.phase,
+					deadline: phase.end,
+					progress: progress,
+					daysLeft: daysLeft,
+				};
+			}
+		}
+
+		return null;
+	}
+
 	public static async getStudents(id: string): Promise<User[]> {
 		try {
 			const res = await api.get<{results: User[]}>(`/ter/periods/${id}/students`);
@@ -253,7 +323,7 @@ export default class TERService {
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string, min_groupe: number, max_groupe: number): Promise<TERPeriod[] | null> {
 		try {
 			const load: TERPeriodCreatePayload = {
 				name: title,
@@ -265,8 +335,8 @@ export default class TERService {
 				assignment_date: projectEndDate,
 				project_start: start_date,
 				project_end: end_date,
-				min_group_size: 2,
-				max_group_size: 4,
+				min_group_size: min_groupe,
+				max_group_size: max_groupe,
 			};
 
 			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
@@ -315,7 +385,12 @@ export default class TERService {
 		}
 	}
 
-	public static exportCsvUrl(periodId: string): string {
-		return `${api.defaults.baseURL}/ter/dashboard/export/${periodId}/csv`;
+	public static async exportCsvUrl(periodId: string): Promise<void> {
+		try {
+			const res = await api.get(`/ter/dashboard/export/${periodId}/csv`)
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
 	}
 }

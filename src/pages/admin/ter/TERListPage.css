@@ -17,10 +17,14 @@
 	gap: 20px;
 }
 
+.ter-list-modal-content {
+	flex: 1;
+}
+
 .ter-list-buttons button {
 	flex: 1;
 }
 
 .ter-list-modal-style #content {
-	height: 300px;
+	height: 500px;
 }

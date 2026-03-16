@@ -46,9 +46,7 @@ export default function AccountLoginPage() {
 					<LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery"/>
 				</div>
                 
-				<div className="login-page-buttons-layout">
-					<Button label={isSubmitting ? "Connexion..." : "Se connecter"} width="100%"/>
-				</div>
+				<Button label={isSubmitting ? "Connexion..." : "Se connecter"} width="100%" height={30}/>
             </form>
         </LoginPage>
     );

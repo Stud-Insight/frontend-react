@@ -85,7 +85,7 @@ export default function UserSelectionDialog({label, value, role_filter, button_t
 	return (
 		<ModalDialog label={label} onClose={onClose} className="user-list-dialog-content">
 			<div className="user-select-search">
-				<InputField onChange={onSearchHandle}/>
+				<InputField onChange={onSearchHandle} placeholder="Rechercher un utilisateur..."/>
 			</div>
 			<div className="user-list-layout">
 				{filteredUsers.map(user => (

@@ -252,7 +252,7 @@ export default function UsersPage(){
 			{deleteUser &&
 				<ConfirmationDialog 
 					label="Supprimer cet utilisateur?" 
-					info={`L'utilisateur "${deleteUser.first_name} ${deleteUser.last_name}" sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
+					info={`L'utilisateur "${deleteUser.first_name} ${deleteUser.last_name}" sera supprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées.`}
 					onCancel={() => setDeleteUser(null)} 
 					onConfirm={deleteHandle}
 				/>
@@ -298,7 +298,7 @@ export default function UsersPage(){
 				<table className="users-table-style">
 					<thead>
 						<tr>
-							<th><InputCheckbox/></th>
+							{/* <th><InputCheckbox/></th> */}
 							<th>Profile</th>
 							<th>ID</th>
 							<th>Nom</th>
@@ -312,9 +312,9 @@ export default function UsersPage(){
 					<tbody>
 						{filteredUsers && filteredUsers.map((user, index) => (
 							<tr key={index}>
-								<td>
+								{/* <td>
 									<InputCheckbox value={selectedUsers.has(user.id)} onChange={() => userSelectionHandle(user.id)}/>
-								</td>
+								</td> */}
 								<td>
 									<div className="users-table-avatar-container">
 										<UserAvatar user={user} />

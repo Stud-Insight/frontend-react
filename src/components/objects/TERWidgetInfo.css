@@ -1,5 +1,15 @@
 .ter-widget-info-style {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
 	color: var(--gray1-col);
+}
+
+.ter-widget-info-content {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 10px;
 }
 
 .ter-widget-info-header {
@@ -11,6 +21,7 @@
 .ter-widget-info-text {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	gap: 10px;
 	flex: 1;
 }

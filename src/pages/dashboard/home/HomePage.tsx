@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardPage from "../DashboardPage.tsx";
-import { useAuth } from "../../../hooks/AuthContext.tsx";
+import { useAuth } from '../../../hooks/AuthContext.tsx';
 import { UserRoles } from "../../../services/UserService.ts";
 import StudentHomePage from './StudentHomePage.tsx';
 import RespoDashboard from './RespoDashboard.tsx';

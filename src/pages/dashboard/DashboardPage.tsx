@@ -60,11 +60,11 @@ export default function DashboardPage({ children }: DashboardPageProps) {
         }
     }
 
-    const pageHandle = (id: string) => {
+    const switchPageHandle = (id: string) => {
         navigate("/dashboard/" + id);
     }
 
-	const isActive = (pattern: string) => {
+	const isPageActive = (pattern: string) => {
 		return matchPath({ path: pattern, end: false }, pathname) !== null;
 	};
 
@@ -74,38 +74,38 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 				<div className="dashboard-sidebar-content">
 					<Logo large={true}/>
 					<HorizontalDivider/>
-					<NavigationButton label="Accueil" active={isActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={pageHandle} notifCount={notification_map.get("home")}/>
-					<NavigationButton label="TER" active={ isActive("/dashboard/ter/*") && !isActive("/dashboard/ter/:id/admin") && !isActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={pageHandle} notifCount={notification_map.get("ter")}/>
-					<NavigationButton label="Stages" active={isActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={pageHandle} notifCount={notification_map.get("stages")}/>
-					<NavigationButton label="Conversations" active={isActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={pageHandle} notifCount={notification_map.get("chat")}/>
-					<NavigationButton label="Notifications" active={isActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={pageHandle} notifCount={notification_map.get("notification")}/>
+					<NavigationButton label="Accueil" active={isPageActive("/dashboard/home")} icon={<FiHome/>} id="home" onClick={switchPageHandle} notifCount={notification_map.get("home")}/>
+					<NavigationButton label="TER" active={ isPageActive("/dashboard/ter/*") && !isPageActive("/dashboard/ter/:id/admin") && !isPageActive("/dashboard/ter/list")} icon={<TbSchool/>} id="ter" onClick={switchPageHandle} notifCount={notification_map.get("ter")}/>
+					<NavigationButton label="Stages" active={isPageActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={switchPageHandle} notifCount={notification_map.get("stages")}/>
+					<NavigationButton label="Conversations" active={isPageActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={switchPageHandle} notifCount={notification_map.get("chat")}/>
+					<NavigationButton label="Notifications" active={isPageActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={switchPageHandle} notifCount={notification_map.get("notification")}/>
 					<HorizontalDivider/>
 
 					{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) && 
-						<NavigationButton label="Sujets TER" active={isActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={pageHandle} notifCount={notification_map.get("sujets")}/>
+						<NavigationButton label="Sujets TER" active={isPageActive("/dashboard/subjects")} icon={<FaRegFolder/>} id="subjects" onClick={switchPageHandle} notifCount={notification_map.get("sujets")}/>
 					}
 
 					{(roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN)) && 
-						<NavigationButton label="Gestion TER" active={isActive("/dashboard/ter/:id/admin") || isActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={pageHandle}/>
+						<NavigationButton label="Gestion TER" active={isPageActive("/dashboard/ter/:id/admin") || isPageActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25}/>} id="ter/list" onClick={switchPageHandle}/>
 					}
 					
 					{roles.includes(UserRoles.ADMIN) &&
-						<NavigationButton label="Gestion Utilisateurs" active={isActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={pageHandle}/>
+						<NavigationButton label="Gestion Utilisateurs" active={isPageActive("/dashboard/users")} icon={<FiUsers/>} id="users" onClick={switchPageHandle}/>
 					}	
 
 					{!roles.includes(UserRoles.ETUDIANT) &&
 						<>
-							<NavigationButton label="Archives" active={isActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={pageHandle} notifCount={notification_map.get("archive")}/>
+							<NavigationButton label="Archives" active={isPageActive("/dashboard/archive")} icon={<FiArchive/>} id="archive" onClick={switchPageHandle} notifCount={notification_map.get("archive")}/>
 							<HorizontalDivider/>
 						</>				
 					}
 					
-					<NavigationButton label="Aide" icon={<PiQuestionBold/>} id="help" active={isActive("/dashboard/help")}  onClick={pageHandle}/>
+					<NavigationButton label="Aide" icon={<PiQuestionBold/>} id="help" active={isPageActive("/dashboard/help")}  onClick={switchPageHandle}/>
 				</div>
 
 				<div className="dashboard-sidebar-content">
 					<HorizontalDivider/>
-					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={pageHandle}>
+					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isPageActive("/dashboard/profile/*")} icon={<FiUser/>} id="profile/me" onClick={switchPageHandle}>
 						<UserAvatar user={user} size={50}/>
 						<div className="dashboard-profile-text">
 							<span style={{color: "var(--black-col)"}}>{user?.first_name} {user?.last_name}</span>

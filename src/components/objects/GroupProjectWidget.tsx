@@ -83,7 +83,7 @@ export default function GroupProjectWidget({label, group, admin = true, active =
 					{group.members.map(member => {
 						if (group.leader && member.id != group.leader.id){
 							return (
-								<UserWidget key={member.id} user={member} selected={false} crown={false}>
+								<UserWidget key={member.id} user={member} selected={false} crown={false} showId={admin}>
 									<OverflowMenu options={[
 										{label: "Transférer Leadership", icon: <FaCrown/>, onClick: () => onLeader?.(member)},
 										{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onUserDelete?.(member)},

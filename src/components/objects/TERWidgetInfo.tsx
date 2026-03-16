@@ -1,52 +1,15 @@
 import React from "react";
-import { TERPeriod } from "../../services/TERService";
+import TERService, { TERPeriod, TERPhaseLabel, TERPhaseColor } from "../../services/TERService";
 import ProgressBar from "../ui/ProgressBar";
 import ContainerWidget from "../ui/ContainerWidget";
 import Tag from "../../atoms/ui/Tag";
+import Icon from "../../atoms/ui/Icon";
+import { HiOutlineCalendar } from "react-icons/hi";
 
 import "./TERWidgetInfo.css"
 
 interface TERWidgetInfoProps {
 	period: TERPeriod;
-}
-
-function getCurrentPhase(period: TERPeriod) {
-	const now = new Date();
-
-	const phases = [
-		{
-			name: "Formation des groupes",
-			start: new Date(period.group_formation_start),
-			end: new Date(period.group_formation_end),
-		},
-		{
-			name: "Choix des sujets",
-			start: new Date(period.subject_selection_start!),
-			end: new Date(period.subject_selection_end!),
-		},
-		{
-			name: "Projet",
-			start: new Date(period.project_start!),
-			end: new Date(period.project_end!),
-		}
-	];
-
-	for (let i = 0; i < phases.length; i++) {
-		const phase = phases[i];
-
-		if (now >= phase.start && now <= phase.end) {
-			const progress = (now.getTime() - phase.start.getTime()) / (phase.end.getTime() - phase.start.getTime());
-
-			return {
-				label: phase.name,
-				deadline: phase.end,
-				progress,
-				index: i + 1,
-				total: phases.length
-			};
-		}
-	}
-	return null;
 }
 
 function getRemainingTime(deadline: Date) {
@@ -59,7 +22,8 @@ function getRemainingTime(deadline: Date) {
 }
 
 export default function TERWidgetInfo({period}: TERWidgetInfoProps) {
-	const phase = getCurrentPhase(period);
+	const phase = TERService.getPeriodPhase(period);
+
 	if (!phase) {
 		return null;
 	}
@@ -67,19 +31,26 @@ export default function TERWidgetInfo({period}: TERWidgetInfoProps) {
 	const remaining = getRemainingTime(phase.deadline);
 
 	return (
-		<ContainerWidget className="ter-widget-info-style">
-			<div className="ter-widget-info-header">
-				<div className="ter-widget-info-text">
-					<span>Phase: </span>
-					<span>{phase.label}</span>
+		<ContainerWidget>
+			<div className="ter-widget-info-style">
+				<div>
+					<Icon icon={<HiOutlineCalendar/>} color="var(--blue-col)"/>
 				</div>
 
-				<Tag label={`${phase.index} / ${phase.total}`} color="var(--gray1-col)"/>
+				<div className="ter-widget-info-content">
+					<div className="ter-widget-info-header">
+						<div className="ter-widget-info-text">
+							<span>Phase: </span>
+							<Tag label={TERPhaseLabel.get(phase.phase)} color={TERPhaseColor.get(phase.phase)}/>
+						</div>
+
+						<span>{`${phase.daysLeft} Jours Restants`}</span>
+					</div>
+					<span>Deadline: {phase.deadline.toLocaleDateString()}</span>
+
+					<ProgressBar current={phase.progress}/>
+				</div>
 			</div>
-
-			<ProgressBar current={phase.progress}/>
-
-			<span>Deadline: {phase.deadline.toLocaleDateString()}</span>
 		</ContainerWidget>
 	)
 }
