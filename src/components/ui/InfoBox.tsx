@@ -1,10 +1,10 @@
 import React from "react";
-import { MdInfo, MdError, MdCheckCircle } from "react-icons/md";
+import { MdInfo, MdError, MdCheckCircle, MdWarning } from "react-icons/md";
 import "./InfoBox.css";
 
 interface InfoBoxProps {
     label: string;
-    type?: "info" | "error" | "success";
+    type?: "info" | "error" | "success" | "warning";
 }
 
 export default function InfoBox({label, type = "info"}: InfoBoxProps) {
@@ -12,6 +12,8 @@ export default function InfoBox({label, type = "info"}: InfoBoxProps) {
         switch (type) {
             case "error":
                 return <MdError size={20}/>;
+            case "warning":
+                return <MdWarning size={20}/>;
             case "success":
                 return <MdCheckCircle size={20}/>;
             default:

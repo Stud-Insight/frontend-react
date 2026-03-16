@@ -9,11 +9,12 @@ import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
 import TERSubjectView from "./TERSubjectView";
 
-import TERService, { TERPeriod, TERStatusColor, TERStatus, TERStatusLabel } from "../../../services/TERService";
+import TERService, { TERPeriod, TERStatusColor, TERStatus, TERStatusLabel, WorkflowWarning } from "../../../services/TERService";
 import GroupService, { Group } from "../../../services/GroupService";
 import GradeService, { Grade } from "../../../services/GradeService";
 import SubjectService, { Subject } from "../../../services/SubjectService";
 import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
+import WarningsBanner from "../../../components/ui/WarningsBanner";
 
 import { GoGear } from "react-icons/go";
 import { TbSchool } from "react-icons/tb";
@@ -40,6 +41,7 @@ export default function TERGestionPage(){
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [professors, setProfessors] = useState<User[]>([]);
 	const [archiveConfirm, setArchiveConfirm] = useState<boolean>(false);
+	const [warnings, setWarnings] = useState<WorkflowWarning[]>([]);
 
 	const addStudent = async (users: Set<string>) => {
 		try {
@@ -265,10 +267,19 @@ export default function TERGestionPage(){
 
 	const exportPeriodHandle = async () => {
 		try {
-			await TERService.exportCsvUrl(id);
+			await TERService.exportCsv(id!);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
+		}
+	}
+
+	const getWarnings = async () => {
+		try {
+			const data = await TERService.getWarnings(id!);
+			setWarnings(data.warnings);
+		} catch {
+			// Silently ignore — warnings are optional
 		}
 	}
 
@@ -291,6 +302,7 @@ export default function TERGestionPage(){
 		getGroups();
 		getGrades();
 		getSubjects();
+		getWarnings();
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
@@ -333,6 +345,8 @@ export default function TERGestionPage(){
 			{isArchived &&
 				<InfoBox label="Cette période est archivée. Les données sont en lecture seule." type="info"/>
 			}
+
+			<WarningsBanner warnings={warnings}/>
 
 			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>
 

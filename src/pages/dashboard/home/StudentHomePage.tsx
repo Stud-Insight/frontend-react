@@ -7,6 +7,7 @@ import { FiUsers } from "react-icons/fi";
 import { TbSchool } from "react-icons/tb";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { FaRegFile } from "react-icons/fa";
+import Button from "../../../atoms/input/Button";
 import { useNavigate } from "react-router-dom";
 import "./StudentHomePage.css";
 
@@ -86,6 +87,21 @@ export default function StudentHomePage() {
 									</span>
 								)}
 							</div>
+						)}
+						{phase.current_phase === "formation" && !data.group_name && (
+							<Button label="Former un groupe" color="var(--blue-col)"
+								icon={<FiUsers/>}
+								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}`)}/>
+						)}
+						{phase.current_phase === "selection" && data.group_name && (
+							<Button label="Classer les sujets" color="var(--orange-col)"
+								icon={<FaRegFile/>}
+								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}/vote`)}/>
+						)}
+						{phase.current_phase === "execution" && data.group_name && (
+							<Button label="Voir mon projet" color="var(--green-col)"
+								icon={<FaRegFile/>}
+								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}`)}/>
 						)}
 					</div>
 				</ContainerWidget>
