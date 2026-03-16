@@ -62,7 +62,7 @@ export default function GroupProjectWidget({label, group, admin = true, active =
 							<IconButton size={20} icon={expanded ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpanded(!expanded)}/>
 						}
 						<OverflowMenu options={[
-							{label: "Ajouter Etudiants", icon: <FaPlus/>, onClick: () => onAdd?.()},
+							{label: "Ajouter Étudiants", icon: <FaPlus/>, onClick: () => onAdd?.()},
 							{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit?.()},
 							{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete?.()},
 						]}/>

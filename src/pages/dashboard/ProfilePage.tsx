@@ -12,7 +12,7 @@ import InputField from "../../components/input/InputField";
 
 import "./ProfilePage.css";
 
-export default function ProfilePage(){
+export default function ProfilPage(){
 	const { user } = useAuth();
 	const [nom, setNom] = useState<string | undefined>("");
 	const [prenom, setPrenom] = useState<string | undefined>("");
@@ -45,11 +45,11 @@ export default function ProfilePage(){
 		<DashboardPage>
 			<div className="dashboard-top-layout">
 				<div className="dashboard-top-title-layout">
-					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Profile</span>
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Profil</span>
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Gérez et modifier votre profile.</span>
+			<span style={{color: "var(--gray1-col)"}}>Gérez et modifiez votre profil.</span>
 
 			<div className="profile-page-layout">
 				<ContainerWidget icon={<FiUser/>} label="Avatar" className="profile-page-left-layout">
@@ -63,7 +63,7 @@ export default function ProfilePage(){
 					<ContainerWidget icon={<FiUser/>} label="Info" className="profile-info-avatar">
 						<InputField label="ID" value={`#${user?.id}`}/>
 						<InputField label="Nom" value={nom}/>
-						<InputField label="Prenom" value={prenom}/>
+						<InputField label="Prénom" value={prenom}/>
 						<InputField label="E-Mail" value={mail}/>
 					</ContainerWidget>
 

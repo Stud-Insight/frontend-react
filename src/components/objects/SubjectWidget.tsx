@@ -114,9 +114,9 @@ export default function SubjectWidget({subject, privateMode = true, adminMode = 
 
 							<div className="subject-widget-tag-layout"> 
 								{subject.min_group_size == subject.max_group_size ? 
-									<Tag label={`${subject.max_group_size} Etudiants`}/>
+									<Tag label={`${subject.max_group_size} Étudiants`}/>
 									:
-									<Tag label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`}/>
+									<Tag label={`${subject.min_group_size} - ${subject.max_group_size} Étudiants`}/>
 								}
 								{subject.tags?.map((tag, index) => (
 									<Tag key={index} label={tag}/>

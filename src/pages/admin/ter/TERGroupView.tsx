@@ -109,7 +109,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 			}
 
 			{addingUser &&
-				<ModalDialog label="Ajouter Etudiants" onClose={resetFields} className="group-view-selection-modal">
+				<ModalDialog label="Ajouter Étudiants" onClose={resetFields} className="group-view-selection-modal">
 					<InputUserSelection value={selectedUsers} label="Membres" users={students} onChange={setSelectedUsers} maxSelection={addingUser.max_group_size - addingUser.member_count}/>
 					<Button icon={<FaPlus/>} label={`Ajouter (${selectedUsers.size})`} onClick={addUserHandle}/>
 				</ModalDialog>
@@ -125,10 +125,10 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 
 			{deleteUser &&
 				<ConfirmationDialog 
-				label="Supprimer Etudiant" 
+				label="Supprimer Étudiant" 
 				onCancel={() => setDeleteUser(null)}
 				onConfirm={removeUserGroupHandle}
-				info={`Etes vous sur de vouloir supprimer "${deleteUser.user.first_name} ${deleteUser.user.last_name}" du groupe "${deleteUser.group.name}"?`}/>
+				info={`Êtes-vous sûr de vouloir supprimer "${deleteUser.user.first_name} ${deleteUser.user.last_name}" du groupe "${deleteUser.group.name}"?`}/>
 			}
 
 			{deleteGroup &&
@@ -136,7 +136,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 				label="Supprimer Groupe" 
 				onCancel={() => setDeleteGroup(null)}
 				onConfirm={deleteGroupHandle}
-				info={`Etes vous sur de vouloir supprimer le groupe "${deleteGroup.name}"?`}/>
+				info={`Êtes-vous sûr de vouloir supprimer le groupe "${deleteGroup.name}"?`}/>
 			}
 
 			{leader &&
@@ -144,7 +144,7 @@ export default function TERGroupView({groups, students, onAdd, onDelete, onAddUs
 				label="Changement Chef" 
 				onCancel={() => setLeader(null)}
 				onConfirm={changeLeaderHandle}
-				info={`Etes vous sur de vouloir changer "${leader.user.first_name} ${leader.user.last_name}" en responsable du groupe "${leader.group.name}"?`}/>
+				info={`Êtes-vous sûr de vouloir changer "${leader.user.first_name} ${leader.user.last_name}" en responsable du groupe "${leader.group.name}"?`}/>
 			}
 
 			<div className="dashboard-top-layout">

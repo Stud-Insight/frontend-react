@@ -70,7 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         try {
             await AuthService.logout();
         } catch (err) {
-            // Ignorer les erreurs de deconnexion
+            // Ignorer les erreurs de déconnexion
         } finally {
             setUser(null);
             setIsLoading(false);

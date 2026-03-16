@@ -58,7 +58,7 @@ export default function TERProfessorView({professors, onAdd, onDelete, onContact
 				<table className="users-table-style">
 					<thead>
 						<tr>
-							<th>Profile</th>
+							<th>Profil</th>
 							<th>Nom</th>
 							<th>E-Mail</th>	
 							<th></th>

@@ -38,7 +38,7 @@ export default function AccountActivationPage(){
 
                 {/*TODO CREER UN CAPTCHA POUR EVIPeriod BOT */}
 
-                <LinkButton label="Retour à la page de connection" redirection="/auth/login"/>
+                <LinkButton label="Retour à la page de connexion" redirection="/auth/login"/>
             </form>
         </LoginPage>
     );
