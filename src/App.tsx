@@ -5,8 +5,6 @@ import AccountLoginPage from "./pages/auth/AccountLoginPage";
 import AccountRecoveryPage from "./pages/auth/AccountRecoveryPage";
 import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/home/HomePage";
-import TERGroupPage from "./pages/dashboard/ter/TERGroupView";
-import TERSubjectView from "./pages/dashboard/ter/TERSubjectView"
 import TERDetailPage from "./pages/dashboard/ter/TERDetailPage"
 import TERPage from "./pages/dashboard/ter/TERPage";
 import TERListPage from "./pages/admin/ter/TERListPage";
