@@ -1,16 +1,12 @@
 import React, {useState, useEffect} from "react";
 import InfoWidget from "../../../components/ui/InfoWidget";
-import DashboardPage from "../DashboardPage";
 import TERService, { TERPeriod } from "../../../services/TERService";
-import { Subject, SubjectStatus } from "../../../services/SubjectService";
 import { User } from "../../../services/UserService";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import GroupService, { Group, GroupInvitation, InvitationStatus } from "../../../services/GroupService";
-import InfoBox from "../../../components/ui/InfoBox";
 import Button from "../../../atoms/input/Button";
 import ModalDialog from "../../../components/dialog/ModalDialog";
 import InputField from "../../../components/input/InputField";
-import TERWidgetInfo from "../../../components/objects/TERWidgetInfo";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
 import UserWidget from "../../../components/objects/UserWidget";
 import GroupInvitationWidget from "../../../components/objects/GroupInvitationWidget";

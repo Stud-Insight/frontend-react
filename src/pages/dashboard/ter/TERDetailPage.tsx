@@ -1,13 +1,12 @@
-import React, { useState, useEffect, ReactNode } from "react"
+import React, { useState, useEffect } from "react"
 import TERWidgetInfo from "../../../components/objects/TERWidgetInfo";
 import TERService, { TERPeriod, TERPhase } from "../../../services/TERService";
 import InfoBox from "../../../components/ui/InfoBox";
-import { Subject } from "../../../services/SubjectService";
 import { useParams } from "react-router-dom";
 import DashboardPage from "../DashboardPage";
-
 import TERGroupView from "./TERGroupView";
 import TERSubjectView from "./TERSubjectView";
+
 import "./TERDetailPage.css"
 
 export default function TERDetailPage(){
@@ -40,6 +39,7 @@ export default function TERDetailPage(){
 		}
 
 		getPeriod();
+
 	}, []);
 
 	return (
