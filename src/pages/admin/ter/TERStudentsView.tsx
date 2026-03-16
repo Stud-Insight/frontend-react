@@ -38,7 +38,7 @@ export default function TERStudentView({students, readOnly, onAdd, onDelete, onC
 		}
 
 		{deleteStudent &&
-			<ConfirmationDialog label={"Supprime etudiant du TER"} onCancel={() => setDeleteStudent(null)} onConfirm={() => {
+			<ConfirmationDialog label={"Supprimer étudiant du TER"} onCancel={() => setDeleteStudent(null)} onConfirm={() => {
 				onDelete?.(deleteStudent);
 				setDeleteStudent(null);
 			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`}/>
@@ -49,7 +49,7 @@ export default function TERStudentView({students, readOnly, onAdd, onDelete, onC
 				<div/>
 				<div className="dashboard-top-button-layout">
 					<ImportCSVButton/>
-					<Button icon={<FaPlus/>} label="Ajouter Etudiant" onClick={() => setAddingStudent(true)}/>
+					<Button icon={<FaPlus/>} label="Ajouter Étudiant" onClick={() => setAddingStudent(true)}/>
 				</div>
 			</div>
 		}

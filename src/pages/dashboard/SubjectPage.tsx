@@ -223,7 +223,7 @@ export default function SubjectPage(){
 			{success && <InfoBox label={success} type="success"/>}
 
 			<div className="dashbord-mini-info-layout">
-				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
+				<InfoWidget active={page == null} label="Sujets Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
 				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
 				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
 				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvé" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
@@ -238,7 +238,7 @@ export default function SubjectPage(){
 				/>
 			))
 			) : (
-				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet crée pour le moment."/>
+				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet créé pour le moment."/>
 			)}	
 		</DashboardPage>
 	)

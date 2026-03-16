@@ -57,10 +57,10 @@ export default function RespoDashboard() {
 		<div className="respo-dashboard-layout">
 			{adminStats && (
 				<>
-					<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble du systeme</span>
+					<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble du système</span>
 					<div className="dashbord-mini-info-layout">
 						<InfoWidget label="Utilisateurs" icon={<FiUser/>} info={adminStats.active_users} color="var(--blue-col)"/>
-						<InfoWidget label="Etudiants" icon={<FiUsers/>} info={adminStats.total_students} color="var(--blue-col)"/>
+						<InfoWidget label="Étudiants" icon={<FiUsers/>} info={adminStats.total_students} color="var(--blue-col)"/>
 						<InfoWidget label="Encadrants" icon={<TbSchool/>} info={adminStats.total_encadrants} color="var(--purple-col)"/>
 					</div>
 					<div className="dashbord-mini-info-layout">

@@ -62,7 +62,7 @@ export default function TERGradeView({grades, readOnly, onAdd, onEdit, onDelete}
 		<>
 			{deleteGrade && 
 				<ConfirmationDialog label="Supprimer Note" onCancel={() => setDeleteGrade(null)} onConfirm={() => onDelete?.(deleteGrade)} info={
-					`Est vous sure de vouloir supprimer la note "${deleteGrade.name}"?`
+					`Êtes-vous sûr de vouloir supprimer la note "${deleteGrade.name}"?`
 				}/>
 			}	
 

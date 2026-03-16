@@ -49,7 +49,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 
 		try {
 			await GroupService.deleteGroup(myGroup!.id);
-			setSuccess(`Vous avez supprimé le groupe '${myGroup?.name}' avec succés!`);
+			setSuccess(`Vous avez supprimé le groupe '${myGroup?.name}' avec succès !`);
 			setTimeout(() => setSuccess(""), 5000);
 			getGroups();
 			getMyGroup();
@@ -73,7 +73,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			await GroupService.updateGroup(myGroup?.id, nomGroup, myGroup!.max_group_size);
 			getGroups();
 			getMyGroup();
-			setSuccess(`Groupe '${myGroup?.name}' modifié avec succés!`);
+			setSuccess(`Groupe '${myGroup?.name}' modifié avec succès !`);
 			setTimeout(() => setSuccess(""), 5000);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -88,7 +88,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			await GroupService.leaveGroup(myGroup!.id);
 			getGroups();
 			getMyGroup();
-			setSuccess(`Vous avez quitter le groupe '${myGroup?.name}' avec succés!`);
+			setSuccess(`Vous avez quitté le groupe '${myGroup?.name}' avec succès !`);
 			setTimeout(() => setSuccess(""), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
@@ -203,7 +203,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 	const createGroupHandle = async () => {
 		try {
 			await GroupService.createGroup(period.id, nomGroup, period.max_group_size, new Set());
-			setSuccess(`Groupe "${nomGroup}" à été crée dans "${period?.name}"`);
+			setSuccess(`Groupe "${nomGroup}" a été créé dans "${period?.name}"`);
 			getGroups();
 			getMyGroup();
 			setTimeout(() => setSuccess(""), 5000);
@@ -255,13 +255,13 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			}
 
 			{inviteGroup &&
-				<UserSelectionDialog value={enrolledStudents} label="Invitation Etudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)}/>
+				<UserSelectionDialog value={enrolledStudents} label="Invitation Étudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)}/>
 			}
 
 			{leaveGroup &&
 				<ConfirmationDialog 
 					label="Quitter Groupe?" 
-					info={`Etes vous sur de vouloir quitter le groupe '${myGroup?.name}'?`}
+					info={`Êtes-vous sûr de vouloir quitter le groupe '${myGroup?.name}'?`}
 					onCancel={() => setLeaveGroup(null)}
 					onConfirm={leaveGroupHandle}
 				/>
@@ -270,7 +270,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			{deleteGroup &&
 				<ConfirmationDialog 
 					label="Supprimer Groupe?" 
-					info={`Etes vous sur de vouloir supprimer votre groupe '${myGroup?.name}'?`}
+					info={`Êtes-vous sûr de vouloir supprimer votre groupe '${myGroup?.name}'?`}
 					onCancel={() => setDeleteGroup(null)}
 					onConfirm={deleteGroupHandle}
 				/>

@@ -28,10 +28,10 @@ export default function StagePage(){
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Détaile et information sur les stages.</span>
+			<span style={{color: "var(--gray1-col)"}}>Détails et informations sur les stages.</span>
 
 			{period == null && 
-				<EmptyWidget icon={<MdWorkOutline size={30}/>} text="Aucune periode de stage pour le moment."/>
+				<EmptyWidget icon={<MdWorkOutline size={30}/>} text="Aucune période de stage pour le moment."/>
 			}
 		</DashboardPage>
 	)

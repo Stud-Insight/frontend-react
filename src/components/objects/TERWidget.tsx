@@ -61,7 +61,7 @@ export default function TERWidget({period, onClick, onSelect, onArchive, selecte
 					{onArchive && period.status === TERStatus.CLOSED &&
 						<Button icon={<FiArchive/>} label="Archiver" style="danger" onClick={onArchive}/>
 					}
-					<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onClick={onClick}/>
+					<Button icon={<FaArrowLeftLong/>} label="Voir Détails" onClick={onClick}/>
 				</div>
 			</div>
 		</ContainerWidget>
