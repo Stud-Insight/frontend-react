@@ -9,6 +9,12 @@ export enum SubjectStatus {
 	REJECTED = "rejected"
 };
 
+export interface SubjectGroupRank {
+	subject_id: number;
+	subject_title: string;
+	rank: number;
+};
+
 export const SubjectStatusColor: Map<SubjectStatus, string> = new Map([
 	[SubjectStatus.DRAFT, "var(--gray1-col)"],
 	[SubjectStatus.SUBMITTED, "var(--blue-col)"],
@@ -144,6 +150,40 @@ export default class SubjectService {
 	public static async acceptSubject(subject_id: string): Promise<void> {
 		try {
 			await api.post(`ter/subjects/${subject_id}/validate`)
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async submitGroupRankingSubject(group_id: string, ranks: SubjectGroupRank[]): Promise<void>{
+		try {
+			await api.post(`ter/rankings/${group_id}`, ranks)
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getGroupSubjectRanking(group_id: string): Promise<SubjectGroupRank[]>{
+		try {
+			const res = await api.get(`ter/rankings/${group_id}`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async submitMemberSubjectRanking(group_id: string, ranks: SubjectGroupRank[]): Promise<void>{
+		try {
+			await api.post(`ter/rankings/${group_id}/individual`, ranks)
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getMemberSubjectRanking(group_id: string): Promise<SubjectGroupRank[]>{
+		try {
+			const res = await api.get(`ter/rankings/${group_id}/individual`);
+			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

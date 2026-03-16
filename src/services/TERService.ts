@@ -227,7 +227,7 @@ export default class TERService {
 				const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
 
 				return {
-					phase: TERPhase.SELECTION,
+					phase: phase.phase,
 					deadline: phase.end,
 					progress: progress,
 					daysLeft: daysLeft,
