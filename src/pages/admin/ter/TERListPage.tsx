@@ -84,6 +84,8 @@ export default function PeriodListPage(){
 		setYear(2000);
 		setStartDate("");
 		setEndDate("");
+		setMaxGroup(4);
+		setMinGroup(2);
 		setCreatePeriod(false);
 	}
 
