@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TERService, { StudentDashboard } from "../../../services/TERService";
+import TERService, { StudentDashboard, PhaseColors } from "../../../services/TERService";
 import ContainerWidget from "../../../components/ui/ContainerWidget";
 import Icon from "../../../atoms/ui/Icon";
 import Tag from "../../../atoms/ui/Tag";
@@ -9,16 +9,6 @@ import { HiOutlineCalendar } from "react-icons/hi";
 import { FaRegFile } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./StudentHomePage.css";
-
-const PhaseColors: Record<string, string> = {
-	formation: "var(--blue-col)",
-	selection: "var(--orange-col)",
-	assignment: "var(--purple-col)",
-	execution: "var(--green-col)",
-	finished: "var(--gray1-col)",
-	upcoming: "var(--cyan-col)",
-	unknown: "var(--gray1-col)",
-};
 
 export default function StudentHomePage() {
 	const [data, setData] = useState<StudentDashboard | null>(null);

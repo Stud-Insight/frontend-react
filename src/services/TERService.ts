@@ -186,6 +186,16 @@ export interface AdminSystemStats {
 	active_stage_periods: number;
 }
 
+export const PhaseColors: Record<string, string> = {
+	formation: "var(--blue-col)",
+	selection: "var(--orange-col)",
+	assignment: "var(--purple-col)",
+	execution: "var(--green-col)",
+	finished: "var(--gray1-col)",
+	upcoming: "var(--cyan-col)",
+	unknown: "var(--gray1-col)",
+};
+
 export default class TERService {
 	public static getPeriodPhase(period: TERPeriod) {
 		const now = new Date();

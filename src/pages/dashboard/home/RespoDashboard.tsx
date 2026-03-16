@@ -2,14 +2,10 @@ import React, { useState, useEffect } from 'react';
 import TERService, { TERPeriod, TERPeriodStats, TERStatus, TERStatusColor, AdminSystemStats } from '../../../services/TERService';
 import InfoWidget from '../../../components/ui/InfoWidget';
 import ContainerWidget from '../../../components/ui/ContainerWidget';
-import TERWidget from '../../../components/objects/TERWidget';
-import Button from '../../../atoms/input/Button';
-import Icon from '../../../atoms/ui/Icon';
 import { FiUsers, FiUser } from 'react-icons/fi';
 import { TbSchool } from 'react-icons/tb';
 import { FaRegFile } from 'react-icons/fa';
 import { MdWorkOutline } from 'react-icons/md';
-import { FiDownload } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import './RespoDashboard.css';
 
@@ -49,12 +45,6 @@ export default function RespoDashboard() {
 		return <span style={{color: "var(--red-col)"}}>{error}</span>;
 	}
 
-	const handleExportCsv = () => {
-		if (activePeriod) {
-			window.open(TERService.exportCsvUrl(activePeriod.id), "_blank");
-		}
-	};
-
 	return (
 		<div className="respo-dashboard-layout">
 			{adminStats && (
@@ -79,7 +69,6 @@ export default function RespoDashboard() {
 						<span style={{fontWeight: 700, fontSize: "18px"}}>
 							{activePeriod.name}
 						</span>
-						<Button icon={<FiDownload/>} label="Exporter CSV" onClick={handleExportCsv}/>
 					</div>
 					<span style={{color: "var(--gray1-col)"}}>Statistiques de la periode TER active</span>
 

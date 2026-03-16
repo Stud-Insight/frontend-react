@@ -10,6 +10,18 @@ export interface Grade {
 	max?: number;
 };
 
+export const GradeStatusLabel: Record<string, string> = {
+	draft: "Brouillon",
+	submitted: "Soumis",
+	finalized: "Finalise",
+};
+
+export const GradeStatusColor: Record<string, string> = {
+	draft: "var(--gray1-col)",
+	submitted: "var(--orange-col)",
+	finalized: "var(--green-col)",
+};
+
 export default class GradeService {
 	public static async	getGrades(ter_period_id: string): Promise<Grade[]>{
 		try {

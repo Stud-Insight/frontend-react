@@ -10,11 +10,9 @@ import "./HomePage.css"
 export default function HomePage(){
 	const { user } = useAuth();
 
-	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => role.name);
-
-	const isRespo = roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN);
-	const isEncadrant = roles.includes(UserRoles.ENCADRANT);
-	const isStudent = roles.includes(UserRoles.ETUDIANT);
+	const isRespo = user ? (UserService.isRespo(user) || UserService.isAdmin(user)) : false;
+	const isEncadrant = user ? UserService.isProfessor(user) : false;
+	const isStudent = user ? UserService.isStudent(user) : false;
 
 	return (
 		<DashboardPage>
