@@ -9,7 +9,7 @@ export default function HorizontalDivider({label}: DividerProps){
     return label ? (
         <div className="divider-style">
             <div className="sep" />
-            <label>{label}</label>
+            <span>{label}</span>
             <div className="sep" />
         </div>
     ) : (

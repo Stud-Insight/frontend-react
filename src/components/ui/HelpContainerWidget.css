@@ -1,0 +1,14 @@
+.help-container-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 15px;
+	height: 100%;
+}
+
+.help-container-text {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	justify-content: space-between;
+}

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import "./NavigationButton.css"
 
 interface NavigationButtonProps {
@@ -8,24 +8,33 @@ interface NavigationButtonProps {
     offset?: number;
     size?: string;
     active?: boolean;
-	showBackground?: boolean;
+	notifCount?: number;
+	children?: ReactNode;
+	className?: string;
     onClick?: (id: string) => void;
 };
 
-
-export default function NavigationButton({label, icon, offset = 0, size = "20px", onClick, active = false, id = "", showBackground = false}: NavigationButtonProps){
-    const className = `navigation-button-style${active ? " active" : ""}`;
-
-    const clickHandle = () => {
-        onClick ? onClick(id) : undefined;
-    };
-
+export default function NavigationButton({label, children, icon, offset = 0, size = "20px", onClick, active = false, id = "", notifCount = 0, className}: NavigationButtonProps){
     return (
-        <button className={className} onClick={clickHandle} style={{backgroundColor: showBackground && !active ? "var(--gray3-col)" : undefined}}>
-            <div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
-				{icon}
-			</div>
-			<label>{label}</label>
+        <button className={`navigation-button-style ${active ? "active" : ""} ${className}`} onClick={() => onClick?.(id)}>
+			{children == null ? 
+			<>
+				<div style={{transform: `translateY(${offset}px)`, fontSize: size}}>
+					{icon}
+				</div>
+				<span>{label}</span>
+			
+			</>:
+				children
+			}
+				
+			{notifCount && notifCount > 0 ?
+				<div className="navigation-button-notification-style">
+					{notifCount}
+				</div>
+				:
+				undefined
+			}
         </button>
     )
 }

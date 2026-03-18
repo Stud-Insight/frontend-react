@@ -1,0 +1,30 @@
+.profile-page-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.profile-page-right-layout {
+	display: flex;
+	flex: 2;
+	gap: 20px;
+	flex-direction: column;
+}
+
+.profile-page-left-layout {
+	flex: 1;
+}
+
+.profile-page-avatar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	flex: 1;
+	gap: 20px;
+}
+
+.profile-page-info {
+	display: flex;
+	flex-direction: column;
+	gap: 20px
+}

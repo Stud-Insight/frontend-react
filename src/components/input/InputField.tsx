@@ -20,7 +20,7 @@ export default function InputField({label, type = "text", icon, value, onChange,
 
     return (
 		<Field label={label} icon={icon} onClick={pressHandle}>
-			<input ref={inputRef} value={value} placeholder={placeholder} type={type} onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
+			<input ref={inputRef} value={value} placeholder={placeholder} type={type} onChange={(e) => onChange?.(e.target.value)}/>
 		</Field>
     );
 }

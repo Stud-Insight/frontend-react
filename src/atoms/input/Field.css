@@ -5,7 +5,7 @@
     gap: 4px;
 }
 
-.field-layout input {
+.field-layout input, textarea {
 	background: none;
 	outline: none;
 	border: none;
@@ -20,8 +20,6 @@
 	gap: 10px;
 	box-sizing: border-box;
 	padding: 5px;
-	width: 100%;
-	height: 40px;
 	cursor: text;
 	font-family: var(--main-font);
 	background-color: var(--gray3-col);
@@ -33,6 +31,7 @@
 	border-color: var(--gray2-col);
 	transition: border-color 0.3s;
 	transition: background-color 0.3s;
+	height: 100%;
 }
 
 .field-content:focus-within {

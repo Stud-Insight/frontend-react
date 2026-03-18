@@ -9,9 +9,7 @@ import LinkButton from "../../components/button/LinkButton.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import LoginPage from "./LoginPage.tsx";
 import UserService from "../../services/UserService.ts";
-import { useAuth } from "../../context/AuthContext.tsx";
-
-import "./LoginPage.css";
+import { useAuth } from "../../hooks/AuthContext.tsx";
 
 export default function AccountLoginPage() {
     const [email, setEmail] = useState("");
@@ -42,9 +40,13 @@ export default function AccountLoginPage() {
             <form method="POST" className="content-style-div" onSubmit={loginHandle}>
                 {error ? <InfoBox label={error} type="error"/> : undefined}
                 <InputField label="E-Mail" value={email} onChange={setEmail} type="email" icon={<IoMail/>}/>
-                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock/>} offset={-1.8}/>
-                <LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery" push_right={true}/>
-                <Button label={isSubmitting ? "Connexion..." : "Se connecter"} type="submit"/>
+                <InputField label="Mot de passe" value={password} onChange={setPassword} type="password" icon={<FaLock/>}/>
+
+				<div className="login-page-link right">
+					<LinkButton label="Mot de passe oublié ?" redirection="/auth/recovery"/>
+				</div>
+                
+				<Button label={isSubmitting ? "Connexion..." : "Se connecter"} width="100%" height={30}/>
             </form>
         </LoginPage>
     );

@@ -1,0 +1,57 @@
+.encadrant-dashboard-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.encadrant-group-card {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.encadrant-group-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+}
+
+.encadrant-group-title {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	flex: 1;
+}
+
+.encadrant-group-members {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.encadrant-member-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	padding: 5px 10px;
+	border-radius: 8px;
+	background-color: var(--gray3-col);
+}
+
+.encadrant-group-footer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 15px;
+}
+
+.encadrant-deliverable-info {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+}

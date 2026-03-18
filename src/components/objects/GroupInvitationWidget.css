@@ -1,0 +1,5 @@
+.group-inv-button-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}

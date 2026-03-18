@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
-import TERService, { TERPeriod, TERPeriodStats, TERStatusLabel } from "../../services/TERService";
+import TERService, { TERPeriod, TERPeriodStats, TERStatus, TERStatusLabel, TERStatusColor } from "../../services/TERService";
 import ContainerWidget from "../ui/ContainerWidget";
-import TagWidget from "../../atoms/ui/Tag";
+import Tag from "../../atoms/ui/Tag";
 import Button from "../../atoms/input/Button";
 import HorizontalDivider from "../ui/HorizontalDivider";
-import ProgressWidget from "../ui/ProgressWidget";
 
 import { FaArrowLeftLong } from "react-icons/fa6";
+import { FiArchive } from "react-icons/fi";
 import { HiOutlineCalendar } from "react-icons/hi";
+import { TbSchool } from "react-icons/tb";
+
+import { MdDone } from "react-icons/md";
+import Icon from "../../atoms/ui/Icon";
 
 import "./TERWidget.css";
 
 interface TERWidgetProps {
-  data: TERPeriod;
-  onClick?: () => void;
+	period: TERPeriod;
+	selected?: boolean;
+	onClick?: () => void;
+	onSelect?: () => void;
+	onArchive?: () => void;
 };
 
-export default function TERWidget({ data, onClick }: TERWidgetProps){
-	const [stats, setStats] = useState<TERPeriodStats | null>(null);
-
+export default function TERWidget({period, onClick, onSelect, onArchive, selected = false}: TERWidgetProps){
 	const dateFormat = (dateString: string) =>
 		new Date(dateString).toLocaleDateString("fr-FR", {
 		day: "2-digit",
@@ -26,74 +31,37 @@ export default function TERWidget({ data, onClick }: TERWidgetProps){
 		year: "numeric",
 	});
 
-	useEffect(() => {
-		const getTerData = async () => {
-			try {
-				const g = await TERService.getPeriodStats(data.id);
-				setStats(g);
-			} catch (err){
-				console.log("Erreur Period Widget");
-			}
-		}
-		
-		getTerData();
-	}, [data.id]);
-
 	return (
-		<ContainerWidget>
+		<ContainerWidget className={`ter-widget-container ${selected ? "selected" : ""}`} onClick={onSelect}>
 			<div className="ter-widget-title-layout">
+				<div>
+					<Icon icon={<TbSchool/>} color="var(--blue-col)"/>
+				</div>
+
 				<div className="ter-widget-title-right-layout">
-					<div className="ter-widget-title-container ">
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
-							{data.name}
-						</label>
-						<TagWidget label={TERStatusLabel.get(data.status)}/>
+					<div className="ter-widget-title-container">
+						<span style={{ fontWeight: "var(--big-bold)", fontSize: 25 }}>
+							{period.name}
+						</span>
+						<Tag label={TERStatusLabel.get(period.status)} color={TERStatusColor.get(period.status)}/>
 					</div>
 					
 					<div className="ter-widget-date-container">
 						<HiOutlineCalendar/>
 
 						<div className="ter-widget-date-layout">
-							<label>{dateFormat(data.group_formation_start)}</label>
-							<label>-</label>
-							<label>{dateFormat(data.project_end ?? data.group_formation_end)}</label>
+							<span>{dateFormat(period.group_formation_start)}</span>
+							<span>-</span>
+							<span>{dateFormat(period.project_end ?? period.group_formation_end)}</span>
 						</div>
 					</div>
 				</div>
 
-				<HorizontalDivider/>
-
-				<div className="ter-widget-info-layout">
-					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Etudiants</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-							{stats?.students_enrolled}
-						</label>
-					</div>
-
-					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Groupes</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-							{stats?.groups_total}
-						</label>
-					</div>
-
-				
-					<div className="ter-widget-info-layout-container">
-						<label style={{ color: "var(--gray1-col)" }}>Sujets</label>
-						<label style={{ fontWeight: "var(--big-bold)", fontSize: 30 }}>
-							{stats?.subjects_total}
-						</label>
-					</div>
-				</div>
-				
-				<HorizontalDivider/>
-
-				<ProgressWidget progress={0.5}/>
 				<div className="ter-widget-button-pos">
-					<div>
-						<Button icon={<FaArrowLeftLong/>} label="Voir Détailes" onChange={onClick}/>
-					</div>
+					{onArchive && period.status === TERStatus.CLOSED &&
+						<Button icon={<FiArchive/>} label="Archiver" style="danger" onClick={onArchive}/>
+					}
+					<Button icon={<FaArrowLeftLong/>} label="Voir Détails" onClick={onClick}/>
 				</div>
 			</div>
 		</ContainerWidget>

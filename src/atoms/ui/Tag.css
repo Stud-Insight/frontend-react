@@ -3,8 +3,9 @@
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
+	width: auto;
 	padding: 5px;
+	gap: 20px;
 	border-radius: 10px;
 	font-size: 12px;
 }

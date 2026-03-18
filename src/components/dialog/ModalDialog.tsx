@@ -8,24 +8,26 @@ import "./ModalDialog.css";
 interface ModalDialogProps {
 	label?: string;
 	children: ReactNode;
-	width?: number;
+	className?: string;
 	onClose?: () => void; 
 };
 
-export default function ModalDialog({label, onClose, children, width}: ModalDialogProps){
+export default function ModalDialog({label, onClose, children, className}: ModalDialogProps){
 	const closeHandler = () => {
 		onClose ? onClose() : undefined;
 	};
 
 	return (
 		<div className="modal-dialog-layout">
-			<div className="modal-dialog-content" style={{width: width ? width : "auto"}}>
+			<div className={`modal-dialog-content ${className}`}>
 				<div className="modal-dialog-title">
-					<label className="modal-dialog-label">{label}</label>
+					<span className="modal-dialog-label">{label}</span>
 					<IconButton icon={<RxCross2/>} onClick={closeHandler}/>
 				</div>
 				<HorizontalDivider/>
-				{children}
+				<div id="content">
+					{children}
+				</div>
 			</div>
 		</div>
 	)

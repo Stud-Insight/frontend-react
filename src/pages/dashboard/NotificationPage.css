@@ -1,0 +1,53 @@
+.notif-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	overflow-y: auto;
+}
+
+.mark-all-read-btn {
+	background: none;
+	border: 1px solid var(--blue-col);
+	color: var(--blue-col);
+	padding: 8px 16px;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 600;
+	align-self: flex-start;
+	transition: background-color 0.2s;
+}
+
+.mark-all-read-btn:hover {
+	background-color: var(--blue-col);
+	color: white;
+}
+
+.notif-preferences {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.notif-prefs-grid {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.notif-pref-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.notif-pref-item input[type="checkbox"] {
+	width: 18px;
+	height: 18px;
+	accent-color: var(--blue-col);
+	cursor: pointer;
+}

@@ -1,0 +1,30 @@
+.ter-list-addter-row {
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+}
+
+.ter-list-addter-container {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.ter-list-buttons {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	gap: 20px;
+}
+
+.ter-list-modal-content {
+	flex: 1;
+}
+
+.ter-list-buttons button {
+	flex: 1;
+}
+
+.ter-list-modal-style #content {
+	height: 500px;
+}

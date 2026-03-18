@@ -1,15 +1,10 @@
 import React, { useState, ReactNode, useRef, useEffect } from "react";
-import { useNavigate, useLocation, Outlet, data } from "react-router-dom";
-
 import NavigationButton from "../../components/button/NavigationButton.tsx";
 import Logo from "../../atoms/ui/Logo.tsx";
 import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import VerticalDivider from "../../components/ui/VerticalDivider.tsx";
 import UserAvatar from "../../components/ui/UserAvatar.tsx";
-import NotificationBadge from "../../components/ui/NotificationBadge.tsx";
-import NotificationWidget from "../../components/ui/NotificationWidget.tsx";
-import RespoDashboard from "./RespoDashboard.tsx";
-
+import { useNotification } from "../../hooks/UseNotification.tsx";
 
 import { FiArchive } from "react-icons/fi";
 import { MdLogout } from "react-icons/md";
@@ -19,14 +14,15 @@ import { FiHome } from "react-icons/fi";
 import { FaRegFolder } from "react-icons/fa";
 import { LuMessageSquare } from "react-icons/lu";
 import { TbSchool } from "react-icons/tb";
-import { HiOutlineCalendar } from "react-icons/hi";
 import { MdWorkOutline } from "react-icons/md";
-import { MdNotificationsNone } from "react-icons/md"
+import { FaRegBell } from "react-icons/fa6";
+import { FiUser } from "react-icons/fi";
+import { User, UserRoles } from "../../services/UserService.ts";
+import { useNavigate, useLocation, matchPath } from "react-router-dom";
+import { useAuth } from "../../hooks/AuthContext.tsx";
+import { PiQuestionBold } from "react-icons/pi";
 
-
-import { useAuth } from "../../context/AuthContext.tsx";
 import NotificationService, { Notification } from "../../services/NotificationService.ts";
-
 import "./DashboardPage.css"
 
 interface DashboardPageProps {
@@ -34,90 +30,88 @@ interface DashboardPageProps {
 };
 
 export default function DashboardPage({ children }: DashboardPageProps) {
-	const notificationRef = useRef<HTMLDivElement>(null);
-	const [showNotifications, setShowNotifications] = useState(false);
-	const [notifications, setNotifications] = useState<Notification[]>([]);
-	const unreadCount = notifications.filter(n => !n.isRead).length;
-
 	const { user } = useAuth();
 	const { logout } = useAuth();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
+	const notifications = useNotification();
+	const unreadCount = notifications.filter(n => !n.is_read).length;
+
+	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
+		return role.name;
+	});
+
+	const notification_map: Map<string, number> = new Map([
+		["home", 0],
+		["ter", 0],
+		["stages", 0],
+		["chat", 0],
+		["notification", unreadCount],
+		["sujets", 0],
+		["archive", 0],
+	]);
 
 	const logoutHandle = async () => {
 		try {
 			await logout();
 			navigate("/");
 		} catch (err) {
-			console.error("Erreur déconnexion:", err);
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
 		}
 	}
 
-	const pageHandle = (id: string) => {
+	const switchPageHandle = (id: string) => {
 		navigate("/dashboard/" + id);
 	}
 
-	useEffect(() => {
-		function handleClickOutside(event: MouseEvent) {
-			if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-				setShowNotifications(false);
-			}
-		}
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
-
-	useEffect(() => {
-		let isMounted = true;
-
-		NotificationService.fetchNotifications()
-			.then((data) => {
-				if (isMounted) {
-					setNotifications(data);
-				}
-			})
-			.catch((err) => console.error("Erreur lors du chargement des notifications:", err));
-
-
-		const unsubscribe = NotificationService.subscribeToNotifications((notification) => {
-			console.log("Notification reçue SSE :", notification);
-			setNotifications((prev) => {
-				if (prev.some((n) => n.id === notification.id)) {
-					return prev;
-				}
-				return [notification, ...prev];
-			});
-		});
-
-		return () => {
-			isMounted = false;
-			unsubscribe();
-		};
-	}, []);
-
+	const isPageActive = (pattern: string) => {
+		return matchPath({ path: pattern, end: false }, pathname) !== null;
+	};
 
 	return (
 		<div className="dashboard-content">
 			<div className="dashboard-sidebar-layout">
 				<div className="dashboard-sidebar-content">
-					<Logo width="auto" large={true} />
+					<Logo large={true} />
 					<HorizontalDivider />
-					<NavigationButton label="Accueil" active={pathname.startsWith("/dashboard/home")} icon={<FiHome />} id="home" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="TER" active={pathname.startsWith("/dashboard/ter/select")} icon={<TbSchool />} id="ter/select" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Stages" active={pathname.startsWith("/dashboard/stages")} icon={<MdWorkOutline />} id="stages" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Messages" active={pathname.startsWith("/dashboard/chat")} icon={<LuMessageSquare />} id="chat" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Calendrier" active={pathname.startsWith("/dashboard/calender")} icon={<HiOutlineCalendar />} id="calender" onClick={(id) => pageHandle(id)} />
+					<NavigationButton label="Accueil" active={isPageActive("/dashboard/home")} icon={<FiHome />} id="home" onClick={switchPageHandle} notifCount={notification_map.get("home")} />
+					<NavigationButton label="TER" active={isPageActive("/dashboard/ter/*") && !isPageActive("/dashboard/ter/:id/admin") && !isPageActive("/dashboard/ter/list")} icon={<TbSchool />} id="ter" onClick={switchPageHandle} notifCount={notification_map.get("ter")} />
+					<NavigationButton label="Stages" active={isPageActive("/dashboard/stages")} icon={<MdWorkOutline />} id="stages" onClick={switchPageHandle} notifCount={notification_map.get("stages")} />
+					<NavigationButton label="Conversations" active={isPageActive("/dashboard/chat")} icon={<LuMessageSquare />} id="chat" onClick={switchPageHandle} notifCount={notification_map.get("chat")} />
+					<NavigationButton label="Notifications" active={isPageActive("/dashboard/notification")} icon={<FaRegBell />} id="notification" onClick={switchPageHandle} notifCount={notification_map.get("notification")} />
 					<HorizontalDivider />
-					<NavigationButton label="Mes Sujets" active={pathname.startsWith("/dashboard/subjects")} icon={<FaRegFolder />} id="subjects" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Gestion TER" active={pathname.startsWith("/dashboard/ter")} icon={<AiOutlineAppstore size={25} />} id="ter/list" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Gestion Utilisateurs" active={pathname.startsWith("/dashboard/users")} icon={<FiUsers />} id="users" onClick={(id) => pageHandle(id)} />
-					<NavigationButton label="Archives" active={pathname.startsWith("/dashboard/archive")} icon={<FiArchive />} id="archive" onClick={(id) => pageHandle(id)} />
-					<HorizontalDivider />
+
+					{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) &&
+						<NavigationButton label="Sujets TER" active={isPageActive("/dashboard/subjects")} icon={<FaRegFolder />} id="subjects" onClick={switchPageHandle} notifCount={notification_map.get("sujets")} />
+					}
+
+					{(roles.includes(UserRoles.RESPO_STAGE) || roles.includes(UserRoles.RESPO_TER) || roles.includes(UserRoles.ADMIN)) &&
+						<NavigationButton label="Gestion TER" active={isPageActive("/dashboard/ter/:id/admin") || isPageActive("/dashboard/ter/list")} icon={<AiOutlineAppstore size={25} />} id="ter/list" onClick={switchPageHandle} />
+					}
+
+					{roles.includes(UserRoles.ADMIN) &&
+						<NavigationButton label="Gestion Utilisateurs" active={isPageActive("/dashboard/users")} icon={<FiUsers />} id="users" onClick={switchPageHandle} />
+					}
+
+					{!roles.includes(UserRoles.ETUDIANT) &&
+						<>
+							<NavigationButton label="Archives" active={isPageActive("/dashboard/archive")} icon={<FiArchive />} id="archive" onClick={switchPageHandle} notifCount={notification_map.get("archive")} />
+							<HorizontalDivider />
+						</>
+					}
+
+					<NavigationButton label="Aide" icon={<PiQuestionBold />} id="help" active={isPageActive("/dashboard/help")} onClick={switchPageHandle} />
 				</div>
 
 				<div className="dashboard-sidebar-content">
+					<HorizontalDivider />
+					<NavigationButton className="dashboard-profile-wrapper" label="Profile" active={isPageActive("/dashboard/profile/*")} icon={<FiUser />} id="profile/me" onClick={switchPageHandle}>
+						<UserAvatar user={user} size={50} />
+						<div className="dashboard-profile-text">
+							<span style={{ color: "var(--black-col)" }}>{user?.first_name} {user?.last_name}</span>
+							<span style={{ color: "var(--gray1-col)", fontSize: "12px" }}>{user?.email}</span>
+						</div>
+					</NavigationButton>
 					<HorizontalDivider />
 					<NavigationButton icon={<MdLogout />} label="Déconnexion" onClick={logoutHandle} />
 				</div>
@@ -126,43 +120,10 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 			<VerticalDivider />
 
 			<div className="dashboard-rightside-main">
-				<div className="dashboard-header-container">
-					<div ref={notificationRef} style={{ position: 'relative', cursor: 'pointer', marginRight: '20px' }}>
-						<div onClick={() => setShowNotifications(!showNotifications)}>
-							<MdNotificationsNone size={25} color="#555" />
-							<NotificationBadge count={unreadCount} />
-						</div>
-						{showNotifications && (
-							<NotificationWidget
-								notifications={notifications}
-								onNotificationClick={(id) => {
-									NotificationService.markAsRead(id);
-									setNotifications((prev) => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
-								}}
-								onReadAll={() => {
-									NotificationService.markAllAsRead();
-									setNotifications((prev) => prev.map(n => ({ ...n, isRead: true })));
-								}}
-							/>
-						)}
-					</div>
-
-					<div className="dashboard-user-container">
-						<label>{user?.first_name} {user?.last_name}</label>
-						<div className="dashboard-avatar-container">
-							<UserAvatar user={user} />
-						</div>
-					</div>
-				</div>
-
+				<div className="dashboard-header-container" />
 				<HorizontalDivider />
-
 				<div className="dashboard-main-container">
-					{pathname === "/dashboard" || pathname === "/dashboard" || pathname === "/dashboard/home" ? (
-						<RespoDashboard />
-					) : (
-						<Outlet />
-					)}
+					{children}
 				</div>
 			</div>
 		</div>

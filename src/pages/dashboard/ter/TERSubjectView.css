@@ -1,0 +1,9 @@
+.subject-classement-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.subject-send-button {
+	align-self: flex-end;
+}

@@ -19,7 +19,7 @@ interface InputDropdownProps {
 };
 
 export default function InputDropdown({label, icon, defaultIndex = 0, value, closeAfterSelection = true, options, onChange, onSelect}: InputDropdownProps){
-	const [open, setOpen] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 	const [selected, setSelected] = useState<string>("");
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -29,14 +29,14 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 		onChange ? onChange(opt) : undefined;
 
 		if (closeAfterSelection){
-			setOpen(false);
+			setExpanded(false);
 		}
 	};
 
 	useEffect(() => {
 		const clickoutHandler = (e: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)){
-				setOpen(false);
+				setExpanded(false);
 			}
 		}
 
@@ -57,10 +57,10 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 	return (
 		<div className="dropdown-layout" ref={dropdownRef}>
 			<Field label={label} icon={icon}>
-				<div className="dropdown-style" onClick={() => setOpen(!open)}>
+				<div className="dropdown-style" onClick={() => setExpanded(!expanded)}>
 					<input value={value} type="text" onChange={onChange ? (e) => onChange(e.target.value) : undefined}/>
 				
-					{open ? 
+					{expanded ? 
 						<IconButton icon={<IoIosArrowDown/>}/>
 					:
 						<IconButton icon={<IoIosArrowUp/>}/>
@@ -69,20 +69,20 @@ export default function InputDropdown({label, icon, defaultIndex = 0, value, clo
 				</div>
 			</Field>
 
-			{open && 
+			{expanded && 
 				<Field className="dropdown-content-layout">
 					{options.map((opt, index) => {
 						if (opt == selected){
 							return (
 								<div key={index} className="dropdown-option-style selected" onClick={() => selectionHandler(opt)}>
-									<label>{opt}</label>
+									<span>{opt}</span>
 									<FaCheck/>
 								</div>
 							);
 						} else {
 							return (
 								<div key={index} className="dropdown-option-style" onClick={() => selectionHandler(opt)}>
-									<label>{opt}</label>
+									<span>{opt}</span>
 								</div>
 							);
 						};

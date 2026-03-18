@@ -1,35 +1,51 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { Subject, SubjectStatus, SubjectStatusLabel, SubjectStatusColor } from "../../services/SubjectService";
 import ContainerWidget from "../ui/ContainerWidget";
 import HorizontalDivider from "../ui/HorizontalDivider";
 import IconButton from "../button/IconButton";
-import TagWidget from "../../atoms/ui/Tag";
+import Tag from "../../atoms/ui/Tag";
 import Icon from "../../atoms/ui/Icon";
 import OverflowMenu from "../../components/input/OverflowMenu";
-
 import { MdDeleteOutline } from "react-icons/md";
 import { LuSend } from "react-icons/lu";
 import { MdOutlineEdit } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { FaRegFile, FaRegClock } from "react-icons/fa";
-
+import { FaRegFile} from "react-icons/fa";
 import "./SubjectWidget.css";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
+import Button from "../../atoms/input/Button";
 
 interface SubjectWidgetProps {
 	subject: Subject;
 	privateMode?: boolean;
+	adminMode?: boolean;
+	children?: ReactNode
+	onFavourite?: () => void;
 	onDownload?: () => void;
 	onDelete?: () => void;
 	onEdit?: () => void;
 	onPublish?: () => void;
 	onExport?: () => void;
+	onAccept?: () => void;
+	onReject?: () => void;
 };
 
-export default function SubjectWidget({subject, privateMode = true, onDelete, onEdit, onDownload, onPublish, onExport}: SubjectWidgetProps){
+export default function SubjectWidget({subject, privateMode = true, adminMode = false, children, onFavourite, onDelete, onEdit, onDownload, onPublish, onExport, onAccept, onReject}: SubjectWidgetProps){
 	const [expand, setExpand] = useState<boolean>(false);
 
+	let options = [
+		{label: "Télécharger", icon: <CgExport/>, onClick: () => {onExport?.()}}
+	];	
+
+	if (subject.status == SubjectStatus.DRAFT){
+		options.push({label: "Publier", icon: <LuSend/>, onClick: () => {onPublish?.()}});
+		options.push({label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {onEdit?.()}});
+		options.push({label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {onDelete?.()}});
+	}
+	
 	const dateFormat = (dateString: string) => {
 		const date_t = new Date(dateString);
 
@@ -46,61 +62,69 @@ export default function SubjectWidget({subject, privateMode = true, onDelete, on
 	return (
 		<ContainerWidget>
 			<div className="subject-widget-layout">
-				{subject.description &&
+				<div className="subject-widget-header">
+					<div className="subject-widget-title-container">
+						<Icon icon={<FaRegFile/>} color="var(--blue-col)"/>
+						
+						<div className="subject-widget-title-right">
+							<div className="group-content-title">
+								<span style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</span>
+								
+								{privateMode &&
+									<Tag label={SubjectStatusLabel.get(subject.status)} color={SubjectStatusColor.get(subject.status)}/>								
+								}
+							</div>
+
+							{privateMode &&
+								<span style={{fontSize: 14, color: "var(--gray1-col)"}}>{dateFormat(subject.created)}</span>
+							}
+							
+							<span style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.professor?.first_name} {subject.professor?.last_name.toUpperCase()}</span>
+						</div>
+					</div>
 					<div className="subject-widget-expand-button">
+						{adminMode && subject.status == SubjectStatus.SUBMITTED &&
+							<div className="subject-widget-expand-button-layout">
+								<Button label="Rejeter" onClick={onReject}/>
+								<Button label="Accepter" onClick={onAccept}/>
+							</div>
+						}
+						
+						{children}
+						
 						<IconButton icon={expand ? <IoIosArrowUp/> : <IoIosArrowDown/>} onClick={() => setExpand(!expand)}/>
-					</div>
-				}
-				
-				<div className="subject-widget-title-container">
-					<Icon icon={<FaRegFile/>} color="var(--blue-col)"/>
-					
-					<div className="subject-widget-title-right">
-						<label style={{fontWeight: "var(--big-bold)", fontSize: 20}}>{subject.title}</label>
-						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.professor?.first_name} {subject.professor?.last_name.toUpperCase()}</label>
+						{privateMode &&
+							<OverflowMenu options={options}/>
+						}
 					</div>
 				</div>
-
-				{subject.description &&
-					<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
-						<label style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</label>
-
-						{/* <div className="subject-widget-task-list">
-							{subject.tasks && subject.tasks.map((task, index) => (
-								<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
-							))}
-						</div>		 */}
-					</div>
-				}
 				
-				<div className="subject-widget-tag-layout">
-					<TagWidget label={`${subject.min_group_size} - ${subject.max_group_size} Etudiants`} color="var(--blue-col)"/>
-					{subject.tags?.map((tag, index) => (
-						<TagWidget key={index} label={tag} color="var(--blue-col)"/>
-					))}
-				</div>
-				
-				{privateMode &&
+				{expand &&
 					<>
 						<HorizontalDivider/>
 
-						<div className="subject-widget-footer-layout">
-							<div className="subject-widget-footer-content">
-								<TagWidget label={SubjectStatusLabel.get(subject.status)} color={SubjectStatusColor.get(subject.status)}/>
-								-
-								<label style={{fontSize: "14px"}}>{dateFormat(subject.created)}</label>
+						<div className={`subject-widget-expandable ${expand ? " expanded" : ""}`}>
+							<span style={{fontSize: 14, color: "var(--gray1-col)"}}>{subject.description}</span>
+
+							<div className="subject-widget-task-list">
+								{subject.taches && subject.taches.map((task, index) => (
+									<div key={index} style={{fontSize: 14, color: "var(--gray1-col)"}}> - {task}</div>
+								))}
 							</div>
 
-							<OverflowMenu options={[
-								{label: "Exporter", icon: <CgExport/>, onClick: () => {onExport?.()}},
-								{label: "Publier", icon: <LuSend/>, onClick: () => {onPublish?.()}},
-								{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => {onEdit?.()}},
-								{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {onDelete?.()}},
-							]}/>
+							<div className="subject-widget-tag-layout"> 
+								{subject.min_group_size == subject.max_group_size ? 
+									<Tag label={`${subject.max_group_size} Étudiants`}/>
+									:
+									<Tag label={`${subject.min_group_size} - ${subject.max_group_size} Étudiants`}/>
+								}
+								{subject.tags?.map((tag, index) => (
+									<Tag key={index} label={tag}/>
+								))}
+							</div>
 						</div>
 					</>
 				}
-				
 			</div>
 		</ContainerWidget>
 	);
