@@ -7,6 +7,7 @@ import TERStudentView from "./TERStudentsView";
 import TERGroupView from "./TERGroupView";
 import TERProfessorView from "./TERProfessorView";
 import TERGradeView from "./TERGradeView";
+import TERScoreView from "./TERScoreView";
 import TERSubjectView from "./TERSubjectView";
 
 import TERService, { TERPeriod, TERStatusColor, TERStatus, TERStatusLabel, WorkflowWarning } from "../../../services/TERService";
@@ -21,7 +22,7 @@ import { TbSchool } from "react-icons/tb";
 import { FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiEdit } from 'react-icons/fi';
 import { User, UserRoles } from "../../../services/UserService";
 import { useParams } from "react-router-dom";
 import Button from "../../../atoms/input/Button";
@@ -42,6 +43,7 @@ export default function TERGestionPage(){
 	const [professors, setProfessors] = useState<User[]>([]);
 	const [archiveConfirm, setArchiveConfirm] = useState<boolean>(false);
 	const [warnings, setWarnings] = useState<WorkflowWarning[]>([]);
+	const [allPeriods, setAllPeriods] = useState<{id: string; name: string}[]>([]);
 
 	const addStudent = async (users: Set<string>) => {
 		try {
@@ -303,6 +305,8 @@ export default function TERGestionPage(){
 		getGrades();
 		getSubjects();
 		getWarnings();
+		TERService.getPeriods().then(p => setAllPeriods(p.map(pp => ({id: pp.id, name: pp.name}))));
+
 	}, []);
 
 	const viewMap: Map<number, ReactNode> = new Map([
@@ -317,7 +321,15 @@ export default function TERGestionPage(){
 			onChangeLeader={changeGroupLeader}
 			/>],
 		[3, <TERSubjectView subjects={subjects} readOnly={isArchived} onAccept={acceptSubject} onReject={rejectSubject}/>],
-		[4, <TERGradeView grades={grades} readOnly={isArchived}/>],
+		[4, <TERGradeView periodId={id!} grades={grades} readOnly={isArchived} onRefresh={getGrades}
+			onSuccess={(msg) => { setSuccess(msg); setTimeout(() => setSuccess(null), 5000); }}
+			onError={(msg) => setError(msg)}
+			periods={allPeriods}
+		/>],
+		[5, <TERScoreView periodId={id!} groups={groups} readOnly={isArchived}
+			onSuccess={(msg) => { setSuccess(msg); setTimeout(() => setSuccess(null), 5000); }}
+			onError={(msg) => setError(msg)}
+		/>],
 	])
 
 	return (
@@ -361,7 +373,10 @@ export default function TERGestionPage(){
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Sujets" active={view == 3} icon={<FaRegFile/>} info={subjects.length} color="var(--orange-col)" onClick={() => setView(3)}/>
 				<InfoWidget label="Notations" active={view == 4} icon={<TbSchool/>} info={grades.length} color="var(--orange-col)" onClick={() => setView(4)}/>
-				<InfoWidget label="Paramètres" active={view == 5} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(5)}/>
+				<InfoWidget label="Assignation" active={view == 5} icon={<FiEdit/>} color="var(--green-col)" onClick={() => setView(5)}/>
+			</div>
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget label="Paramètres" active={view == 6} icon={< GoGear/>} color="var(--gray1-col)" onClick={() => setView(6)}/>
 			</div>
 
 			{success && <InfoBox label={success} type="success"/>}
