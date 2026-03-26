@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import InfoWidget from "../../../components/ui/InfoWidget";
 import TERService, { TERPeriod } from "../../../services/TERService";
 import { User } from "../../../services/UserService";
 import GroupProjectWidget from "../../../components/objects/GroupProjectWidget";
 import GroupService, { Group, GroupInvitation, InvitationStatus } from "../../../services/GroupService";
 import Button from "../../../atoms/input/Button";
+import MyGroupPage from "../../groupes/MyGroupPage";
 import ModalDialog from "../../../components/dialog/ModalDialog";
 import InputField from "../../../components/input/InputField";
 import UserSelectionDialog from "../../../components/dialog/UserSelectionDialog";
@@ -14,7 +15,7 @@ import ContainerWidget from "../../../components/ui/ContainerWidget";
 import ConfirmationDialog from "../../../components/dialog/ConfirmationDialog";
 
 import { LuSend } from "react-icons/lu";
-import { FaRegFile} from "react-icons/fa";
+import { FaRegFile } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
@@ -29,7 +30,7 @@ interface TERGroupViewProps {
 	setSuccess: (success: string) => void;
 };
 
-export default function TERGroupView({period, setError, setSuccess}: TERGroupViewProps){
+export default function TERGroupView({ period, setError, setSuccess }: TERGroupViewProps) {
 	const { user } = useAuth();
 	const [page, setPage] = useState<number>(0);
 	const [groups, setGroups] = useState<Group[]>([]);
@@ -53,7 +54,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			setTimeout(() => setSuccess(""), 5000);
 			getGroups();
 			getMyGroup();
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -90,7 +91,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			getMyGroup();
 			setSuccess(`Vous avez quitté le groupe '${myGroup?.name}' avec succès !`);
 			setTimeout(() => setSuccess(""), 5000);
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -100,7 +101,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		try {
 			const res = await GroupService.getMyGroup(period.id);
 			setMyGroup(res);
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -129,7 +130,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 
 			setEnrolledStudents(filtered);
 
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -157,11 +158,11 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			getGroupInvitations();
 			getGroups();
 			getMyGroup();
-		} catch (err) {
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
- 	}
+	}
 
 	const inviteStudentsGroup = async (users: Set<User>) => {
 		setInviteGroup(false);
@@ -194,7 +195,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 				a.name.localeCompare(b.name)
 			))
 			setGroups(res);
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -207,7 +208,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			getGroups();
 			getMyGroup();
 			setTimeout(() => setSuccess(""), 5000);
-		} catch (err){
+		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
 		}
@@ -223,9 +224,9 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 
 	useEffect(() => {
 		if (!myGroup?.id) {
-			
+
 			return;
-		}	
+		}
 
 		if (myGroup.leader!.id == user!.id) {
 			getInvitedStudents(myGroup.id);
@@ -242,25 +243,25 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 		<>
 			{createGroup &&
 				<ModalDialog label="Creation Groupe" onClose={resetFields} className="group-view-selection-modal">
-					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
-					<Button icon={<FaPlus/>} label="Confirmer" height={30} onClick={createGroupHandle}/>
+					<InputField label="Nom" value={nomGroup} onChange={setNomGroup} />
+					<Button icon={<FaPlus />} label="Confirmer" height={30} onClick={createGroupHandle} />
 				</ModalDialog>
-			}	
+			}
 
 			{editGroup &&
 				<ModalDialog label="Modifier Groupe" onClose={resetFields} className="group-view-selection-modal">
-					<InputField label="Nom" value={nomGroup} onChange={setNomGroup}/>
-					<Button icon={<MdOutlineEdit/>} label="Modifer" height={30} onClick={editGroupHandle}/>
+					<InputField label="Nom" value={nomGroup} onChange={setNomGroup} />
+					<Button icon={<MdOutlineEdit />} label="Modifer" height={30} onClick={editGroupHandle} />
 				</ModalDialog>
 			}
 
 			{inviteGroup &&
-				<UserSelectionDialog value={enrolledStudents} label="Invitation Étudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)}/>
+				<UserSelectionDialog value={enrolledStudents} label="Invitation Étudiants" button_text="Inviter" onConfirm={inviteStudentsGroup} onClose={() => setInviteGroup(false)} />
 			}
 
 			{leaveGroup &&
-				<ConfirmationDialog 
-					label="Quitter Groupe?" 
+				<ConfirmationDialog
+					label="Quitter Groupe?"
 					info={`Êtes-vous sûr de vouloir quitter le groupe '${myGroup?.name}'?`}
 					onCancel={() => setLeaveGroup(null)}
 					onConfirm={leaveGroupHandle}
@@ -268,60 +269,37 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 			}
 
 			{deleteGroup &&
-				<ConfirmationDialog 
-					label="Supprimer Groupe?" 
+				<ConfirmationDialog
+					label="Supprimer Groupe?"
 					info={`Êtes-vous sûr de vouloir supprimer votre groupe '${myGroup?.name}'?`}
 					onCancel={() => setDeleteGroup(null)}
 					onConfirm={deleteGroupHandle}
 				/>
 			}
-			
+
 			<div className="dashbord-mini-info-layout">
-				{myGroup &&
-					<InfoWidget label="Mon Groupe" icon={<FiUsers/>} info={`${myGroup.member_count} / ${myGroup.max_group_size}`} color="var(--blue-col)" active={page == 0} onClick={() => setPage(0)}/>
-				}
-				<InfoWidget label="Invitations" icon={<FiUsers/>} info={invitations.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)}/>
-				<InfoWidget label="Groupes" icon={<FaRegFile/>} info={groups.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)}/>
+				<InfoWidget
+					label="Mon Groupe"
+					icon={<FiUsers />}
+					info={myGroup ? `${myGroup.member_count} / ${myGroup.max_group_size}` : "0 / 0"}
+					color="var(--blue-col)"
+					active={page == 0}
+					onClick={() => setPage(0)}
+				/>
+				<InfoWidget label="Invitations" icon={<FiUsers />} info={invitations.length} color="var(--blue-col)" active={page == 1} onClick={() => setPage(1)} />
+				<InfoWidget label="Groupes" icon={<FaRegFile />} info={groups.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)} />
 			</div>
 
-			{page == 0 && myGroup &&
-				<>
-					<div className="dashboard-top-layout">
-						<div/>
-						<div className="dashboard-top-button-layout">
-							{user?.id == myGroup.leader!.id ? 
-								<>
-									<Button icon={<LuSend/>} label="Inviter" onClick={inviteStudentsToggle}/>
-									<Button icon={<MdOutlineEdit/>} label="Modifier Groupe" onClick={preEditGroup}/>
-									<Button icon={<MdDeleteOutline/>} label="Supprimer Groupe" color="var(--red-col)" onClick={() => setDeleteGroup(myGroup)}/>
-								</>
-								
-								:
-								<Button icon={<FaPlus/>} label="Quitter Groupe" onClick={() => setLeaveGroup(myGroup)}/>
-							}
-						</div>
-					</div>
-
-					<GroupProjectWidget label="Info" group={myGroup} admin={false} forceExpanded={true}/>
-				
-					{sentInvitations.length > 0 &&
-						<ContainerWidget>
-							{sentInvitations && sentInvitations.map(inv => (
-								<UserWidget user={inv.invitee}>
-									<Button icon={<FaPlus/>} label="Annuler Invitation" onClick={() => cancelInvitationHandle(inv.id)}/>
-								</UserWidget>
-							))}
-						</ContainerWidget>
-					}
-				</>
+			{page == 0 &&
+				<MyGroupPage showDashboard={false} period={period} group={myGroup} />
 			}
 
 			{page == 1 &&
-				<>	
+				<>
 					<div className="ter-list-group-layout">
 						{invitations && invitations.map(inv => {
 							const group = groups.find(grp => grp.id === inv.group_id);
-							return <GroupInvitationWidget group={group} onAccept={() => respondInvite(inv.id, true)} onReject={() => respondInvite(inv.id, false)}/>
+							return <GroupInvitationWidget group={group} onAccept={() => respondInvite(inv.id, true)} onReject={() => respondInvite(inv.id, false)} />
 						})}
 					</div>
 				</>
@@ -331,19 +309,19 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 				<>
 					{!myGroup &&
 						<div className="dashboard-top-layout">
-							<div/>
+							<div />
 							<div className="dashboard-top-button-layout">
-								<Button icon={<FaPlus/>} label="Créer Groupe" onClick={() => setCreateGroup(true)}/>
+								<Button icon={<FaPlus />} label="Créer Groupe" onClick={() => setCreateGroup(true)} />
 							</div>
 						</div>
-					}	
+					}
 
 					{myGroup ?
 						<div className="ter-list-group-layout">
 							{groups && groups.sort(group => {
 								return (group.id == myGroup.id ? -1 : 1)
 							}).map(group => (
-								<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id}/>
+								<GroupProjectWidget admin={false} key={group.id} group={group} active={group.id == myGroup?.id} />
 							))}
 						</div>
 
@@ -351,7 +329,7 @@ export default function TERGroupView({period, setError, setSuccess}: TERGroupVie
 
 						<div className="ter-list-group-layout">
 							{groups && groups.map(group => (
-								<GroupProjectWidget admin={false} key={group.id} group={group} active={false}/>
+								<GroupProjectWidget admin={false} key={group.id} group={group} active={false} />
 							))}
 						</div>
 					}

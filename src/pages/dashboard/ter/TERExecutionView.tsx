@@ -10,15 +10,15 @@ import SubjectRankWidget from "../../../components/objects/SubjectRankWidget";
 import { LuSend } from "react-icons/lu";
 import { FaRegFile } from "react-icons/fa";
 
-import "./TERSubjectView.css"
+import "./TERExecutionView.css"
 
-interface TERSubjectViewProps {
+interface TERExecutionViewProps {
 	period: TERPeriod;
 	setError: (error: string) => void;
 	setSuccess: (success: string) => void;
 };
 
-export default function TERSubjectView({ period, setError, setSuccess }: TERSubjectViewProps) {
+export default function TERExecutionView({ period, setError, setSuccess }: TERExecutionViewProps) {
 	const [page, setPage] = useState<number>(0);
 	const [subjects, setSubjects] = useState<Subject[]>([]);
 	const [myGroup, setMyGroup] = useState<Group | null>(null);
@@ -47,7 +47,7 @@ export default function TERSubjectView({ period, setError, setSuccess }: TERSubj
 	const sendRankingsHandle = async () => {
 		try {
 			const arr: SubjectRank[] = Array.from(myRanks.entries()).map(([subject_id, rank]) => ({
-				subject_id,
+				subject_id: parseInt(subject_id),
 				subject_title: "",
 				rank
 			})
@@ -108,7 +108,7 @@ export default function TERSubjectView({ period, setError, setSuccess }: TERSubj
 	}, [myGroup]);
 
 	useEffect(() => {
-		const map = new Map(ranks.map(rank => [rank.subject_id, rank.rank]));
+		const map = new Map(ranks.map(rank => [rank.subject_id.toString(), rank.rank]));
 		setMyRanks(map);
 	}, [ranks]);
 
@@ -123,35 +123,6 @@ export default function TERSubjectView({ period, setError, setSuccess }: TERSubj
 					<InfoWidget label="Sujets" icon={<FaRegFile />} info={subjects.length} color="var(--blue-col)" active={page == 3} onClick={() => setPage(3)} />
 				}
 			</div>
-
-			{page == 1 && groupRanks &&
-				<>
-					<div className="subject-classement-layout">
-						{groupRanks.map(rank => (
-							<SubjectRankWidget key={`${rank.subject_id}-${rank.rank}`} data={rank} />
-						))}
-					</div>
-				</>
-			}
-
-			{page == 3 &&
-				<>
-					<div className="subject-send-button">
-						<Button icon={<LuSend />} label="Envoyer Classement" onClick={sendRankingsHandle} />
-					</div>
-
-					<div className="subject-classement-layout">
-						{subjects.map(subject => (
-							<SubjectWidget key={subject.id} subject={subject} adminMode={false} privateMode={false}>
-								<InputNumberField
-									value={myRanks.get(subject.id) ?? 0}
-									onChange={(value: number) => updateRankHandle(subject.id, value)}
-								/>
-							</SubjectWidget>
-						))}
-					</div>
-				</>
-			}
 		</>
 	)
 }

@@ -35,7 +35,7 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const notifications = useNotification();
-	const unreadCount = notifications.filter(n => !n.is_read).length;
+	const unreadCount = notifications.filter(n => !n.isRead).length;
 
 	const roles: UserRoles[] = user == null ? [] : user?.groups.map(role => {
 		return role.name;

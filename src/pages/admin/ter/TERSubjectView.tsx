@@ -10,25 +10,25 @@ interface TERSubjectViewProps {
 	onReject?: (subject: Subject) => void;
 };
 
-export default function TERSubjectView({subjects, readOnly, onAccept, onReject}: TERSubjectViewProps){
+export default function TERSubjectView({ subjects, readOnly, onAccept, onReject }: TERSubjectViewProps) {
 	const [reject, setReject] = useState<Subject | null>(null);
 
 	return (
 		<>
 			{reject &&
-				<ConfirmationDialog label="Rejeter Sujet?" 
-				onCancel={() => setReject(null)} 
-				onConfirm={() => onReject?.(reject)}
-				info={`Êtes-vous sûr de vouloir rejeter le sujet "${reject.title}"`}
+				<ConfirmationDialog label="Rejeter Sujet?"
+					onCancel={() => setReject(null)}
+					onConfirm={() => { onReject?.(reject); setReject(null); }}
+					info={`Êtes-vous sûr de vouloir rejeter le sujet "${reject.title}"`}
 				>
-					
+
 				</ConfirmationDialog>
 			}
 
 			{subjects && subjects.map(subject => (
 				<SubjectWidget key={subject.id} subject={subject} adminMode={!readOnly}
-				onAccept={!readOnly ? () => onAccept?.(subject) : undefined}
-				onReject={!readOnly ? () => setReject(subject) : undefined}
+					onAccept={!readOnly ? () => onAccept?.(subject) : undefined}
+					onReject={!readOnly ? () => setReject(subject) : undefined}
 				/>
 			))}
 		</>

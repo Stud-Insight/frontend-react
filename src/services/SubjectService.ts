@@ -10,7 +10,7 @@ export enum SubjectStatus {
 };
 
 export interface SubjectRank {
-	subject_id: number;
+	subject_id: string;
 	subject_title: string;
 	rank: number;
 };

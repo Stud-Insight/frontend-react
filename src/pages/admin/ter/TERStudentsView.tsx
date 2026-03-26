@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import ImportCSVButton from "../../../components/button/ImportCSVButton";
 import { User, UserRoles } from "../../../services/UserService";
 import { FaPlus } from "react-icons/fa6";
@@ -18,7 +18,7 @@ interface TERStudentViewProps {
 	onContact?: (user: User) => void;
 };
 
-export default function TERStudentView({students, readOnly, onAdd, onDelete, onContact}: TERStudentViewProps){
+export default function TERStudentView({ students, readOnly, onAdd, onDelete, onContact }: TERStudentViewProps) {
 	const [addingStudent, setAddingStudent] = useState<boolean>(false);
 	const [deleteStudent, setDeleteStudent] = useState<User | null>(null);
 
@@ -28,11 +28,11 @@ export default function TERStudentView({students, readOnly, onAdd, onDelete, onC
 	};
 
 	return (<>
-		{addingStudent && 
-			<UserSelectionDialog 
+		{addingStudent &&
+			<UserSelectionDialog
 				label="Ajout étudiants"
-				role_filter={[UserRoles.ETUDIANT]} 
-				onClose={() => setAddingStudent(false)} 
+				role_filter={[UserRoles.ETUDIANT]}
+				onClose={() => setAddingStudent(false)}
 				onConfirm={(users) => addUsersHandle(users)}
 			/>
 		}
@@ -41,26 +41,26 @@ export default function TERStudentView({students, readOnly, onAdd, onDelete, onC
 			<ConfirmationDialog label={"Supprimer étudiant du TER"} onCancel={() => setDeleteStudent(null)} onConfirm={() => {
 				onDelete?.(deleteStudent);
 				setDeleteStudent(null);
-			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`}/>
+			}} info={`L'étudiant "${deleteStudent.first_name} ${deleteStudent.last_name}" sera supprimé du TER.`} />
 		}
-		
+
 		{!readOnly &&
 			<div className="dashboard-top-layout">
-				<div/>
+				<div />
 				<div className="dashboard-top-button-layout">
-					<ImportCSVButton/>
-					<Button icon={<FaPlus/>} label="Ajouter Étudiant" onClick={() => setAddingStudent(true)}/>
+					<ImportCSVButton />
+					<Button icon={<FaPlus />} label="Ajouter Étudiant" onClick={() => setAddingStudent(true)} />
 				</div>
 			</div>
 		}
-		
-		{students && students.length > 0 &&
+
+		{students?.length > 0 &&
 			<table className="users-table-style">
 				<thead>
 					<tr>
 						<th>Profil</th>
 						<th>Nom</th>
-						<th>E-Mail</th>	
+						<th>E-Mail</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -69,22 +69,22 @@ export default function TERStudentView({students, readOnly, onAdd, onDelete, onC
 						<tr key={user.id}>
 							<td>
 								<div className="users-table-avatar-container">
-									<UserAvatar user={user}/>
+									<UserAvatar user={user} />
 								</div>
 							</td>
 							<td>{user.first_name} {user.last_name}</td>
 							<td>{user.email}</td>
 							<td>
 								<OverflowMenu options={[
-									{label: "Contacter", icon: <LuSend/>, onClick: () => {onContact?.(user)}},
-									...(!readOnly ? [{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => {setDeleteStudent(user)}}] : []),
-								]}/>
+									{ label: "Contacter", icon: <LuSend />, onClick: () => { onContact?.(user) } },
+									...(!readOnly ? [{ label: "Supprimer", icon: <MdDeleteOutline />, onClick: () => { setDeleteStudent(user) } }] : []),
+								]} />
 							</td>
 						</tr>
 					))}
-				</tbody>	
+				</tbody>
 			</table>
 		}
-		</>
+	</>
 	);
 }

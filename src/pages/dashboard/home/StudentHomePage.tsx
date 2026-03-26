@@ -30,20 +30,20 @@ export default function StudentHomePage() {
 	}, []);
 
 	if (error) {
-		return <span style={{color: "var(--red-col)"}}>{error}</span>;
+		return <span style={{ color: "var(--red-col)" }}>{error}</span>;
 	}
 
 	if (!data) {
-		return <span style={{color: "var(--gray1-col)"}}>Chargement...</span>;
+		return <span style={{ color: "var(--gray1-col)" }}>Chargement...</span>;
 	}
 
 	if (data.status === "no_period") {
 		return (
 			<ContainerWidget>
 				<div className="student-home-empty">
-					<TbSchool size={40} color="var(--gray1-col)"/>
-					<span style={{fontWeight: 600, fontSize: "16px"}}>Aucun TER actif</span>
-					<span style={{color: "var(--gray1-col)"}}>Vous n'êtes inscrit à aucune période TER en cours.</span>
+					<TbSchool size={40} color="var(--gray1-col)" />
+					<span style={{ fontWeight: 600, fontSize: "16px" }}>Aucun TER actif</span>
+					<span style={{ color: "var(--gray1-col)" }}>Vous n'êtes inscrit à aucune période TER en cours.</span>
 				</div>
 			</ContainerWidget>
 		);
@@ -60,21 +60,21 @@ export default function StudentHomePage() {
 
 	return (
 		<div className="student-home-layout">
-			<span style={{color: "var(--gray1-col)"}}>{data.ter_period_name}</span>
+			<span style={{ color: "var(--gray1-col)" }}>{data.ter_period_name}</span>
 
 			{phase && (
 				<ContainerWidget>
 					<div className="student-home-phase-layout">
 						<div className="student-home-phase-header">
-							<Icon icon={<HiOutlineCalendar/>} color={phaseColor}/>
+							<Icon icon={<HiOutlineCalendar />} color={phaseColor} />
 							<div className="student-home-phase-text">
-								<span style={{fontWeight: 600}}>{phase.current_phase_label}</span>
-								<Tag label={phase.current_phase_label} color={phaseColor}/>
+								<span style={{ fontWeight: 600 }}>{phase.current_phase_label}</span>
+								<Tag label={phase.current_phase_label} color={phaseColor} />
 							</div>
 						</div>
 						{phase.next_deadline && (
 							<div className="student-home-deadline">
-								<span style={{color: "var(--gray1-col)", fontSize: "14px"}}>
+								<span style={{ color: "var(--gray1-col)", fontSize: "14px" }}>
 									{phase.next_deadline_label} : {formatDate(phase.next_deadline)}
 								</span>
 								{phase.days_remaining !== null && (
@@ -90,18 +90,18 @@ export default function StudentHomePage() {
 						)}
 						{phase.current_phase === "formation" && !data.group_name && (
 							<Button label="Former un groupe" color="var(--blue-col)"
-								icon={<FiUsers/>}
-								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}`)}/>
+								icon={<FiUsers />}
+								onClick={() => navigate(`/dashboard/groupes/me`)} />
 						)}
 						{phase.current_phase === "selection" && data.group_name && (
 							<Button label="Classer les sujets" color="var(--orange-col)"
-								icon={<FaRegFile/>}
-								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}/vote`)}/>
+								icon={<FaRegFile />}
+								onClick={() => navigate(`/dashboard/groupes/me/vote`)} />
 						)}
 						{phase.current_phase === "execution" && data.group_name && (
 							<Button label="Voir mon projet" color="var(--green-col)"
-								icon={<FaRegFile/>}
-								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}`)}/>
+								icon={<FaRegFile />}
+								onClick={() => navigate(`/dashboard/groupes/me`)} />
 						)}
 					</div>
 				</ContainerWidget>
@@ -109,22 +109,22 @@ export default function StudentHomePage() {
 
 			<div className="dashbord-mini-info-layout">
 				{data.group_name ? (
-					<ContainerWidget onClick={() => data.group_id && navigate(`/dashboard/ter/${data.ter_period_id}/vote`)}>
+					<ContainerWidget onClick={() => navigate(`/dashboard/groupes/me`)}>
 						<div className="student-home-info-row">
-							<Icon icon={<FiUsers/>} color="var(--blue-col)"/>
+							<Icon icon={<FiUsers />} color="var(--blue-col)" />
 							<div className="student-home-info-text">
-								<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>Mon groupe</span>
-								<span style={{fontWeight: 700}}>{data.group_name}</span>
+								<span style={{ color: "var(--gray1-col)", fontSize: "12px" }}>Mon groupe</span>
+								<span style={{ fontWeight: 700 }}>{data.group_name}</span>
 							</div>
 						</div>
 					</ContainerWidget>
 				) : (
-					<ContainerWidget>
+					<ContainerWidget onClick={() => navigate(`/dashboard/groupes/me`)}>
 						<div className="student-home-info-row">
-							<Icon icon={<FiUsers/>} color="var(--gray1-col)"/>
+							<Icon icon={<FiUsers />} color="var(--gray1-col)" />
 							<div className="student-home-info-text">
-								<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>Mon groupe</span>
-								<span style={{fontWeight: 700, color: "var(--orange-col)"}}>Aucun groupe</span>
+								<span style={{ color: "var(--gray1-col)", fontSize: "12px" }}>Mon groupe</span>
+								<span style={{ fontWeight: 700, color: "var(--orange-col)" }}>Aucun groupe</span>
 							</div>
 						</div>
 					</ContainerWidget>
@@ -133,20 +133,20 @@ export default function StudentHomePage() {
 				{data.subject_title ? (
 					<ContainerWidget>
 						<div className="student-home-info-row">
-							<Icon icon={<FaRegFile/>} color="var(--green-col)"/>
+							<Icon icon={<FaRegFile />} color="var(--green-col)" />
 							<div className="student-home-info-text">
-								<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>Mon sujet</span>
-								<span style={{fontWeight: 700}}>{data.subject_title}</span>
+								<span style={{ color: "var(--gray1-col)", fontSize: "12px" }}>Mon sujet</span>
+								<span style={{ fontWeight: 700 }}>{data.subject_title}</span>
 							</div>
 						</div>
 					</ContainerWidget>
 				) : (
 					<ContainerWidget>
 						<div className="student-home-info-row">
-							<Icon icon={<FaRegFile/>} color="var(--gray1-col)"/>
+							<Icon icon={<FaRegFile />} color="var(--gray1-col)" />
 							<div className="student-home-info-text">
-								<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>Mon sujet</span>
-								<span style={{fontWeight: 700, color: "var(--gray1-col)"}}>Pas encore attribué</span>
+								<span style={{ color: "var(--gray1-col)", fontSize: "12px" }}>Mon sujet</span>
+								<span style={{ fontWeight: 700, color: "var(--gray1-col)" }}>Pas encore attribué</span>
 							</div>
 						</div>
 					</ContainerWidget>
@@ -155,3 +155,4 @@ export default function StudentHomePage() {
 		</div>
 	);
 }
+

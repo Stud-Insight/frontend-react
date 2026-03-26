@@ -7,16 +7,16 @@ interface NotificationWidgetProps {
 	onClick?: () => void;
 };
 
-function formatDate(isoDate: string): string {
+function formatDate(isoDate: string | number | Date): string {
 	const d = new Date(isoDate);
 	return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
-export default function NotificationWidget({notif, onClick}: NotificationWidgetProps){
+export default function NotificationWidget({ notif, onClick }: NotificationWidgetProps) {
 	return (
-		<div className={`notif-card ${notif.is_read ? 'is-read' : 'is-unread'}`} onClick={onClick}>
+		<div className={`notif-card ${notif.isRead ? 'is-read' : 'is-unread'}`} onClick={onClick}>
 			<div className="notif-indicator">
-				{!notif.is_read && <div className="blue-dot" />}
+				{!notif.isRead && <div className="blue-dot" />}
 			</div>
 
 			<div className="notif-body">

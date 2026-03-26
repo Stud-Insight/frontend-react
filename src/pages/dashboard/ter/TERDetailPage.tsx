@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import TERWidgetInfo from "../../../components/objects/TERWidgetInfo";
 import TERService, { TERPeriod, TERPhase } from "../../../services/TERService";
 import InfoBox from "../../../components/ui/InfoBox";
@@ -6,23 +6,28 @@ import { useParams } from "react-router-dom";
 import DashboardPage from "../DashboardPage";
 import TERGroupView from "./TERGroupView";
 import TERSubjectView from "./TERSubjectView";
+import TERExecutionView from "./TERExecutionView";
 
 import "./TERDetailPage.css"
 
-export default function TERDetailPage(){
+export default function TERDetailPage() {
 	const { id } = useParams<{ id: string }>();
 	const [error, setError] = useState<string | null>();
 	const [success, setSuccess] = useState<string | null>();
 	const [period, setPeriod] = useState<TERPeriod | null>(null);
-	
+
 	const viewHandler = (phase: TERPhase) => {
+		if (!period) return null;
 		switch (phase) {
 			case TERPhase.FORMATION: {
-				return <TERGroupView period={period} setError={setError} setSuccess={setSuccess}/>
+				return <TERGroupView period={period} setError={setError} setSuccess={setSuccess} />
 			}
 
 			case TERPhase.SELECTION: {
-				return <TERSubjectView period={period} setError={setError} setSuccess={setSuccess}/>
+				return <TERSubjectView period={period} setError={setError} setSuccess={setSuccess} />
+			}
+			case TERPhase.EXECUTION: {
+				return <TERExecutionView period={period} setError={setError} setSuccess={setSuccess} />
 			}
 		}
 	}
@@ -32,7 +37,7 @@ export default function TERDetailPage(){
 			try {
 				const res = await TERService.getPeriod(id!);
 				setPeriod(res);
-			} catch (err){
+			} catch (err) {
 				const message = err instanceof Error ? err.message : "Erreur de connexion";
 				setError(message);
 			}
@@ -48,16 +53,16 @@ export default function TERDetailPage(){
 				<>
 					<div className="dashboard-top-layout">
 						<div className="dashboard-top-title-layout">
-							<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>{period.academic_year} / {period.name}</span>
+							<span style={{ fontWeight: "var(--big-bold)", fontSize: "25px" }}>{period.academic_year} / {period.name}</span>
 						</div>
 					</div>
 
-					<TERWidgetInfo period={period}/>
+					<TERWidgetInfo period={period} />
 
-					{error && <InfoBox label={error} type="error"/>}
-					{success && <InfoBox label={success} type="success"/>}
+					{error && <InfoBox label={error} type="error" />}
+					{success && <InfoBox label={success} type="success" />}
 
-					{viewHandler(TERPhase.SELECTION)}
+					{viewHandler(TERPhase.EXECUTION)}
 				</>
 			}
 		</DashboardPage>
