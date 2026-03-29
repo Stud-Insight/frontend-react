@@ -30,7 +30,7 @@ export default function StageOfferListPage(){
 				</div>
 			</div>
 
-			<span style={{color: "var(--gray1-col)"}}>Détaile et information sur les offres de stages.</span>
+			<span style={{color: "var(--gray1-col)"}}>Détails et informations sur les offres de stages.</span>
 
 			{offres.length > 0 ? (
 				<div className="stage-offre-list-layout">

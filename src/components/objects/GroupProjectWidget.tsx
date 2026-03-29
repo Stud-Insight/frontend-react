@@ -64,7 +64,7 @@ export default function GroupProjectWidget({label, group, admin = true, active =
 						
 						{(onAdd || onEdit || onDelete) &&
 							<OverflowMenu options={[
-								...(onAdd ? [{label: "Ajouter Etudiants", icon: <FaPlus/>, onClick: () => onAdd()}] : []),
+								...(onAdd ? [{label: "Ajouter Étudiants", icon: <FaPlus/>, onClick: () => onAdd()}] : []),
 								...(onEdit ? [{label: "Modifier", icon: <MdOutlineEdit/>, onClick: () => onEdit()}] : []),
 								...(onDelete ? [{label: "Supprimer", icon: <MdDeleteOutline/>, onClick: () => onDelete()}] : []),
 							]}/>

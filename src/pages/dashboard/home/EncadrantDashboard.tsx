@@ -56,8 +56,8 @@ export default function EncadrantDashboard() {
 				<ContainerWidget>
 					<div style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", padding: "30px"}}>
 						<TbSchool size={40} color="var(--gray1-col)"/>
-						<span style={{fontWeight: 600}}>Aucun groupe assigne</span>
-						<span style={{color: "var(--gray1-col)"}}>Vous n'avez pas encore de groupes assignes a vos sujets.</span>
+						<span style={{fontWeight: 600}}>Aucun groupe assigné</span>
+						<span style={{color: "var(--gray1-col)"}}>Vous n'avez pas encore de groupes assignés à vos sujets.</span>
 					</div>
 				</ContainerWidget>
 			</div>
@@ -71,7 +71,7 @@ export default function EncadrantDashboard() {
 			<div className="dashbord-mini-info-layout">
 				<InfoWidget label="Groupes" icon={<FiUsers/>} info={dashboard.total_groups} color="var(--blue-col)"/>
 				<InfoWidget label="Notes" icon={<TbSchool/>} info={dashboard.graded_groups} color="var(--orange-col)"/>
-				<InfoWidget label="Finalises" icon={<FaRegCheckCircle/>} info={dashboard.finalized_groups} color="var(--green-col)"/>
+				<InfoWidget label="Finalisés" icon={<FaRegCheckCircle/>} info={dashboard.finalized_groups} color="var(--green-col)"/>
 			</div>
 
 			<WarningsBanner warnings={warnings}/>

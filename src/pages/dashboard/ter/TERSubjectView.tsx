@@ -54,7 +54,7 @@ export default function TERSubjectView({period, setError, setSuccess}: TERSubjec
 			);
 			await SubjectService.submitMemberSubjectRanking(myGroup!.id, arr);
 			getRankings();
-			setSuccess(`Vos classement on êtes envoyé avec succès!`);
+			setSuccess(`Vos classements ont été envoyés avec succès !`);
 			setTimeout(() => setSuccess(""), 5000);
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Erreur de connexion";

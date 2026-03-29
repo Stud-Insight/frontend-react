@@ -37,8 +37,8 @@ export default function TERPage(){
 			navigate(`/dashboard/ter/${periods[0].id}`);
 		}
 
-		//un prof peut être associé à plusieur TER en même temps
-		if (UserService.isProfessor(user!)){
+		//un prof peut être associé à plusieurs TER en même temps
+		if (UserService.isProfessor(user)){
 			return (			
 				<DashboardPage>
 					<div className="dashboard-top-layout">
@@ -47,7 +47,7 @@ export default function TERPage(){
 						</div>
 					</div>
 
-					<span style={{color: "var(--gray1-col)"}}>Détaile et information sur vos TER.</span>
+					<span style={{color: "var(--gray1-col)"}}>Détails et informations sur vos TER.</span>
 
 					{periods && periods.map(per => (
 						<TERWidget key={per.id} period={per} onClick={() => navigate(`/dashboard/ter/${per.id}`)}/>
@@ -65,12 +65,12 @@ export default function TERPage(){
 				</div>
 			</div>	
 
-			<span style={{color: "var(--gray1-col)"}}>Détaile et information sur vos TER.</span>
+			<span style={{color: "var(--gray1-col)"}}>Détails et informations sur vos TER.</span>
 
 			{error ?  (
 				<InfoBox label={error} type="error"/>
 			) : (
-				<EmptyWidget icon={<TbSchool size={30}/>} text="Vous êtes inscris à aucun TER pour le moment."/>
+				<EmptyWidget icon={<TbSchool size={30}/>} text="Vous n'êtes inscrit à aucun TER pour le moment."/>
 			)}
 		</DashboardPage>
 	)

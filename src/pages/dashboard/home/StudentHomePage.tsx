@@ -43,7 +43,7 @@ export default function StudentHomePage() {
 				<div className="student-home-empty">
 					<TbSchool size={40} color="var(--gray1-col)"/>
 					<span style={{fontWeight: 600, fontSize: "16px"}}>Aucun TER actif</span>
-					<span style={{color: "var(--gray1-col)"}}>Vous n'etes inscrit a aucune periode TER en cours.</span>
+					<span style={{color: "var(--gray1-col)"}}>Vous n'êtes inscrit à aucune période TER en cours.</span>
 				</div>
 			</ContainerWidget>
 		);
@@ -146,7 +146,7 @@ export default function StudentHomePage() {
 							<Icon icon={<FaRegFile/>} color="var(--gray1-col)"/>
 							<div className="student-home-info-text">
 								<span style={{color: "var(--gray1-col)", fontSize: "12px"}}>Mon sujet</span>
-								<span style={{fontWeight: 700, color: "var(--gray1-col)"}}>Pas encore attribue</span>
+								<span style={{fontWeight: 700, color: "var(--gray1-col)"}}>Pas encore attribué</span>
 							</div>
 						</div>
 					</ContainerWidget>

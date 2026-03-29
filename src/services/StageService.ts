@@ -34,7 +34,7 @@ export const StageOfferStatusLabel: Map<StageOfferStatus, string> = new Map([
 export const StagePeriodStatusLabel: Map<StagePeriodStatus, string> = new Map([
 	[StagePeriodStatus.DRAFT, "Brouillon"],
 	[StagePeriodStatus.OPEN, "Ouvert"],
-	[StagePeriodStatus.CLOSED, "Cloture"],
+	[StagePeriodStatus.CLOSED, "Clôturé"],
 	[StagePeriodStatus.ARCHIVED, "Archivé"],
 ]);
 
