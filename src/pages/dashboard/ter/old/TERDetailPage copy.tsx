@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
-import ContainerWidget from "../../../components/ui/ContainerWidget";
-import ScheduleEventWidget from "../../../components/ui/ScheduleEventWidget";
-import SubjectWidget from "../../../components/objects/SubjectWidget";
+import ContainerWidget from "../../../../components/ui/ContainerWidget";
+import ScheduleEventWidget from "../../../../components/ui/ScheduleEventWidget";
+import SubjectWidget from "../../../../components/objects/SubjectWidget";
 import { HiOutlineMenu } from "react-icons/hi";
 import { FiUser } from "react-icons/fi";
-import { Subject, SubjectStatus } from "../../../services/SubjectService";
+import { Subject, SubjectStatus } from "../../../../services/SubjectService";
 import { useParams } from "react-router-dom";
-import DashboardPage from "../DashboardPage";
+import DashboardPage from "../../DashboardPage";
 
 import "./TERDetailPage.css"
 

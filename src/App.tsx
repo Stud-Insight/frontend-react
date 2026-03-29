@@ -113,8 +113,8 @@ function AppRoutes() {
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
 			</Route>
 
-            <Route path="/" element={<RootRedirect />} />
-            <Route path="*" element={<RootRedirect />} />
+            <Route path="/" element={<RootRedirect/>} />
+            <Route path="*" element={<RootRedirect/>} />
         </Routes>
     );
 }

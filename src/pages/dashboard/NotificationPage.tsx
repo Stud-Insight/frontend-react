@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardPage from "./DashboardPage.tsx";
-import InfoWidget from "../../components/ui/InfoWidget.tsx";
 import InfoBox from "../../components/ui/InfoBox.tsx";
 import ContainerWidget from "../../components/ui/ContainerWidget.tsx";
 import NotificationService, { Notification, NotificationPreferences, getNotificationRoute } from "../../services/NotificationService.ts";

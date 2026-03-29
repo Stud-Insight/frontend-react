@@ -33,12 +33,12 @@ export default function TERPage(){
 	}, [navigate]);
 
 	if (periods.length > 0){
-		if (UserService.isStudent(user)){
+		if (UserService.isStudent(user!)){
 			navigate(`/dashboard/ter/${periods[0].id}`);
 		}
 
 		//un prof peut être associé à plusieur TER en même temps
-		if (UserService.isProfessor(user)){
+		if (UserService.isProfessor(user!)){
 			return (			
 				<DashboardPage>
 					<div className="dashboard-top-layout">

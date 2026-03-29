@@ -78,7 +78,7 @@ export default class UserService {
 		}
 	}
 
-	public static async getAllUsers(): Promise<User[] | null> {
+	public static async getAllUsers(): Promise<User[]> {
 		try {
 			const response = await api.get<{results: User[]}>("/users/");
         	return response.data.results;

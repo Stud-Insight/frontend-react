@@ -57,7 +57,7 @@ export default function UserSelectionDialog({label, value, role_filter, button_t
 	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
-				const list = await UserService.getAllPublicUsers();
+				const list = await UserService.getAllUsers();
 
 				let filtered = role_filter
 					? list.filter(user =>
