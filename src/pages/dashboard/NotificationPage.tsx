@@ -7,12 +7,9 @@ import NotificationService, { Notification, NotificationPreferences, getNotifica
 import NotificationWidget from "../../components/objects/NotificationWidget.tsx";
 import EmptyWidget from "../../components/ui/EmptyWidget.tsx";
 import Button from "../../atoms/input/Button.tsx";
-
 import { FaRegBell } from "react-icons/fa6";
-import { FaRegCheckCircle } from "react-icons/fa";
 
 import "./NotificationPage.css";
-import InputCheckbox from "../../components/input/InputCheckbox.tsx";
 
 const PreferenceLabels: Record<keyof NotificationPreferences, string> = {
 	email_messages: "Messages",
@@ -37,7 +34,7 @@ export default function NotificationPage() {
 				const updated = await NotificationService.markAsRead(notif.id);
 				setNotifList(prev => prev.map(n => n.id === notif.id ? { ...n, is_read: true, read_at: updated.read_at } : n));
 			}
-			const route = getNotificationRoute(notif);
+			const route = NotificationService.getNotificationRoute(notif);
 			if (route) {
 				navigate(route);
 			}
