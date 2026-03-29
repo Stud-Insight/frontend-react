@@ -9,8 +9,6 @@ import HorizontalDivider from "../../components/ui/HorizontalDivider.tsx";
 import LoginPage from "./LoginPage.tsx";
 import AuthService from "../../services/AuthService.ts";
 
-import "./LoginPage.css";
-
 export default function AccountRecoveryPage() {
     const [email, setEmail] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -38,14 +36,14 @@ export default function AccountRecoveryPage() {
     return (
         <LoginPage>
             <form method="POST" className="content-style-div" onSubmit={recoveryHandle}>
-                <InfoBox label="Veuillez saisir votre adresse e-mail pour recevoir un lien de reinitialisation de votre mot de passe." />
+                <InfoBox label="Veuillez saisir votre adresse e-mail pour recevoir un lien de réinitialisation de votre mot de passe." />
                 {error && <InfoBox label={error} type="error"/>}
                 {success && <InfoBox label={success} type="success"/>}
 
                 <InputField label="E-Mail" type="email" icon={<IoMail />} value={email} onChange={setEmail}/>
                 <HorizontalDivider />
-                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"} type="submit"/>
-                <LinkButton label="Retour a la page de connexion" redirection="/auth/login" push_right={true} push_left={true}/>
+                <Button label={isSubmitting ? "Envoi en cours..." : "Envoyer un mail"}/>
+                <LinkButton label="Retour à la page de connexion" redirection="/auth/login"/>
             </form>
         </LoginPage>
     );

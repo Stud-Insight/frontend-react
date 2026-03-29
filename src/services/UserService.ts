@@ -15,7 +15,7 @@ export const UserRolesLabels: Map<UserRoles, string> = new Map([
 	[UserRoles.ETUDIANT, "Étudiant"],
 	[UserRoles.RESPO_TER, "Responsable TER"],
 	[UserRoles.RESPO_STAGE, "Responsable Stage"],
-	[UserRoles.ENCADRANT, "Encadrant"],
+	[UserRoles.ENCADRANT, "Professeur"],
 	[UserRoles.EXTERNE, "Externe"],
 	[UserRoles.ADMIN, "Administrateur"],
 ]);
@@ -78,11 +78,21 @@ export default class UserService {
 		}
 	}
 
-	public static async getAllUsers(): Promise<User[] | null> {
+	public static async getAllUsers(): Promise<User[]> {
 		try {
-			const response = await api.get<User[]>("/users/");
-        	return response.data;
+			const response = await api.get<{results: User[]}>("/users/");
+        	return response.data.results;
 		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getAllPublicUsers(search: string = ""): Promise<User[]> {
+		try {
+			const params = search ? { search } : {};
+            const response = await api.get<User[]>("/chat/users", { params });
+            return response.data;
+		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
@@ -128,5 +138,29 @@ export default class UserService {
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
+	}
+
+	public static isProfessor(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ENCADRANT;
+		});
+	}
+
+	public static isStudent(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ETUDIANT;
+		});
+	}
+
+	public static isRespo(user: User): boolean {
+		return user.groups.some(role => {
+			return (role.name == UserRoles.RESPO_STAGE) || (role.name == UserRoles.RESPO_TER);
+		});
+	}
+	
+	public static isAdmin(user: User): boolean {
+		return user.groups.some(role => {
+			return role.name == UserRoles.ADMIN;
+		});
 	}
 };

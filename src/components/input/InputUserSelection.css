@@ -1,0 +1,17 @@
+.user-selection-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	height: 200px;
+	overflow-y: auto;
+	width: 100%;
+}
+
+.user-selection-content input {
+	flex: 1;     
+}
+
+.user-selection-input {
+	display: flex;
+	flex-direction: row;
+}

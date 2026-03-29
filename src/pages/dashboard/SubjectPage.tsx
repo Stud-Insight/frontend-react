@@ -12,10 +12,14 @@ import InputTagSelection from "../../components/input/InputTagSelection";
 import InputArea from "../../components/input/InputArea";
 import InputNumberField from "../../components/input/InputNumberField";
 import InputAttachment from "../../components/input/InputAttachment";
+import TERSelectionDialog from "../../components/dialog/TERSelectionDialog";
 
+import EmptyWidget from "../../components/ui/EmptyWidget";
+
+import { TERPeriod } from "../../services/TERService";
 import { FaPlus } from "react-icons/fa6";
 import { FaRegClock, FaRegCheckCircle, FaRegFile } from "react-icons/fa";
-
+import { MdOutlineEdit } from "react-icons/md";
 import "./SubjectPage.css";
 
 export default function SubjectPage(){
@@ -26,6 +30,7 @@ export default function SubjectPage(){
 	const [deleteSubject, setDeleteSubject] = useState<Subject | null>(null);
 	const [modifySubject, setModifySubject] = useState<Subject | null>(null);
 	const [createSubject, setCreateSubject] = useState<boolean>(false);
+	const [publishSubject, setPublishSubject] = useState<Subject | null>(null);
 	const [title, setTitle] = useState<string>("");
 	const [desc, setDesc] = useState<string>("");
 	const [etuMin, setEtuMin] = useState<number>(0);
@@ -47,7 +52,6 @@ export default function SubjectPage(){
 		try {
 			const data = await SubjectService.getUserSubjects();
 			setProjects(data);
-			console.log(data);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -58,6 +62,7 @@ export default function SubjectPage(){
 		setCreateSubject(false);
 		setModifySubject(null);
 		setDeleteSubject(null);
+		setPublishSubject(null);
 		setTitle("");
 		setDesc("");
 		setEtuMin(0);
@@ -100,8 +105,9 @@ export default function SubjectPage(){
 	const confirmCreationHandle = async () => {
 		try {
 			await SubjectService.createSubject(title, desc, etuMin, etuMax, selectedTags, selectedFiles);
-			setSuccess(`Projet "${title}" à été créée!`);
+			setSuccess(`Sujet "${title}" a été créé!`);
 			getSubjects();
+			setTimeout(() => setSuccess(null), 5000);
 		} catch (err){
 			const message = err instanceof Error ? err.message : "Erreur de connexion";
 			setError(message);
@@ -136,6 +142,26 @@ export default function SubjectPage(){
 		);
 	}
 
+	const onPublishHandle = async (periods: Set<TERPeriod>) => {
+		try {
+			const g = Array.from(periods).map(period => (
+				period.id
+			));
+
+			const p: TERPeriod = Array.from(periods)[0];
+
+			await SubjectService.publishSubject(new Set(g), publishSubject?.id);
+			getSubjects();
+			setSuccess(`Sujet "${publishSubject?.title}" a été soumis à "${p.name}"`);
+			setTimeout(() => setSuccess(null), 5000);
+		} catch(err) {
+			const message = err instanceof Error ? err.message : "Erreur de connexion";
+			setError(message);
+		}
+
+		resetFieldHandle();
+	}
+
 	useEffect(() => {
 		getSubjects();
 	}, []);
@@ -143,90 +169,77 @@ export default function SubjectPage(){
 	return (
 		<DashboardPage>
 			{createSubject &&
-				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} width={"90%"}>
+				<ModalDialog label="Créer Un Nouveau Sujet" onClose={resetFieldHandle} className="project-modal-style">
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
-
-					<div className="subject-page-main-layout">
-						<div className="subject-page-sub-layout">
-							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
-							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
-						</div>
-
-						<div className="subject-page-sub-layout">
-							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
-						</div>
-						
-						<div className="subject-page-sub-layout">
-							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
-						</div>
-					</div>
-					
-					<Button label="Créer Sujet" icon={<FaPlus/>} onChange={confirmCreationHandle}/>
+					<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+					<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
+					<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+					<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>	
+					<Button label="Créer Sujet" icon={<FaPlus/>} onClick={confirmCreationHandle}/>
 				</ModalDialog>
 			}
 
 			{modifySubject &&
-				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} width={"90%"}>
+				<ModalDialog label="Modification Sujet" onClose={resetFieldHandle} className="project-modal-style">
 					<InputField value={title} label="Titre *" onChange={setTitle}/>
 					<InputArea value={desc} label="Description *" onChange={setDesc}/>
-
-					<div className="subject-page-main-layout">
-						<div className="subject-page-sub-layout">
-							<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={5}/>
-							<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={5} defaultNum={5}/>
-						</div>
-
-						<div className="subject-page-sub-layout">
-							<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
-						</div>
-						
-						<div className="subject-page-sub-layout">
-							<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>
-						</div>
-					</div>
-					
-					<Button label="Modifier" icon={<FaPlus/>} onChange={editConfirmHandle}/>
+					<InputNumberField value={etuMin} label="Étudiants Minimum *" onChange={setEtuMin} min={0} max={maxGroupEtu}/>
+					<InputNumberField value={etuMax} label="Étudiants Maximum *" onChange={setEtuMax} min={0} max={maxGroupEtu}/>
+					<InputTagSelection label="Tags" tags={selectedTags} options={SubjectTags} onSelect={addTagHandle} onDelete={(t: string) => deleteTagHandle(t)}/>
+					<InputAttachment label="Attachement" files={selectedFiles} onChange={addFileHandle} onDelete={deleteFileHandle}/>	
+					<Button label="Modifier" icon={<MdOutlineEdit/>} onClick={editConfirmHandle}/>
 				</ModalDialog>
 			}
 
-			<div className="dashboard-top-layout">
-				<div className="dashboard-top-title-layout">
-					<label style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets</label>
-				</div>
-			
-				<div className="dashboard-top-button-layout">
-					<Button icon={<FaPlus/>} label="Créer Un Sujet" onChange={() => {
-						setEtuMax(maxGroupEtu);
-						setCreateSubject(true);
-					}}/>
-				</div>
-			</div>
-			<label style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</label>
-
-			{error && <InfoBox label={error} type="error"/>}
-			{success && <InfoBox label={success} type="success"/>}
-
-			<div className="dashbord-mini-info-layout">
-				<InfoWidget active={page == null} label="Sujet Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
-				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
-				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
-				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvés" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
-			</div>
-
-			{filteredSubjects.map((sub, index) => (
-				<SubjectWidget key={index} subject={sub} onDelete={() => setDeleteSubject(sub)} onEdit={() => editHandle(sub)}/>
-			))}
-
 			{deleteSubject &&
 				<ConfirmationDialog 
-					label="Supprimer ce projet?" 
-					info="Ce projet sera surpprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
+					label="Supprimer ce sujet?" 
+					info="Ce sujet sera supprimé définitivement de la base de donnée. Cette action est irréversible et entraînera la perte de toutes les données associées."
 					onCancel={() => setDeleteSubject(null)} 
 					onConfirm={deleteHandle}
 				/>
 			}
 
+			{publishSubject &&
+				<TERSelectionDialog label="Publier ce projet?" maxSelection={1} onClose={() => setPublishSubject(null)} onConfirm={(periods) => onPublishHandle(periods)}/>
+			}
+
+			<div className="dashboard-top-layout">
+				<div className="dashboard-top-title-layout">
+					<span style={{fontWeight: "var(--big-bold)", fontSize: "25px"}}>Mes Sujets TER</span>
+				</div>
+			
+				<div className="dashboard-top-button-layout">
+					<Button icon={<FaPlus/>} label="Créer Un Sujet" onClick={() => {
+						setEtuMax(maxGroupEtu);
+						setCreateSubject(true);
+					}}/>
+				</div>
+			</div>
+			<span style={{color: "var(--gray1-col)"}}>Créez et gérez vos propositions de sujet TER.</span>
+
+			{error && <InfoBox label={error} type="error"/>}
+			{success && <InfoBox label={success} type="success"/>}
+
+			<div className="dashbord-mini-info-layout">
+				<InfoWidget active={page == null} label="Sujets Créés" icon={<FaRegFile/>} info={subjects.length.toString()} color="var(--blue-col)" onClick={() => setPage(null)}/>
+				<InfoWidget active={page == SubjectStatus.DRAFT} label="Sujet Brouillon" icon={<FaRegClock/>} info={draftCount.toString()} color={SubjectStatusColor.get(SubjectStatus.DRAFT)} onClick={() => setPage(SubjectStatus.DRAFT)}/>
+				<InfoWidget active={page == SubjectStatus.SUBMITTED} label="Sujet Soumis" icon={<FaRegCheckCircle/>} info={submitCount.toString()} color={SubjectStatusColor.get(SubjectStatus.SUBMITTED)} onClick={() => setPage(SubjectStatus.SUBMITTED)}/>
+				<InfoWidget active={page == SubjectStatus.VALIDATED} label="Sujet Approuvé" icon={<FaRegCheckCircle/>} info={approveCount.toString()} color={SubjectStatusColor.get(SubjectStatus.VALIDATED)} onClick={() => setPage(SubjectStatus.VALIDATED)}/>
+			</div>	
+
+			{filteredSubjects.length > 0 ? (
+				filteredSubjects.map(sub => (
+				<SubjectWidget key={sub.id} subject={sub} 
+					onDelete={() => setDeleteSubject(sub)} 
+					onEdit={() => editHandle(sub)}
+					onPublish={() => setPublishSubject(sub)}
+				/>
+			))
+			) : (
+				<EmptyWidget icon={<FaRegFile size={30}/>} text="Aucun sujet créé pour le moment."/>
+			)}	
 		</DashboardPage>
 	)
 }

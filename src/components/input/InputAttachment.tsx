@@ -33,7 +33,7 @@ function FileWidget({file, onDelete}: FileWidgetProps){
 			return <FaRegFileAudio/>
 		}
 
-		if (file.name.endsWith(".zip")){
+		if (file.name.endsWith(".zip") || file.name.endsWith(".tgz")){
 			return <FaRegFileArchive/>
 		}
 
@@ -50,8 +50,8 @@ function FileWidget({file, onDelete}: FileWidgetProps){
 				{getApproIcon()}
 
 				<div className="input-file-widget-info-layout">
-					<label>{file.name}</label>
-					<label>{FileService.formatFileSize(file.size)}</label>
+					<span>{file.name}</span>
+					<span>{FileService.formatFileSize(file.size)}</span>
 				</div>
 			</div>
 
@@ -93,7 +93,7 @@ export default function InputAttachment({label, icon, files, accept="", onChange
 		>
 			<Field label={label} icon={icon} className={`input-attachement-style ${isOverDrag ? "active" : undefined}`}>
 				<div>
-					<label>Drag & drop ou  </label>
+					<span>Drag & drop ou  </span>
 					<LinkButton label="Fichiers" onClick={() => inputRef.current?.click()}/>
 				</div>
 

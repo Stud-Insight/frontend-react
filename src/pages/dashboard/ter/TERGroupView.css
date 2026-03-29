@@ -1,0 +1,19 @@
+.ter-list-page-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	width: 100%;
+}
+
+.ter-list-group-layout {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.ter-list-project-layout {
+	flex: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}

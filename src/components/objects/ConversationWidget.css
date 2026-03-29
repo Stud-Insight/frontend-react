@@ -1,0 +1,43 @@
+.conv-layout {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	padding: 10px;
+	gap: 15px;
+	border-style: solid;
+	border-width: 2px;
+	border-color: var(--beige-col);
+	background-color: var(--beige-col);
+	box-sizing: border-box;
+	border-radius: 10px;
+	transition: border-color 0.3s;
+	transition: background-color 0.3s;
+	transition: transform 0.15s;
+}
+
+.conv-name {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+}
+
+.conv-last-message {
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	align-items: center;
+	font-size: 13px;
+	color: var(--gray1-col);
+}
+
+.conv-layout.active {
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+	transform: scale(1.03);
+}
+
+.conv-content-layout {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}

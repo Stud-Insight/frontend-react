@@ -1,0 +1,14 @@
+.progress-bar-bg {
+	position: relative;
+    height: 8px;
+    background: var(--beige-col);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+	position: absolute;
+    height: 8px;
+    background: var(--blue-col);
+    border-radius: 4px;
+}

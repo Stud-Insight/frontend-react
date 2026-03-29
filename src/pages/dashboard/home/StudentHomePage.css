@@ -1,0 +1,52 @@
+.student-home-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.student-home-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	padding: 40px 20px;
+}
+
+.student-home-phase-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.student-home-phase-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 15px;
+}
+
+.student-home-phase-text {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.student-home-deadline {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	padding-left: 55px;
+}
+
+.student-home-info-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 15px;
+}
+
+.student-home-info-text {
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}

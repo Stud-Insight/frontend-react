@@ -1,0 +1,110 @@
+.date-layout-container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	height: auto;
+}
+
+.ter-list-label-layout {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	width: 100%;
+}
+
+.calender-layout {
+	position: absolute;
+	opacity: 0;
+	transition: opacity 0.3s;
+	z-index: 9999;
+	width: 100%;
+	pointer-events: none;
+}
+
+.calender-layout.expand {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.date-input-layout {
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 10%, transparent);
+}
+
+.date-selection-content {
+	width: 100%;
+}
+
+.date-selection-content-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}
+
+.calender-layout {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	height: auto;
+}
+
+.calender-header-layout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.calender-title {
+	font-weight: 400;
+}
+
+.calender-content-style {
+	display: grid;
+	grid-template-columns: repeat(7, 1fr);
+  	grid-template-rows: repeat(6, auto);
+	width: 100%;
+}
+
+.calender-cell {
+	--radius: 10px;
+	border-radius: var(--radius);
+	padding: 6px;
+	text-align: center;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	border-style: solid;
+	border-width: 0px;
+	border-radius: 6px;
+	padding: 7px;
+}
+
+.calender-cell.between {
+	border-radius: 0px 0px 0px 0px;
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 40%, transparent);
+	color: var(--blue-col);
+}
+
+.calender-cell.first {
+	border-radius: var(--radius) 0px 0px var(--radius);
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 40%, transparent);
+	color: var(--blue-col);
+}
+
+.calender-cell.last {
+	border-radius: 0px var(--radius) var(--radius) 0px;
+	border-color: var(--blue-col);
+	background-color: color-mix(in srgb, var(--blue-col) 40%, transparent);
+	color: var(--blue-col);
+}
+
+.calender-cell:hover {
+  	background-color: var(--gray2-col);
+}

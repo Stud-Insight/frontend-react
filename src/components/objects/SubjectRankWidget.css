@@ -1,0 +1,41 @@
+.subject-rank-widget-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.subject-rank-widget-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.subject-rank-widget-subject {
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.subject-rank-widget-rank {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.subject-rank-widget-rank-label {
+    font-size: 12px;
+    color: var(--gray1-col);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.subject-rank-widget-rank-value {
+    font-size: 22px;
+    font-weight: var(--big-bold);
+    color: var(--blue-col);
+}

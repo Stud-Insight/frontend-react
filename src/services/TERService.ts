@@ -10,11 +10,48 @@ export enum TERStatus {
 	ARCHIVED = "archived"
 };
 
+export enum TERPhase {
+	FORMATION = "formation",
+	SELECTION = "selection",
+	ASSIGNMENT = "assignment",
+	EXECUTION = "execution",
+	FINISHED = "finished",
+	UPCOMING = "upcoming",
+	UNKNOWN = "unknown",
+};
+
+export const TERPhaseLabel: Map<TERPhase, string> = new Map([
+	[TERPhase.FORMATION, "Formation des groupes"],
+	[TERPhase.SELECTION, "Vote des sujets"],
+	[TERPhase.ASSIGNMENT, "Assignement des sujets au groupe"],
+	[TERPhase.EXECUTION, "Réalisation du projet assigné"],
+	[TERPhase.FINISHED, "Projet terminé"],
+	[TERPhase.UPCOMING, "Phase à venir, préparation nécessaire"],
+	[TERPhase.UNKNOWN, "Statut inconnu ou non défini"],
+]);
+
+export const TERPhaseColor: Map<TERPhase, string> = new Map([
+	[TERPhase.FORMATION, "var(--blue-col)"],
+	[TERPhase.SELECTION, "var(--blue-col)"],
+	[TERPhase.ASSIGNMENT, "var(--blue-col)"],
+	[TERPhase.EXECUTION, "var(--blue-col)"],
+	[TERPhase.FINISHED, "var(--blue-col)"],
+	[TERPhase.UPCOMING, "var(--blue-col)"],
+	[TERPhase.UNKNOWN, "var(--blue-col)"],
+]);
+
 export const TERStatusLabel: Map<TERStatus, string> = new Map([
 	[TERStatus.DRAFT, "Brouillon"],
 	[TERStatus.OPEN, "En Cours"],
 	[TERStatus.CLOSED, "Terminé"],
 	[TERStatus.ARCHIVED, "Archivé"],
+]);
+
+export const TERStatusColor: Map<TERStatus, string> = new Map([
+	[TERStatus.DRAFT, "var(--gray1-col)"],
+	[TERStatus.OPEN, "var(--green-col)"],
+	[TERStatus.CLOSED, "var(--blue-col)"],
+	[TERStatus.ARCHIVED, "var(--purple-col)"],
 ]);
 
 export interface TERNotation {
@@ -93,49 +130,180 @@ export interface TERPeriodStats {
     subjects_assigned: number;
 }
 
-export interface TERStudent {
-	id: string;
-	first_name: string;
-	last_name: string;
-	email: string;
+export interface StudentPhase {
+	current_phase: string;
+	current_phase_label: string;
+	next_deadline: string | null;
+	next_deadline_label: string | null;
+	days_remaining: number | null;
 }
 
+export interface StudentDashboard {
+	ter_period_id: string | null;
+	ter_period_name: string | null;
+	status: string;
+	phase: StudentPhase | null;
+	group_name: string | null;
+	group_id: string | null;
+	subject_title: string | null;
+	subject_id: string | null;
+}
+
+export interface EncadrantGroupDeliverable {
+	total: number;
+	submitted: number;
+}
+
+export interface EncadrantGroup {
+	id: string;
+	name: string;
+	members: { id: string; email: string; first_name: string; last_name: string }[];
+	subject_title: string;
+	subject_id: string;
+	deliverables: EncadrantGroupDeliverable;
+	grade_status: string | null;
+	group_grade: number | null;
+}
+
+export interface EncadrantDashboard {
+	ter_period_id: string;
+	ter_period_name: string;
+	groups: EncadrantGroup[];
+	total_groups: number;
+	graded_groups: number;
+	finalized_groups: number;
+}
+
+export interface AdminSystemStats {
+	total_users: number;
+	active_users: number;
+	total_students: number;
+	total_encadrants: number;
+	total_externes: number;
+	active_ter_periods: number;
+	draft_ter_periods: number;
+	archived_ter_periods: number;
+	active_stage_periods: number;
+}
+
+export interface WorkflowWarning {
+	level: "error" | "warning";
+	phase: string;
+	message: string;
+	count: number | null;
+	total: number | null;
+}
+
+export interface WorkflowWarningsResponse {
+	period_id: string;
+	period_name: string;
+	current_phase: string;
+	warnings: WorkflowWarning[];
+}
+
+export const PhaseColors: Record<string, string> = {
+	formation: "var(--blue-col)",
+	selection: "var(--orange-col)",
+	assignment: "var(--purple-col)",
+	execution: "var(--green-col)",
+	finished: "var(--gray1-col)",
+	upcoming: "var(--cyan-col)",
+	unknown: "var(--gray1-col)",
+};
+
 export default class TERService {
-	public static async getEnrolledStudents(id: string): Promise<User[] | null> {
-		try {
-			const res = await api.get<TERStudent[]>(
-				`/ter/periods/${id}/students`
-			);
+	public static getPeriodPhase(period: TERPeriod) {
+		const now = new Date();
 
-			const users: User[] = res.data.map((student) => ({
-				id: student.id,
-				first_name: student.first_name,
-				last_name: student.last_name,
-				email: student.email,
-				groups: [],
-			}));
-
-			return users;
-		} catch (error) {
-			errorFormat(error as AxiosError<ApiError>);
-		}
-	}
-
-	public static async addEnroleStudents(period_id: string, stud_ids: string[]): Promise<{ added: number; total_enrolled: number } | null> {
-		try {
-			const p = {
-				student_ids: stud_ids
+		const phases = [
+			{
+				phase: TERPhase.FORMATION,
+				start: new Date(period.group_formation_start),
+				end: new Date(period.group_formation_end),
+			},
+			{
+				phase: TERPhase.SELECTION,
+				start: new Date(period.subject_selection_start!),
+				end: new Date(period.subject_selection_end!),
+			},
+			{
+				phase: TERPhase.EXECUTION,
+				start: new Date(period.project_start!),
+				end: new Date(period.project_end!),
 			}
+		];
 
-			const res = await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students`, p);
+		for (let i = 0; i < phases.length; i++) {
+			const phase = phases[i];
 
-			return res.data;
+			if (now >= phase.start && now <= phase.end) {
+				const progress = (now.getTime() - phase.start.getTime()) / (phase.end.getTime() - phase.start.getTime());
+				const msLeft = phase.end.getTime() - now.getTime();
+				const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
+
+				return {
+					phase: phase.phase,
+					deadline: phase.end,
+					progress: progress,
+					daysLeft: daysLeft,
+				};
+			}
+		}
+
+		return null;
+	}
+
+	public static async getStudents(id: string): Promise<User[]> {
+		try {
+			const res = await api.get<{results: User[]}>(`/ter/periods/${id}/students`);
+			return res.data.results;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async getAllPeriods(): Promise<TERPeriod[] | null> {
+	public static async addStudent(period_id: string, user_id: string): Promise<void> {
+		try {
+			await api.post<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students/${user_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async deleteStudent(period_id: string, user_id: string): Promise<void> {
+		try {
+			await api.delete<{added: number; total_enrolled: number}>(`/ter/periods/${period_id}/students/${user_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getProfessors(period_id: string): Promise<User[]> {
+		try {
+			const res = await api.get<{results: User[]}>(`/ter/periods/${period_id}/encadrants`);
+			return res.data.results;
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async addProfessor(period_id: string, professor_id: string): Promise<void> {
+		try {
+			await api.post<{results: User[]}>(`/ter/periods/${period_id}/encadrants/${professor_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async deleteProfessor(period_id: string, professor_id: string): Promise<void> {
+		try {
+			await api.delete<{results: User[]}>(`/ter/periods/${period_id}/encadrants/${professor_id}`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getPeriods(): Promise<TERPeriod[]> {
 		try {
 			const res = await api.get<TERPeriod[]>("/ter/periods/");
 			return res.data;
@@ -144,7 +312,7 @@ export default class TERService {
 		}
 	}
 
-	public static async getPeriodStats(id: string): Promise<TERPeriodStats | null> {
+	public static async getPeriodStats(id: string): Promise<TERPeriodStats> {
 		try {
 			const res = await api.get<TERPeriodStats>(`/ter/periods/${id}/stats`);
 			return res.data;
@@ -153,46 +321,140 @@ export default class TERService {
 		}
 	}
 
-	public static async getPeriod(id: string): Promise<TERPeriod | null>{
+	public static async getSubjects(ter_id: string): Promise<Subject[]> {
 		try {
-			const res = await api.get<TERPeriod>(`/ter/periods/${id}`);
+			const res = await api.get<{results: Subject[]}>(`/ter/subjects?ter_period_id=${ter_id}`);
+			return res.data.results;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	} 
+
+	public static async getMyPeriods(): Promise<TERPeriod[]> {
+		try {
+			const res = await api.get<TERPeriod[]>(`/ter/periods/me`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getPeriod(period_id: string): Promise<TERPeriod | null>{
+		try {
+			const res = await api.get<TERPeriod>(`/ter/periods/${period_id}`);
 			return res.data;		
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}
 	}
 
-	public static async createPeriod(title: string, academic_year: number, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, assignmentDate: string): Promise<TERPeriod[] | null> {
+	public static async openPeriod(period_id: string): Promise<void> {
 		try {
-			// const mock: TERPeriodCreatePayload = {
-			// 	name: "TER Informatique",
-			// 	academic_year: "2026-2027",
-			// 	group_formation_start: "2026-09-01",
-			// 	group_formation_end: "2026-09-10",
-			// 	subject_selection_start: "2026-09-11",
-			// 	subject_selection_end: "2026-09-25",
-			// 	assignment_date: "2026-09-30",
-			// 	project_start: "2026-10-01",
-			// 	project_end: "2027-01-31",
-			// 	min_group_size: 2,
-			// 	max_group_size: 4,
-			// };
+			await api.post(`/ter/periods/${period_id}/open`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
 
+	public static async closePeriod(period_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/periods/${period_id}/close`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async archivePeriod(period_id: string): Promise<void> {
+		try {
+			await api.post(`/ter/periods/${period_id}/archive`);
+		} catch (error) {
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async createPeriod(title: string, academic_year: string, start_date: string, end_date: string, groupStartDate: string, groupEndDate: string, projectStartDate: string, projectEndDate: string, assignmentDate: string, min_groupe: number, max_groupe: number): Promise<TERPeriod[] | null> {
+		try {
 			const load: TERPeriodCreatePayload = {
 				name: title,
-				academic_year: `${academic_year - 1}-${academic_year}`,
-				group_formation_start: groupStartDate ,
+				academic_year: academic_year,
+				group_formation_start: groupStartDate,
 				group_formation_end: groupEndDate,
-				subject_selection_start: "2026-09-11",
-				subject_selection_end: "2026-09-25",
-				assignment_date: assignmentDate,
+				subject_selection_start: projectStartDate,
+				subject_selection_end: projectEndDate,
+				assignment_date: projectEndDate,
 				project_start: start_date,
 				project_end: end_date,
-				min_group_size: 2,
-				max_group_size: 4,
+				min_group_size: min_groupe,
+				max_group_size: max_groupe,
 			};
 
 			const res = await api.post<TERPeriod[]>("/ter/periods/", load);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getStudentDashboard(periodId?: string): Promise<StudentDashboard> {
+		try {
+			const url = periodId
+				? `/ter/dashboard/student?ter_period_id=${periodId}`
+				: `/ter/dashboard/student`;
+			const res = await api.get<StudentDashboard>(url);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getEncadrantPeriods(): Promise<{id: string; name: string; academic_year: string; status: string}[]> {
+		try {
+			const res = await api.get<{id: string; name: string; academic_year: string; status: string}[]>(`/ter/dashboard/encadrant/periods`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getEncadrantDashboard(periodId: string): Promise<EncadrantDashboard> {
+		try {
+			const res = await api.get<EncadrantDashboard>(`/ter/dashboard/encadrant/${periodId}`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getAdminStats(): Promise<AdminSystemStats> {
+		try {
+			const res = await api.get<AdminSystemStats>(`/ter/dashboard/admin/stats`);
+			return res.data;
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async exportCsv(periodId: string): Promise<void> {
+		try {
+			const res = await api.get(`/ter/dashboard/export/${periodId}/csv`, {
+				responseType: 'blob',
+			});
+			const url = window.URL.createObjectURL(new Blob([res.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `export_ter_${periodId}.csv`);
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+			window.URL.revokeObjectURL(url);
+		} catch (error){
+			errorFormat(error as AxiosError<ApiError>);
+		}
+	}
+
+	public static async getWarnings(periodId: string): Promise<WorkflowWarningsResponse> {
+		try {
+			const res = await api.get<WorkflowWarningsResponse>(`/ter/dashboard/warnings/${periodId}`);
 			return res.data;
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

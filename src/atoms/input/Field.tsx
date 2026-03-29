@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode } from "react";
 import "./Field.css"
 
 interface FieldProps {
@@ -12,11 +12,13 @@ interface FieldProps {
 export default function Field({label, icon, children, onClick, className}: FieldProps){
 	return (
 		<div className="field-layout">
-			<div className="field-label">
-				{icon}
-				{label && <label>{label}</label>}
-			</div>
-
+			{label &&
+				<div className="field-label">
+					{icon}
+					<span>{label}</span>
+				</div>
+			}
+			
 			<div className={`field-content ${className}`} onClick={onClick}>
 				{children}
 			</div>

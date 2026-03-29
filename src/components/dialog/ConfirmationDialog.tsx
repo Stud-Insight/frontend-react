@@ -13,12 +13,13 @@ interface ConfirmationDialogProps {
 
 export default function ConfirmationDialog({label, info, onCancel, onConfirm}: ConfirmationDialogProps){
 	return (
-		<ModalDialog onClose={onCancel} width={500} label={label}>
+		<ModalDialog onClose={onCancel} label={label} className="confirmation-dialog-layout-layout">
 			<div className="confirmation-dialog-layout">
-				<label className="confirmation-dialog-info">{info}</label>
-				<div className="confirmation-dialog-buttons-layout">
-					<Button label="Annuler" style="cancel" width={`${100}%`} onChange={onCancel}/>
-					<Button label="Confirmer" style="danger" width={`${100}%`} onChange={onConfirm}/>
+				<span className="confirmation-text-layout">{info}</span>
+
+				<div id="button-content">
+					<Button label="Annuler" style="cancel" onClick={onCancel}/>
+					<Button label="Confirmer" style="danger" onClick={onConfirm}/>
 				</div>
 			</div>
 		</ModalDialog>

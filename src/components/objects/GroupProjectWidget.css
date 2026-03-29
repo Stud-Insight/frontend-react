@@ -1,8 +1,8 @@
-.group-project-widget-layout {
+.group-project-widget-header {
 	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	height: 100%;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .group-project-widget-title {
@@ -20,46 +20,50 @@
 	gap: 5px;
 }
 
-.info-widget-icon {
-	display: flex;
-	padding: 10px;
-	aspect-ratio: 1 / 1;
-	font-size: 24px;
-	border-radius: 10px;
-	justify-content: center;
-	align-items: center;
-	color: var(--blue-col);
-	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
-}
-
-.group-project-footer {
+.group-widget-buttons-layout {
 	display: flex;
 	flex-direction: row;
-	align-items: center;
-	gap: 20px;
+	gap: 15px
 }
 
-.group-project-footer-buttons {
+.group-project-top {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	gap: 10px;
-	font-size: 20px;
 }
 
-.group-project-name-tags-layout {
+.group-project-info {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
+	color: var(--gray1-col);
+	font-weight: var(--small-bold);
 	gap: 10px;
 }
 
-.group-project-name-tags {
+.group-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	opacity: 0;
+	max-height: 0;
+	transition: max-height 0.3s;
+	transition: opacity 0.3s;
+}
+
+.group-content.expanded {
+	opacity: 1;
+	max-height: 400;
+}
+
+.group-content-title {
 	display: flex;
 	flex-direction: row;
-	padding: 8px;
-	font-size: 12px;
-	color: var(--blue-col);
-	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
-	border-radius: 10px;
-	gap: 2px;
+	align-items: center;
+	gap: 10px;
+}
+
+.group-add-user-div {
+	
 }

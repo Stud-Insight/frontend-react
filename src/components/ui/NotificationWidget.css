@@ -1,0 +1,97 @@
+.notification-widget-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    width: 360px;
+    background-color: var(--white-col);
+    border: 1px solid var(--gray-border-col);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    max-height: 500px;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.notification-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--gray-border-col);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--white-col);
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--black-col);
+}
+
+.notification-header button {
+    background: none;
+    border: none;
+    color: var(--blue-col);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.notification-header button:hover {
+    opacity: 0.7;
+}
+
+.notification-list {
+    overflow-y: auto;
+    background-color: var(--white-col);
+    max-height: 380px;
+    scrollbar-width: thin;
+}
+
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--gray-border-col);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.notification-item:hover {
+    background-color: var(--gray-bg-col);
+}
+
+.notification-item.unread {
+    background-color: var(--blue-light-bg-col);
+    border-left: 4px solid var(--blue-col);
+}
+
+.notification-item strong {
+    font-size: 14px;
+    color: var(--black-col);
+}
+
+.notification-item p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--gray1-col);
+    line-height: 1.4;
+}
+
+.notification-item .notif-date {
+    margin-top: 5px;
+    font-size: 11px;
+    color: var(--gray2-col);
+}
+
+.empty-msg {
+    padding: 30px;
+    text-align: center;
+    color: var(--gray2-col);
+    font-size: 14px;
+}

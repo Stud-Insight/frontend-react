@@ -12,6 +12,13 @@
 	gap: 20px;
 }
 
+.subject-widget-expand-button-layout {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	height: 30px;
+}
+
 .subject-widget-title-right {
 	display: flex;
 	flex-direction: column;
@@ -73,6 +80,8 @@
 	overflow: hidden;
 	max-height: 0;
 	opacity: 0;
+	word-break: break-word;
+  	overflow-wrap: anywhere;
 	transition: max-height 0.4s, opacity 0.4s;
 }
 
@@ -86,18 +95,25 @@
 	background-color: color-mix(in srgb, var(--gray1-col) 20%, transparent);
 }
 
+.subject-widget-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .subject-widget-expand-button {
-	position: absolute;
-	top: -10px;
-	right: -10px;
-	font-size: 20px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
 }
 .subject-widget-state-style.submitted {
 	color: var(--blue-col);
 	background-color: color-mix(in srgb, var(--blue-col) 20%, transparent);
 }
 
-.subject-widget-state-style.VALIDATED {
+.subject-widget-state-style.validated {
 	color: var(--green-col);
 	background-color: color-mix(in srgb, var(--green-col) 20%, transparent);
 }
