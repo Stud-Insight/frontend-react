@@ -298,7 +298,7 @@ export default function UsersPage(){
 				<table className="users-table-style">
 					<thead>
 						<tr>
-							<th><InputCheckbox/></th>
+							{/* <th><InputCheckbox/></th> */}
 							<th>Profil</th>
 							<th>ID</th>
 							<th>Nom</th>

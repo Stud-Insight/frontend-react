@@ -21,7 +21,7 @@ export default function TERSubjectView({ subjects, readOnly, onAccept, onReject 
 					onConfirm={() => { onReject?.(reject); setReject(null); }}
 					info={`Êtes-vous sûr de vouloir rejeter le sujet "${reject.title}"`}
 				>
-
+				
 				</ConfirmationDialog>
 			}
 
