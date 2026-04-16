@@ -360,7 +360,7 @@ export default function TERGestionPage(){
 				<InfoBox label="Cette période est archivée. Les données sont en lecture seule." type="info"/>
 			}
 
-			{/* <WarningsBanner warnings={warnings}/> */}
+			<WarningsBanner warnings={warnings}/>
 
 			<span style={{color: "var(--gray1-col)"}}>Vue d'ensemble des groupes, sujets, notations et participants du TER.</span>
 

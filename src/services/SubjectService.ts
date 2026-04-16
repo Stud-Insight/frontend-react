@@ -185,7 +185,7 @@ export default class SubjectService {
 	public static async getMemberSubjectRanking(group_id: string): Promise<SubjectRank[]>{
 		try {
 			const res = await api.get(`ter/rankings/${group_id}/individual`);
-			return res.data.members_rankings[0].rankings;
+			return res.data.members_rankings[0]?.rankings ?? [];
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);
 		}

@@ -45,15 +45,18 @@ export default function UserAvatar({user, size}: UserAvatarProps){
 		}
 	};
 	
+	if (user?.avatar) {
+		const src = user.avatar.startsWith("http") ? user.avatar : `${process.env.API_URL?.replace(/\/api\/?$/, "") ?? ""}${user.avatar}`;
+		return (
+			<div className="avatar-style-container" style={{width: `${size}px`, height: `${size}px`, padding: 0, overflow: "hidden"}}>
+				<img src={src} alt="avatar" style={{width: "100%", height: "100%", objectFit: "cover"}}/>
+			</div>
+		);
+	}
+
 	return (
 		<div className="avatar-style-container" style={{width: `${size}px`, height: `${size}px`, backgroundColor: `${getColor(user)}`}}>
 			{getInitials()}
 		</div>
 	)
-
-	return (
-		<div>
-			{/* TODO: a montrer le vrai avatar */}
-		</div>
-	);
 }

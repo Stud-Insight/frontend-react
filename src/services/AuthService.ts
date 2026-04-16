@@ -166,6 +166,64 @@ export default class AuthService {
         }
     }	
 
+	public static async updateProfile(data: { first_name?: string; last_name?: string }): Promise<User> {
+        try {
+            const response = await api.put<User>("/auth/me", data);
+            localStorage.setItem("user", JSON.stringify(response.data));
+            return response.data;
+        } catch (error) {
+            errorFormat(error as AxiosError<ApiError>);
+            throw error;
+        }
+    }
+
+    public static async uploadAvatar(file: File): Promise<User> {
+        try {
+            await this.getCSRFToken();
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await api.post<User>("/auth/me/avatar", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            localStorage.setItem("user", JSON.stringify(response.data));
+            return response.data;
+        } catch (error) {
+            errorFormat(error as AxiosError<ApiError>);
+            throw error;
+        }
+    }
+
+    public static async deleteAvatar(): Promise<User> {
+        try {
+            await this.getCSRFToken();
+
+            const response = await api.delete<User>("/auth/me/avatar");
+            localStorage.setItem("user", JSON.stringify(response.data));
+            return response.data;
+        } catch (error) {
+            errorFormat(error as AxiosError<ApiError>);
+            throw error;
+        }
+    }
+
+    public static async changePassword(current_password: string, new_password: string): Promise<MessageResponse> {
+        try {
+            await this.getCSRFToken();
+
+            const response = await api.post<MessageResponse>("/auth/password-change", {
+                current_password,
+                new_password,
+            });
+
+            return response.data;
+        } catch (error) {
+            errorFormat(error as AxiosError<ApiError>);
+            throw error;
+        }
+    }
+
 	public static async getCurrentUser(): Promise<User | null> {
         try {
             const response = await api.get<User>("/auth/me");

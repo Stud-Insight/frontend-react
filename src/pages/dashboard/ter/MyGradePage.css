@@ -1,0 +1,27 @@
+.my-grade-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.my-grade-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+	padding: 10px;
+}
+
+.my-grade-value {
+	font-size: 28px;
+	font-weight: var(--big-bold);
+	color: var(--blue-col);
+}
+
+.my-grade-comment {
+	color: var(--gray1-col);
+	font-size: 13px;
+	padding: 0 10px 10px;
+	white-space: pre-wrap;
+}

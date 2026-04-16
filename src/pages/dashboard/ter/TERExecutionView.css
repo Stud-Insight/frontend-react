@@ -1,0 +1,49 @@
+.ter-execution-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.ter-execution-upload-form {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 10px;
+}
+
+.ter-execution-deliverable-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 10px;
+}
+
+.ter-execution-deliverable-item {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 10px 15px;
+	border: 1px solid var(--gray2-col);
+	border-radius: 8px;
+	background: var(--bg-col);
+}
+
+.ter-execution-deliverable-info {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+}
+
+.ter-execution-deliverable-name {
+	font-weight: var(--big-bold);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ter-execution-deliverable-meta {
+	color: var(--gray1-col);
+	font-size: 12px;
+}

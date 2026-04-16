@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import TERService, { TERStatus, EncadrantDashboard as EncadrantData, EncadrantGroup, WorkflowWarning } from "../../../services/TERService";
 import WarningsBanner from "../../../components/ui/WarningsBanner";
 import { GradeStatusLabel, GradeStatusColor } from "../../../services/GradeService";
@@ -13,6 +14,7 @@ import { FaRegFile, FaRegCheckCircle } from "react-icons/fa";
 import "./EncadrantDashboard.css";
 
 export default function EncadrantDashboard() {
+	const navigate = useNavigate();
 	const [dashboard, setDashboard] = useState<EncadrantData | null>(null);
 	const [warnings, setWarnings] = useState<WorkflowWarning[]>([]);
 	const [loaded, setLoaded] = useState(false);
@@ -77,7 +79,7 @@ export default function EncadrantDashboard() {
 			<WarningsBanner warnings={warnings}/>
 
 			{dashboard.groups.map((group: EncadrantGroup) => (
-				<ContainerWidget key={group.id}>
+				<ContainerWidget key={group.id} onClick={() => navigate(`/dashboard/ter/group/${group.id}/deliverables`)}>
 					<div className="encadrant-group-card">
 						<div className="encadrant-group-header">
 							<div className="encadrant-group-title">

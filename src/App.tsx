@@ -7,6 +7,8 @@ import AccountActivationPage from "./pages/auth/AccountActivationPage";
 import HomePage from "./pages/dashboard/home/HomePage";
 import TERDetailPage from "./pages/dashboard/ter/TERDetailPage"
 import TERPage from "./pages/dashboard/ter/TERPage";
+import GroupDeliverablesPage from "./pages/dashboard/ter/GroupDeliverablesPage";
+import MyGradePage from "./pages/dashboard/ter/MyGradePage";
 import TERListPage from "./pages/admin/ter/TERListPage";
 import ChatPage from "./pages/dashboard/ChatPage";
 import SubjectPage from "./pages/dashboard/SubjectPage";
@@ -109,6 +111,9 @@ function AppRoutes() {
 					<Route path="" element={<ProtectedRoute><TERDetailPage/></ProtectedRoute>}/>
 					<Route path="admin" element={<ProtectedRoute><TERGestionPage/></ProtectedRoute>}/>
 				</Route>
+
+				<Route path="group/:group_id/deliverables" element={<ProtectedRoute><GroupDeliverablesPage/></ProtectedRoute>}/>
+				<Route path="my-grade" element={<ProtectedRoute><MyGradePage/></ProtectedRoute>}/>
 
 				<Route path="list" element={<ProtectedRoute><TERListPage/></ProtectedRoute>}/>
 			</Route>

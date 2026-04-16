@@ -33,6 +33,53 @@ export interface TERPeriodMinimal {
 	name: string;
 };
 
+export interface MyGrade {
+	id: string;
+	grade_id: string;
+	student_id: string;
+	student_email: string;
+	student_name: string;
+	opted_in: boolean;
+	opted_in_at: string | null;
+	individual_grade: number | null;
+	individual_grade_comment: string;
+	final_grade: number | null;
+};
+
+export interface OptInResponse {
+	success: boolean;
+	message: string;
+	opted_in: boolean;
+	opted_in_at: string | null;
+};
+
+export interface PeerReviewAggregate {
+	student_id: string;
+	student_email: string;
+	student_name: string;
+	review_count: number;
+	avg_contribution: number;
+	avg_collaboration: number;
+	avg_technical_skill: number;
+	overall_average: number;
+	comments: string[];
+};
+
+export interface GroupGrade {
+	id: string;
+	ter_period_id: string;
+	group_id: string;
+	graded_by_id: string | null;
+	group_grade: number | null;
+	group_grade_comment: string;
+	individual_grading_enabled: boolean;
+	status: string;
+	finalized_at: string | null;
+	finalized_by_id: string | null;
+	created: string;
+	modified: string;
+};
+
 export const GradeStatusLabel: Record<string, string> = {
 	draft: "Brouillon",
 	submitted: "Soumis",
@@ -161,6 +208,59 @@ export default class GradeService {
 			return response.data;
 		} catch (err) {
 			errorFormat(err as AxiosError<ApiError>);
+		}
+	}
+
+	// ==================== Final grades ====================
+
+	public static async getMyGrade(periodId?: string): Promise<MyGrade | null> {
+		try {
+			const url = periodId ? `/ter/grades/my-grade?period_id=${periodId}` : `/ter/grades/my-grade`;
+			const response = await api.get<MyGrade>(url);
+			return response.data;
+		} catch (err) {
+			const axiosErr = err as AxiosError<ApiError>;
+			if (axiosErr.response?.status === 404) {
+				return null;
+			}
+			errorFormat(axiosErr);
+			return null;
+		}
+	}
+
+	public static async getGroupGrade(groupId: string): Promise<GroupGrade | null> {
+		try {
+			const response = await api.get<GroupGrade>(`/ter/grades/group/${groupId}`);
+			return response.data;
+		} catch (err) {
+			const axiosErr = err as AxiosError<ApiError>;
+			if (axiosErr.response?.status === 404) {
+				return null;
+			}
+			errorFormat(axiosErr);
+			return null;
+		}
+	}
+
+	public static async optInIndividualGrading(groupId: string): Promise<OptInResponse | null> {
+		try {
+			const response = await api.post<OptInResponse>(`/ter/grades/group/${groupId}/opt-in`);
+			return response.data;
+		} catch (err) {
+			errorFormat(err as AxiosError<ApiError>);
+			return null;
+		}
+	}
+
+	// ==================== Peer reviews ====================
+
+	public static async getAggregatedPeerReviews(groupId: string): Promise<PeerReviewAggregate[]> {
+		try {
+			const response = await api.get<PeerReviewAggregate[]>(`/ter/peer-reviews/group/${groupId}/aggregate`);
+			return response.data;
+		} catch (err) {
+			errorFormat(err as AxiosError<ApiError>);
+			return [];
 		}
 	}
 }

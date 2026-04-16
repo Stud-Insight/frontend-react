@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import DashboardPage from "../DashboardPage";
 import TERGroupView from "./TERGroupView";
 import TERSubjectView from "./TERSubjectView";
+import TERExecutionView from "./TERExecutionView";
 
 import "./TERDetailPage.css"
 
@@ -15,7 +16,7 @@ export default function TERDetailPage(){
 	const [success, setSuccess] = useState<string | null>();
 	const [period, setPeriod] = useState<TERPeriod | null>(null);
 	
-	const viewHandler = (phase: TERPhase) => {
+	const viewHandler = (phase: TERPhase | undefined) => {
 		switch (phase) {
 			case TERPhase.FORMATION: {
 				return <TERGroupView period={period} setError={setError} setSuccess={setSuccess}/>
@@ -24,6 +25,13 @@ export default function TERDetailPage(){
 			case TERPhase.SELECTION: {
 				return <TERSubjectView period={period} setError={setError} setSuccess={setSuccess}/>
 			}
+
+			case TERPhase.EXECUTION: {
+				return <TERExecutionView period={period} setError={setError} setSuccess={setSuccess}/>
+			}
+
+			default:
+				return null;
 		}
 	}
 
@@ -57,7 +65,7 @@ export default function TERDetailPage(){
 					{error && <InfoBox label={error} type="error"/>}
 					{success && <InfoBox label={success} type="success"/>}
 
-					{viewHandler(TERPhase.SELECTION)}
+					{viewHandler(TERService.getPeriodPhase(period)?.phase)}
 				</>
 			}
 		</DashboardPage>

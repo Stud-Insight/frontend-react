@@ -79,6 +79,11 @@ export default function DashboardPage({ children }: DashboardPageProps) {
 					<NavigationButton label="Stages" active={isPageActive("/dashboard/stages")} icon={<MdWorkOutline/>} id="stages" onClick={switchPageHandle} notifCount={notification_map.get("stages")}/>
 					<NavigationButton label="Conversations" active={isPageActive("/dashboard/chat")} icon={<LuMessageSquare/>} id="chat" onClick={switchPageHandle} notifCount={notification_map.get("chat")}/>
 					<NavigationButton label="Notifications" active={isPageActive("/dashboard/notification")} icon={<FaRegBell/>} id="notification" onClick={switchPageHandle} notifCount={notification_map.get("notification")}/>
+
+					{roles.includes(UserRoles.ETUDIANT) &&
+						<NavigationButton label="Mes notes" active={isPageActive("/dashboard/ter/my-grade")} icon={<TbSchool/>} id="ter/my-grade" onClick={switchPageHandle}/>
+					}
+
 					<HorizontalDivider/>
 
 					{(roles.includes(UserRoles.ENCADRANT) || roles.includes(UserRoles.ADMIN)) && 

@@ -99,9 +99,14 @@ export default function StudentHomePage() {
 								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}/vote`)}/>
 						)}
 						{phase.current_phase === "execution" && data.group_name && (
-							<Button label="Voir mon projet" color="var(--green-col)"
+							<Button label="Déposer un livrable" color="var(--green-col)"
 								icon={<FaRegFile/>}
 								onClick={() => navigate(`/dashboard/ter/${data.ter_period_id}`)}/>
+						)}
+						{phase.current_phase === "finished" && data.group_name && (
+							<Button label="Consulter mes notes" color="var(--blue-col)"
+								icon={<TbSchool/>}
+								onClick={() => navigate(`/dashboard/ter/my-grade`)}/>
 						)}
 					</div>
 				</ContainerWidget>
