@@ -87,8 +87,8 @@ export default class SubjectService {
 				ter_period_id: null,
 				title: title, 
 				description: desc,
-				domain: "",
-				prerequisites: "",
+				domain: "TEST",
+				prerequisites: "TEST",
 				max_groups: 1,
 				min_group_size: min_group,
 				max_group_size: max_group,
@@ -96,6 +96,7 @@ export default class SubjectService {
 				taches: [],
 			};
 
+			console.log(load);
 			await api.post<SubjectCreateSchema>(`/ter/subjects/`, load);
 		} catch (error){
 			errorFormat(error as AxiosError<ApiError>);

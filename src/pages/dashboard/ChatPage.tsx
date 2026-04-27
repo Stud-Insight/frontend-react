@@ -134,7 +134,7 @@ export default function ChatPage(){
 								</div>
 
 								<div className="chat-content-footer">
-									<InputField value={newMessage} onChange={setNewMessage}/>
+									<InputField placeholder="Envoyer un message..." value={newMessage} onChange={setNewMessage}/>
 									<Button icon={<LuSend/>}label="Envoyer" onClick={sendMessageHandle}/>
 								</div>	
 							</>
