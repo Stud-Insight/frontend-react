@@ -169,9 +169,8 @@ export function getNotificationRoute(notif: Notification): string | null {
 export default class NotificationService {
 	public static async fetchNotifications(limit: number = 50, offset: number = 0): Promise<Notification[]> {
 		try {
-			// const response = await api.get<Notification[]>(`/notifications/?limit=${limit}&offset=${offset}`);
-			// return response.data;
-			return mockNotifications;
+			const response = await api.get<Notification[]>(`/notifications/?limit=${limit}&offset=${offset}`);
+			return response.data;
 		} catch (error) {
 			errorFormat(error as AxiosError<ApiError>);
 		}
