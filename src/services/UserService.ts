@@ -43,6 +43,7 @@ export interface User {
     groups: Group[];
     is_staff: boolean;
     is_superuser: boolean;
+    is_cas_user?: boolean;
 	date_joined?: string;
     last_login?: string | null;
 };

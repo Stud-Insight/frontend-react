@@ -13,6 +13,12 @@ module.exports = merge(common, {
             "process.env.API_URL": JSON.stringify(
                 process.env.API_URL || "http://localhost:8080/api"
             ),
+            "process.env.ENABLE_PASSWORD_AUTH": JSON.stringify(
+                process.env.ENABLE_PASSWORD_AUTH || "true"
+            ),
+            "process.env.ENABLE_CAS_AUTH": JSON.stringify(
+                process.env.ENABLE_CAS_AUTH || "false"
+            ),
         }),
         new html_plugin({
             template: "./src/index.html",

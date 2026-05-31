@@ -16,6 +16,8 @@ services:
       - studinsight-network
     environment:
       - API_URL=http://localhost:8080/api
+      - ENABLE_PASSWORD_AUTH=${ENABLE_PASSWORD_AUTH:-true}
+      - ENABLE_CAS_AUTH=${ENABLE_CAS_AUTH:-true}
     depends_on:
       - backend
   
